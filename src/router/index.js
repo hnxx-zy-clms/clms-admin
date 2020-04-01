@@ -83,6 +83,12 @@ export const constantRoutes = [
         name: 'Log',
         component: () => import('@/views/sys/log/log-list'),
         meta: { title: '系统日志', icon: 'table' }
+      },
+      {
+        path: 'xxx',
+        name: 'Xxx',
+        component: () => import('@/views/sys/xxx/xxx-list'),
+        meta: { title: '模版', icon: 'table' }
       }
     ]
   },

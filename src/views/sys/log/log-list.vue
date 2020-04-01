@@ -110,7 +110,7 @@ export default {
         totalCount: 0, // 总条数
         params: {}, // 查询参数对象
         list: [], // 数据
-        sortColumn: '', // 排序列
+        sortColumn: 'createdTime', // 排序列
         sortMethod: 'asc' // 排序方式
       },
       loading: false, // 控制是否显示加载效果
