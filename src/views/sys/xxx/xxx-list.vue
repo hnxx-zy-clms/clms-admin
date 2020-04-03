@@ -1,22 +1,40 @@
 <template>
   <!-- 加载 -->
   <div v-loading="loading">
+
+    <!-- 搜索栏 模糊查询-->
+    <el-form :inline="true" :model="page" class="demo-form-inline" size="mini">
+      <el-form-item label="模糊查询">
+        <el-input v-model="page.params.xxName" placeholder="xxName" clearable />
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" sizi="mini" @click="getByPage">查询</el-button>
+      </el-form-item>
+    </el-form>
+    <!-- 分割线 -->
+    <el-divider />
+    <el-button type="primary" class="add-button" size="mini" @click="openAddDialog">添加</el-button>
+    <el-button type="danger" class="add-button" size="mini" @click="deleteByIds">批量删除</el-button>
+
     <!-- 列表 -->
     <!--
       1. :data 绑定数据 分页对象的的list数据
       2. show-overflow-tooltip 超出部分隐藏
+      3. @selection-change="handleSelectionChange" selection-change	当选择项发生变化时会触发该事件
      -->
     <el-table
       :data="page.list"
       border
       style="width: 100%"
+      @selection-change="handleSelectionChange"
       @sort-change="changeSort"
     >
       <el-table-column
         type="selection"
         width="55"
       />
-      <el-table-column prop="xxName" label="xx名称" />
+      <el-table-column prop="xxId" label="编号" width="60" />
+      <el-table-column prop="xxName" label="xx名称" width="150" />
       <el-table-column prop="createdTime" label="创建时间" sortable="custom" />
       <el-table-column prop="updateTime" label="更新时间" sortable="custom" />
     </el-table>
@@ -44,13 +62,24 @@
       @current-change="handleCurrentChange"
     />
 
+    <!-- 添加弹窗 -->
+    <el-dialog title="添加" :visible.sync="addDialog">
+      <xxx-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" />
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
 // 导入api接口定义的方法 接收变量为 xxxApi
-import logApi from '@/api/xxx'
+import XxxApi from '@/api/xxx'
+// 导入组件
+import XxxAdd from './xxx-add'
 export default {
+  //  定义添加的组件
+  components: {
+    XxxAdd
+  },
   data() {
     return {
       // 定义page对象
@@ -65,7 +94,8 @@ export default {
         sortMethod: 'asc' // 排序方式
       },
       loading: false, // 控制是否显示加载效果
-      selectLogs: [] // 被选中的日志
+      selectXxxs: [], // 被选中的模版列
+      addDialog: false // 控制添加弹窗显示
     }
   },
   // 初始化函数
@@ -87,7 +117,7 @@ export default {
     },
     // 分页方法 调用封装的方法 getByPage()
     getByPage() {
-      logApi.getByPage(this.page).then(res => {
+      XxxApi.getByPage(this.page).then(res => {
         this.page = res.data
       })
     },
@@ -101,6 +131,49 @@ export default {
         this.page.sortMethod = 'asc'
       }
       this.getByPage()
+    },
+    // 多选参数
+    handleSelectionChange(val) {
+      this.selectXxxs = val
+    },
+    deleteByIds() {
+      // 批量删除
+      this.$confirm('删除之后无法恢复，是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'error'
+      }).then(() => {
+        const ids = []
+        this.selectXxxs.forEach(e => {
+          ids.push(e.xxId)
+        })
+        XxxApi.deleteByIds(ids).then(res => {
+          this.$message.success(res.msg)
+          this.getByPage()
+        })
+      })
+    },
+    // 弃用，启用状态更新
+    // changeIsEnabled(val) {
+    //   const id = val.xxId
+    //   if (val.isEnabled) {
+    //     XxxApi.enable(id).then(res => {
+    //       this.$message.success(res.msg)
+    //     })
+    //   } else {
+    //     XxxApi.disable(id).then(res => {
+    //       this.$message.success(res.msg)
+    //     })
+    //   }
+    // },
+    // 模块功能组件
+    openAddDialog() {
+      // 打开添加弹窗
+      this.addDialog = true
+    },
+    closeAddDialog() {
+      // 关闭添加弹窗
+      this.addDialog = false
     }
   }
 }

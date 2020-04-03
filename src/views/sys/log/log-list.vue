@@ -144,7 +144,7 @@ export default {
     handleSelectionChange(val) {
       this.selectLogs = val
     },
-    // 根据idS删除
+    // 根据ids删除
     deleteByIds() {
       // 批量删除
       this.$confirm('删除之后无法恢复，是否删除?', '提示', {
