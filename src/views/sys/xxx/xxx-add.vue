@@ -1,13 +1,13 @@
 <template>
   <div>
     <!--添加表单  -->
-    <el-form ref="form" :model="xxx" label-width="80px" size="mini">
+    <el-form ref="addForm" :model="xxx" label-width="80px" size="mini">
       <el-form-item label="xxName">
         <el-input v-model="xxx.xxName" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" size="mini" @click="onSubmit">提交</el-button>
-        <el-button size="mini">取消</el-button>
+        <el-button size="mini" @click="close">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -30,9 +30,14 @@ export default {
     onSubmit() {
       xxxApi.save(this.xxx).then(res => {
         this.$message.success(res.msg)
-        this.$emit('closeAddDrawer')
+        this.$emit('closeAddDialog')
+        this.xxx = {}
         this.$emit('getByPage')
       })
+    },
+    close() {
+      this.$emit('closeAddDialog')
+      this.xxx = {}
     }
   }
 }

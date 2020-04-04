@@ -25,7 +25,7 @@ export default {
   update(xxx) { // 修改更新
     return request({
       url: `/${group_name}/update`,
-      method: 'update',
+      method: 'put',
       data: xxx
     })
   },

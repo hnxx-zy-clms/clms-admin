@@ -21,22 +21,41 @@
       1. :data 绑定数据 分页对象的的list数据
       2. show-overflow-tooltip 超出部分隐藏
       3. @selection-change="handleSelectionChange" selection-change	当选择项发生变化时会触发该事件
+      4. @sort-change="changeSort" sort-change 事件回中可以获取当前排序的字段名[prop]和排序顺序[order]
      -->
     <el-table
       :data="page.list"
       border
+      fit
       style="width: 100%"
       @selection-change="handleSelectionChange"
       @sort-change="changeSort"
     >
       <el-table-column
         type="selection"
-        width="55"
+        align="center"
+        width="45"
       />
-      <el-table-column prop="xxId" label="编号" width="60" />
-      <el-table-column prop="xxName" label="xx名称" width="150" />
-      <el-table-column prop="createdTime" label="创建时间" sortable="custom" />
-      <el-table-column prop="updateTime" label="更新时间" sortable="custom" />
+      <el-table-column prop="xxId" label="编号" width="60" align="center" />
+      <el-table-column prop="xxName" label="xx名称" width="150" align="center" />
+      <el-table-column prop="createdTime" label="创建时间" width="200" align="center" sortable="custom" />
+      <el-table-column prop="updateTime" label="更新时间" width="200" align="center" sortable="custom" />
+      <el-table-column prop="enable" label="状态" width="100" align="center">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.isEnabled === 1">启用</el-tag>
+          <el-tag v-else type="info">弃用</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="360" align="center">
+        <template slot-scope="scope">
+          <el-button size="mini" type="primary" @click="toUpdate(scope.row.xxId)">修改</el-button>
+          <el-button size="mini" type="info" @click="toRead(scope.row.aboutId)">查看</el-button>
+          <el-button v-if="scope.row.isEnabled === 0" size="mini" type="success" @click="toEnable(scope.row.xxId)">启用</el-button>
+          <el-button v-if="scope.row.isEnabled === 1" size="mini" type="warning" @click="toDisable(scope.row.xxId)">弃用</el-button>
+          <el-button size="mini" type="danger" @click="toDelete(scope.row.xxId)">删除</el-button>
+
+        </template>
+      </el-table-column>
     </el-table>
 
     <!--
@@ -54,7 +73,7 @@
       align="center"
       class="pagination"
       :current-page="page.currentPage"
-      :page-sizes="[10,20,50,100]"
+      :page-sizes="[5,10,20,50]"
       :page-size="page.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="page.totalCount"
@@ -66,19 +85,28 @@
     <el-dialog title="添加" :visible.sync="addDialog">
       <xxx-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" />
     </el-dialog>
+    <!--
+      修改弹窗
+      :xxx="xxx" 用于传递参数对象
+    -->
+    <el-dialog title="修改" :visible.sync="updateDialog">
+      <xxx-update :xxx="xxx" @closeUpdateDialog="closeUpdateDialog" @getByPage="getByPage" />
+    </el-dialog>
 
   </div>
 </template>
 
 <script>
 // 导入api接口定义的方法 接收变量为 xxxApi
-import XxxApi from '@/api/xxx'
+import xxxApi from '@/api/xxx'
 // 导入组件
 import XxxAdd from './xxx-add'
+import XxxUpdate from './xxx-update'
 export default {
   //  定义添加的组件
   components: {
-    XxxAdd
+    XxxAdd,
+    XxxUpdate
   },
   data() {
     return {
@@ -93,9 +121,13 @@ export default {
         sortColumn: 'createdTime', // 排序列
         sortMethod: 'asc' // 排序方式
       },
+      xxx: {
+        xxId: ''
+      },
       loading: false, // 控制是否显示加载效果
       selectXxxs: [], // 被选中的模版列
-      addDialog: false // 控制添加弹窗显示
+      addDialog: false, // 控制添加弹窗显示
+      updateDialog: false // 控制修改弹窗显示
     }
   },
   // 初始化函数
@@ -117,11 +149,12 @@ export default {
     },
     // 分页方法 调用封装的方法 getByPage()
     getByPage() {
-      XxxApi.getByPage(this.page).then(res => {
+      xxxApi.getByPage(this.page).then(res => {
         this.page = res.data
+        console.log(res)
       })
     },
-    // 条件排序
+    // 条件排序 e 和 val 都行
     changeSort(e) {
       if (e.order) {
         this.page.sortColumn = e.prop
@@ -130,6 +163,7 @@ export default {
         this.page.sortColumn = ''
         this.page.sortMethod = 'asc'
       }
+      this.$message.success('操作成功!')
       this.getByPage()
     },
     // 多选参数
@@ -147,25 +181,84 @@ export default {
         this.selectXxxs.forEach(e => {
           ids.push(e.xxId)
         })
-        XxxApi.deleteByIds(ids).then(res => {
-          this.$message.success(res.msg)
+        xxxApi.deleteByIds(ids).then(res => {
+          this.$message.success('res.msg')
           this.getByPage()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
         })
       })
     },
-    // 弃用，启用状态更新
-    // changeIsEnabled(val) {
-    //   const id = val.xxId
-    //   if (val.isEnabled) {
-    //     XxxApi.enable(id).then(res => {
-    //       this.$message.success(res.msg)
-    //     })
-    //   } else {
-    //     XxxApi.disable(id).then(res => {
-    //       this.$message.success(res.msg)
-    //     })
-    //   }
-    // },
+    // 操作部分相关方法
+    // 修改
+    toUpdate(id) {
+      xxxApi.get(id).then(res => {
+        this.xxx = res.data
+        this.updateDialog = true
+      })
+    },
+    // 查看
+    toRead() {
+      this.$message.success('QAQ')
+    },
+    // 启用
+    toEnable(id) {
+      this.$confirm('是否启用？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        xxxApi.enable(id).then(res => {
+          this.$message.success(res.msg)
+          this.getByPage()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消启用'
+        })
+      })
+    },
+    // 弃用
+    toDisable(id) {
+      this.$confirm('是否弃用?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        xxxApi.disable(id).then(res => {
+          this.$message.success(res.msg)
+          this.getByPage()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消弃用'
+        })
+      })
+    },
+    // 删除
+    toDelete(id) {
+      this.$confirm('是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        xxxApi.delete(id).then(res => {
+          this.$message.success(res.msg)
+          this.getByPage()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+
     // 模块功能组件
     openAddDialog() {
       // 打开添加弹窗
@@ -174,6 +267,10 @@ export default {
     closeAddDialog() {
       // 关闭添加弹窗
       this.addDialog = false
+    },
+    closeUpdateDialog() {
+      // 关闭修改弹窗
+      this.updateDialog = false
     }
   }
 }
