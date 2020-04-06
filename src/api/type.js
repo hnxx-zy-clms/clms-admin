@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-var group_name = 'type'
+var group_name = 'articleType'
 export default {
   save(type) { // 添加
     return request({
@@ -8,18 +8,18 @@ export default {
       data: type
     })
   },
-  listBack() { // 后台查询
+  getAll() { // 后台查询
     return request({
-      url: `/${group_name}/listBack`,
+      url: `/${group_name}/getAll`,
       method: 'get'
     })
   },
-  // getList() { // 前台查询
-  //   return request({
-  //     url: `/${group_name}/getList`,
-  //     method: 'get'
-  //   })
-  // },
+  getList() { // 前台查询
+    return request({
+      url: `/${group_name}/getList`,
+      method: 'get'
+    })
+  },
   update(type) { // 更新
     return request({
       url: `/${group_name}/update`,

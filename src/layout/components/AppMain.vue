@@ -16,7 +16,7 @@ export default {
     }
   },
   created() {
-    // this.getTypeList()
+    this.getTypeList()
   },
   methods: {
     getTypeList() {

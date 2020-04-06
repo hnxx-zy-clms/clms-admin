@@ -6,6 +6,10 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 
+/**
+ * 1. component: () => import('@/views/login/index') 多路由懒加载
+ * 2. redirect 重定向
+ */
 export const constantRoutes = [
   {
     path: '/login',

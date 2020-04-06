@@ -18,7 +18,7 @@
 
     <!-- 列表 -->
     <!--
-      1. :data 绑定数据 分页对象的的list数据
+      1. :data v-bind:model="page.list" 绑定数据 分页对象的的list数据
       2. show-overflow-tooltip 超出部分隐藏
       3. @selection-change="handleSelectionChange" selection-change	当选择项发生变化时会触发该事件
       4. @sort-change="changeSort" sort-change 事件回中可以获取当前排序的字段名[prop]和排序顺序[order]
@@ -36,7 +36,7 @@
         align="center"
         width="45"
       />
-      <el-table-column prop="xxId" label="编号" width="60" align="center" />
+      <el-table-column prop="xxId" label="#" width="60" align="center" />
       <el-table-column prop="xxName" label="xx名称" width="150" align="center" />
       <el-table-column prop="createdTime" label="创建时间" width="200" align="center" sortable="custom" />
       <el-table-column prop="updateTime" label="更新时间" width="200" align="center" sortable="custom" />
@@ -49,7 +49,7 @@
       <el-table-column label="操作" width="360" align="center">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="toUpdate(scope.row.xxId)">修改</el-button>
-          <el-button size="mini" type="info" @click="toRead(scope.row.aboutId)">查看</el-button>
+          <el-button size="mini" type="info" @click="toRead(scope.row.xxId)">查看</el-button>
           <el-button v-if="scope.row.isEnabled === 0" size="mini" type="success" @click="toEnable(scope.row.xxId)">启用</el-button>
           <el-button v-if="scope.row.isEnabled === 1" size="mini" type="warning" @click="toDisable(scope.row.xxId)">弃用</el-button>
           <el-button size="mini" type="danger" @click="toDelete(scope.row.xxId)">删除</el-button>
@@ -103,7 +103,7 @@ import xxxApi from '@/api/xxx'
 import XxxAdd from './xxx-add'
 import XxxUpdate from './xxx-update'
 export default {
-  //  定义添加的组件
+  //  定义添加的组件 子组件/私有组件
   components: {
     XxxAdd,
     XxxUpdate
