@@ -33,7 +33,7 @@
       style="width: 100%"
       @sort-change="changeSort"
     >
-      <el-table-column prop="articleId" label="#" width="60" align="center" />
+      <el-table-column type="index" fixed="left" label="#" width="60" align="center" />
       <el-table-column prop="articleTitle" align="center" label="标题" width="200" show-overflow-tooltip />
       <el-table-column prop="typeName" label="分类" width="120" align="center" />
       <el-table-column prop="articleAuthor" label="作者" width="160" sortable="custom" align="center" />
@@ -73,6 +73,12 @@
               </el-dropdown-item>
               <el-dropdown-item>
                 <el-button size="mini" type="primary" @click="toRead(scope.row.articleId)">查看</el-button>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <el-button v-if="scope.row.isEnabled === 0" size="mini" type="success" @click="toEnable(scope.row.articleId)">启用</el-button>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <el-button v-if="scope.row.isEnabled === 1" size="mini" type="warning" @click="toDisable(scope.row.articleId)">弃用</el-button>
               </el-dropdown-item>
               <el-dropdown-item>
                 <el-button size="mini" type="danger" @click="toDelete(scope.row.articleId)">删除</el-button>
@@ -117,6 +123,10 @@
     <el-dialog title="修改" :visible.sync="updateDialog">
       <article-update :article="article" @closeUpdateDialog="closeUpdateDialog" @getByPage="getByPage" />
     </el-dialog>
+    <!-- 阅读弹窗 -->
+    <el-dialog title="文章内容" :visible.sync="readDialog" width="50%">
+      <div v-html="article.articleContent" />
+    </el-dialog>
 
   </div>
 </template>
@@ -157,7 +167,8 @@ export default {
       typeList: this.$store.getters.typeList, // 分类列表
       loading: false, // 控制是否显示加载效果
       addDialog: false, // 控制添加弹窗显示
-      updateDialog: false // 控制修改弹窗显示
+      updateDialog: false, // 控制修改弹窗显示
+      readDialog: false // 控制阅读弹窗显示
     }
   },
   // 初始化函数
@@ -204,9 +215,12 @@ export default {
         this.updateDialog = true
       })
     },
-    // 查看
-    toRead() {
-      this.$message.success('QAQ')
+    // 查看 后台还是只提供查看操作，阅读的话给前台用
+    toRead(id) {
+      articleApi.get(id).then(res => {
+        this.article = res.data
+        this.readDialog = true
+      })
     },
     // 启用
     toEnable(id) {

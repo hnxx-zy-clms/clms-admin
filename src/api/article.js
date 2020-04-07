@@ -22,7 +22,7 @@ export default {
       data: article
     })
   },
-  deleteById(id) { // 根据id删除
+  delete(id) { // 根据id删除
     return request({
       url: `/${group_name}/delete/${id}`,
       method: 'delete'
@@ -31,6 +31,24 @@ export default {
   get(id) { // 根据id查询
     return request({
       url: `/${group_name}/get/${id}`,
+      method: 'get'
+    })
+  },
+  enable(id) { // 启用
+    return request({
+      url: `/${group_name}/enable/${id}`,
+      method: 'put'
+    })
+  },
+  disable(id) { // 弃用
+    return request({
+      url: `/${group_name}/disable/${id}`,
+      method: 'put'
+    })
+  },
+  read(id) { // 阅读
+    return request({
+      url: `/${group_name}/read/${id}`,
       method: 'get'
     })
   }

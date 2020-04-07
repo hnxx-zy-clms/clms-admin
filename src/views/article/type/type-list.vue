@@ -4,7 +4,7 @@
 
     <!-- 列表 -->
     <el-table :data="typeList" border style="width: 100%">
-      <el-table-column prop="typeId" label="#" width="60" align="center" />
+      <el-table-column type="index" fixed="left" label="#" width="60" align="center" />
       <el-table-column prop="typeName" label="分类名称" width="200" align="center" />
       <el-table-column prop="typeCount" label="文章数" align="center" />
       <el-table-column prop="createdTime" label="创建时间" width="180" align="center" sortable="custom" />
@@ -49,7 +49,9 @@ export default {
   },
   data() {
     return {
-      type: {}, // 分类
+      type: {
+        typeId: ''
+      },
       updateDialog: false, // 控制修改弹窗展示
       addDialog: false, // 控制添加弹窗展示
       typeList: [] // 类型数组
@@ -80,7 +82,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        typeApi.enableById(id).then(res => {
+        typeApi.enable(id).then(res => {
           this.$message.success(res.msg)
           this.getTypeList()
         })
@@ -93,7 +95,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        typeApi.disableById(id).then(res => {
+        typeApi.disable(id).then(res => {
           this.$message.success(res.msg)
           this.getTypeList()
         })
@@ -106,7 +108,7 @@ export default {
         cancelButtonText: '取消',
         type: 'error'
       }).then(() => {
-        typeApi.deleteById(id).then(res => {
+        typeApi.delete(id).then(res => {
           this.$message.success(res.msg)
           this.getTypeList()
         })

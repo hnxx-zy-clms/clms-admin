@@ -50,12 +50,13 @@
     >
       <el-table-column
         type="selection"
-        width="55"
+        align="center"
+        width="45"
       />
-      <el-table-column prop="logId" label="编号" width="60" />
-      <el-table-column prop="logUrl" label="请求地址" width="150" sortable="custom" />
-      <el-table-column prop="logParams" label="参数" width="150" show-overflow-tooltip />
-      <el-table-column prop="logStatus" label="请求状态" width="130" sortable="custom">
+      <el-table-column prop="logId" fixed="left" label="#" width="60" align="center" />
+      <el-table-column prop="logUrl" label="请求地址" align="center" width="200" show-overflow-tooltip sortable="custom" />
+      <el-table-column prop="logParams" label="参数" align="center" width="80" show-overflow-tooltip />
+      <el-table-column prop="logStatus" label="请求状态" align="center" width="110" sortable="custom">
         <!-- scope 为作用域插槽 scope.row 为当前列的对象信息 -->
         <template slot-scope="scope">
           <!-- v-if / v-else 用于条件判断 -->
@@ -63,11 +64,11 @@
           <el-tag v-else type="danger">异常</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="logMethod" label="请求方式" width="110" sortable="custom" />
-      <el-table-column prop="logTime" label="响应时间(毫秒)" width="160" sortable="custom" />
-      <el-table-column prop="logIp" label="请求ip" width="150" />
-      <el-table-column prop="logResult" label="返回值" width="250" show-overflow-tooltip />
-      <el-table-column prop="createdTime" label="创建时间" sortable="custom" />
+      <el-table-column prop="logMethod" label="请求方式" width="110" align="center" sortable="custom" />
+      <el-table-column prop="logTime" label="响应时间(毫秒)" width="160" align="center" sortable="custom" />
+      <el-table-column prop="logIp" label="请求ip" align="center" width="150" />
+      <el-table-column prop="logResult" label="返回值" width="80" align="center" show-overflow-tooltip />
+      <el-table-column prop="createdTime" label="创建时间" width="200" align="center" sortable="custom" />
     </el-table>
 
     <!--

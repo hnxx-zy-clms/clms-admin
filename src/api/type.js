@@ -27,19 +27,19 @@ export default {
       data: type
     })
   },
-  enableById(id) { // 启用
+  enable(id) { // 启用
     return request({
       url: `/${group_name}/enable/${id}`,
       method: 'put'
     })
   },
-  disableById(id) { // 添加
+  disable(id) { // 弃用
     return request({
       url: `/${group_name}/disable/${id}`,
       method: 'put'
     })
   },
-  deleteById(id) { // 删除
+  delete(id) { // 删除
     return request({
       url: `/${group_name}/delete/${id}`,
       method: 'delete'

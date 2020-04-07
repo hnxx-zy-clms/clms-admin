@@ -2,8 +2,21 @@
   <div>
     <!--添加表单  -->
     <el-form ref="addForm" :model="article" label-width="80px" size="mini">
-      <el-form-item label="xxName">
-        <el-input v-model="article.xxName" />
+      <el-form-item label="标题">
+        <el-input v-model="article.articleTitle" />
+      </el-form-item>
+      <el-form-item label="分类">
+        <el-select v-model="article.articleType" clearable filterable placeholder="请选择" style="width: 100%">
+          <el-option
+            v-for="type in typeList"
+            :key="type.typeId"
+            :label="type.typeName"
+            :value="type.typeId"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="内容">
+        <tinymce v-model="article.articleContent" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" size="mini" @click="onSubmit">提交</el-button>
@@ -15,10 +28,22 @@
 
 <script>
 import articleApi from '@/api/article'
+// 导入富文本公共组件
+import Tinymce from '@/components/Tinymce/index'
+import { getToken } from '@/utils/auth'
 export default {
+  // 注册组件
+  components: {
+    Tinymce
+  },
   data() {
     return {
-      article: {}
+      article: {},
+      imageUrl: null, // 上传图片回显
+      headers: { // 上传文件的请求头
+        Authorization: getToken()
+      },
+      typeList: this.$store.getters.typeList
     }
   },
   methods: {

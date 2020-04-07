@@ -36,7 +36,7 @@
         align="center"
         width="45"
       />
-      <el-table-column prop="xxId" label="#" width="60" align="center" />
+      <el-table-column type="index" fixed="left" label="#" width="60" align="center" />
       <el-table-column prop="xxName" label="xx名称" width="150" align="center" />
       <el-table-column prop="createdTime" label="创建时间" width="200" align="center" sortable="custom" />
       <el-table-column prop="updateTime" label="更新时间" width="200" align="center" sortable="custom" />
