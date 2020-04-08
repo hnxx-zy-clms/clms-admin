@@ -34,7 +34,34 @@ export const constantRoutes = [
       meta: { title: '首页', icon: 'dashboard' }
     }]
   },
-
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/user/user',
+    name: 'User',
+    meta: { title: '用户管理', icon: 'example' }
+  },
+  {
+    path: '/report',
+    component: Layout,
+    redirect: '/report/report',
+    name: 'Report',
+    meta: { title: '日报管理', icon: 'example' }
+  },
+  {
+    path: '/class',
+    component: Layout,
+    redirect: '/class/class',
+    name: 'Class',
+    meta: { title: '班级管理', icon: 'example' }
+  },
+  {
+    path: '/request',
+    component: Layout,
+    redirect: '/request/request',
+    name: 'Request',
+    meta: { title: '答疑管理', icon: 'example' }
+  },
   {
     path: '/article',
     component: Layout,
@@ -74,7 +101,13 @@ export const constantRoutes = [
       }
     ]
   },
-
+  {
+    path: '/meeting',
+    component: Layout,
+    redirect: '/meeting/meeting',
+    name: 'Meeting',
+    meta: { title: '日报管理', icon: 'example' }
+  },
   {
     path: '/sys',
     component: Layout,

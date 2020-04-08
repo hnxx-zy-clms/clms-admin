@@ -8,7 +8,7 @@ export default {
       data: page
     })
   },
-  deleteByIds(logIds) { // 批量删除
+  delete(logIds) { // 删除
     return request({
       url: `/${group_name}/deleteByIds`,
       method: 'put',

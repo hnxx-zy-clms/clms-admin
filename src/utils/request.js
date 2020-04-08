@@ -67,9 +67,9 @@ service.interceptors.response.use(
   error => {
     console.log('err' + error) // for debug
     Message({
-      message: error.msg,
+      message: '请求超时!',
       type: 'error',
-      duration: 5 * 1000
+      duration: 10 * 1000
     })
     return Promise.reject(error)
   }
