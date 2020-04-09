@@ -13,7 +13,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" sizi="mini" @click="getByPage">查询</el-button>
+        <el-button type="primary" sizi="mini" @click="search">查询</el-button>
       </el-form-item>
     </el-form>
     <!-- 分割线 -->
@@ -177,6 +177,11 @@ export default {
   },
   // 定义方法
   methods: {
+    // 条件搜索
+    search() {
+      this.page.currentPage = 1
+      this.getByPage(this.page)
+    },
     // 每页大小改变 参数 value 为每页大小(pageSize)
     handleSizeChange(val) {
       this.page.pageSize = val
