@@ -41,12 +41,33 @@ export const constantRoutes = [
     name: 'User',
     meta: { title: '用户管理', icon: 'example' }
   },
+
   {
     path: '/report',
     component: Layout,
     redirect: '/report/report',
     name: 'Report',
-    meta: { title: '日报管理', icon: 'example' }
+    meta: { title: '报告管理', icon: 'example' },
+    children: [
+      {
+        path: 'daily',
+        name: 'Daily',
+        component: () => import('@/views/report/daily/daliy-list'),
+        meta: { title: '日报管理', icon: 'table' }
+      },
+      {
+        path: 'weekly',
+        name: 'Weekly',
+        component: () => import('@/views/report/weekly/weekly-list'),
+        meta: { title: '周报管理', icon: 'table' }
+      },
+      {
+        path: 'marking',
+        name: 'Marking',
+        component: () => import('@/views/report/marking/marking-list'),
+        meta: { title: '批阅管理', icon: 'table' }
+      }
+    ]
   },
   {
     path: '/class',
@@ -100,13 +121,6 @@ export const constantRoutes = [
         meta: { title: '点赞管理', icon: 'table' }
       }
     ]
-  },
-  {
-    path: '/meeting',
-    component: Layout,
-    redirect: '/meeting/meeting',
-    name: 'Meeting',
-    meta: { title: '日报管理', icon: 'example' }
   },
   {
     path: '/sys',
