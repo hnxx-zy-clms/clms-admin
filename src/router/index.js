@@ -123,6 +123,41 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/meeting',
+    component: Layout,
+    redirect: '/meeting/meeting',
+    name: 'Meeting',
+    meta: { title: '日报管理', icon: 'example' }
+  },
+
+  // 任务通知
+  {
+    path: '/tasknotice',
+    component: Layout,
+    name: 'TaskNotice',
+    meta: { title: '任务通知', icon: 'example' },
+    children: [
+      {
+        path: 'tasklist',
+        name: 'TaskList',
+        component: () => import('@/views/tasknotice/task/task-list'),
+        meta: { title: '任务管理', icon: 'table' }
+      },
+      {
+        path: 'notice',
+        name: 'notice',
+        component: () => import('@/views/tasknotice/notice/notice-list'),
+        meta: { title: '通知管理', icon: 'table' }
+      },
+      {
+        path: 'registration',
+        name: 'registration',
+        component: () => import('@/views/tasknotice/Registration/registration'),
+        meta: { title: '签到管理', icon: 'table' }
+      }
+    ]
+  },
+  {
     path: '/sys',
     component: Layout,
     redirect: '/sys/log',
