@@ -57,7 +57,12 @@ export default {
         sortColumn: 'commentTime', // 排序列
         sortMethod: 'asc' // 排序方式
       },
-      commentList: {}
+      commentList: null
+    }
+  },
+  watch: {
+    comment: function() {
+      this.getByPage()
     }
   },
   created() {
@@ -66,6 +71,7 @@ export default {
   methods: {
     // 分页方法 调用封装的方法 getByPage()
     getByPage() {
+      console.log(this.comment)
       this.commentList = {}
       const pid = this.comment.commentId
       this.page.params.pid = pid
@@ -92,7 +98,6 @@ export default {
      */
     close() {
       this.$emit('closeUpdateDialog')
-      this.commentList = {}
     }
   }
 }

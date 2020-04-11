@@ -245,7 +245,7 @@ export default {
     toRead(id) {
       commentApi.get(id).then(res => {
         this.comment = res.data
-        // console.log(this.comment)
+        console.log(this.comment)
         // console.log(this.comment.commentType)
         this.readDialog = true
       })

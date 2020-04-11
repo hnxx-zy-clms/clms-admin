@@ -70,11 +70,19 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/class',
+    path: '/classes',
     component: Layout,
-    redirect: '/class/class',
-    name: 'Class',
-    meta: { title: '班级管理', icon: 'example' }
+    redirect: '/classes/classes',
+    name: 'classes',
+    meta: { title: '班级管理', icon: 'example' },
+    children: [
+      {
+        path: 'classes',
+        name: 'Classes',
+        component: () => import('@/views/classes/classes/classes-list'),
+        meta: { title: '班级管理', icon: 'table' }
+      }
+    ]
   },
   {
     path: '/request',
@@ -87,7 +95,7 @@ export const constantRoutes = [
     path: '/article',
     component: Layout,
     redirect: '/article/article',
-    name: 'Article',
+    name: 'article',
     meta: { title: '文章管理', icon: 'example' },
     children: [
       {
@@ -98,7 +106,7 @@ export const constantRoutes = [
       },
       {
         path: 'article',
-        name: 'article',
+        name: 'Article',
         component: () => import('@/views/article/article/article-list'),
         meta: { title: '文章管理', icon: 'table' }
       },

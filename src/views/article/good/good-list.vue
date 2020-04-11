@@ -30,7 +30,7 @@
     >
       <el-table-column prop="goodId" label="#" width="80" align="center" />
       <el-table-column prop="userId" label="用户id" align="center" width="130" />
-      <el-table-column prop="articleId" label="用户id" align="center" width="130" />
+      <el-table-column prop="articleId" label="文章id" align="center" width="130" />
       <el-table-column prop="commentId" label="评论id" align="center" width="130" />
       <el-table-column prop="goodTime" label="点赞时间" width="250" align="center" sortable="custom" />
       <el-table-column label="操作" width="300" align="center">
