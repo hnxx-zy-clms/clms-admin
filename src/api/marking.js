@@ -14,5 +14,11 @@ export default {
       method: 'post',
       data: page
     })
+  },
+  deleteById(id) { // 根据id删除
+    return request({
+      url: `/${group_name}/deleteAdmin/${id}`,
+      method: 'delete'
+    })
   }
 }

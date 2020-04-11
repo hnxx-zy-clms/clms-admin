@@ -2,37 +2,46 @@
   <!-- 加载 -->
   <div v-loading="loading">
 
-    <!-- 搜索栏 模糊查询-->
-<!--    <el-form :inline="true" :model="page" class="demo-form-inline" size="mini">-->
-<!--      <el-form-item label="用户名">-->
-<!--        <el-input v-model="page.params.userName" placeholder="用户名" clearable />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="组ID">-->
-<!--        <el-input v-model="page.params.userGroupId" placeholder="组ID" clearable />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="角色ID">-->
-<!--        <el-input v-model="page.params.userPositionId" placeholder="角色ID" clearable />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="起始日期">-->
-<!--        <el-date-picker-->
-<!--          v-model="page.params.reportDate"-->
-<!--          type="daterange"-->
-<!--          align="right"-->
-<!--          unlink-panels-->
-<!--          range-separator="至"-->
-<!--          start-placeholder="开始日期"-->
-<!--          end-placeholder="结束日期"-->
-<!--          :default-time="['00:00:00', '23:59:59']"-->
-<!--          :picker-options="pickerOptions"-->
-<!--          format="yyyy 年 MM 月 dd 日"-->
-<!--          value-format="yyyy-MM-dd HH:mm:ss"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item>-->
-<!--        <el-button type="primary" sizi="mini" @click="query">查询</el-button>-->
-<!--      </el-form-item>-->
-<!--    </el-form>-->
-    <!-- 分割线 -->
+    <el-form :inline="true" :model="page" class="demo-form-inline" size="mini">
+      <el-form-item label="报告类型">
+        <el-select v-model="page.params.reportType" placeholder="报告类型" clearable filterable>
+          <el-option
+            v-for="item in reportTypeList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="批阅类型">
+        <el-select v-model="page.params.markingType" placeholder="批阅类型" clearable filterable>
+          <el-option
+            v-for="item in markingTypeList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="报告起始日期">
+        <el-date-picker
+          v-model="page.params.reportDate"
+          type="daterange"
+          align="right"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :default-time="['00:00:00', '23:59:59']"
+          :picker-options="pickerOptions"
+          format="yyyy 年 MM 月 dd 日"
+          value-format="yyyy-MM-dd HH:mm:ss"
+        />
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" sizi="mini" @click="query">查询</el-button>
+      </el-form-item>
+    </el-form>
     <el-divider />
     <!-- 列表 -->
     <!--
@@ -42,14 +51,40 @@
       4. @sort-change="changeSort" sort-change 事件回中可以获取当前排序的字段名[prop]和排序顺序[order]
      -->
     <el-table
+      ref="table"
       :data="page.list"
       border
       style="width: 100%"
       @sort-change="changeSort"
     >
-      <el-table-column prop="reportId" label="#" width="60" align="center" />
-      <el-table-column prop="markingId" align="center" label="报告ID" width="50" show-overflow-tooltip />
-      <el-table-column prop="marking" label="批阅状态" width="110"  align="center">
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" class="demo-table-expand">
+            <el-form-item v-if="props.row.groupName != null " label="组长批阅数据">
+              <span>评分：{{ props.row.groupLeaderScore }} 分 </span>
+              <span>评语：{{ props.row.groupLeaderComment }}</span>
+            </el-form-item>
+            <el-table-item v-else>
+              <span>暂无数据 </span>
+            </el-table-item>
+            <el-form-item v-if="props.row.monitorName != null" label="班长批阅数据">
+              <span>评分：{{ props.row.monitorScore }} 分 </span>
+              <span>评语：{{ props.row.monitorComment }}</span>
+            </el-form-item>
+            <el-form-item v-if="props.row.teacherName != null" label="教师批阅数据">
+              <span>评分：{{ props.row.teacherScore }} 分 </span>
+              <span>评语：{{ props.row.teacherComment }}</span>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
+      <el-table-column
+        type="index"
+        width="50"
+        label="#"
+      />
+      <el-table-column prop="reportId" align="center" label="报告ID" width="50" show-overflow-tooltip />
+      <el-table-column prop="marking" label="批阅状态" width="110" align="center">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.groupName === null " type="warning">组长未批阅</el-tag>
           <el-tag v-else-if="scope.row.monitorName === null" type="danger">班长未批阅</el-tag>
@@ -57,29 +92,23 @@
           <el-tag v-else type="success">教师已批阅</el-tag>
         </template>
       </el-table-column>
-      <el-table-column  label="组长批阅数据" width="200" align="center">
-        <el-table-column prop="groupLeaderScore" label="评分" />
-        <el-table-column prop="groupLeaderComment" label="评语" />
-        <el-table-column prop="groupName" label="批阅人" />
-        <el-table-column prop="groupTime" label="批阅时间" />
+      <el-table-column label="组长批阅数据" width="200" align="center">
+        <el-table-column prop="groupName" align="center" label="批阅人" sortable="custom" />
+        <el-table-column prop="groupTime" align="center" label="批阅时间" sortable="custom" />
       </el-table-column>
-      <el-table-column  label="班长批阅数据" width="200" align="center">
-        <el-table-column prop="monitorScore" label="评分" />
-        <el-table-column prop="monitorComment" label="评语" />
-        <el-table-column prop="monitorName" label="批阅人" />
-        <el-table-column prop="monitorTime" label="批阅时间" />
+      <el-table-column label="班长批阅数据" width="200" align="center">
+        <el-table-column prop="monitorName" align="center" label="批阅人" sortable="custom" />
+        <el-table-column prop="monitorTime" align="center" label="批阅时间" sortable="custom" />
       </el-table-column>
-      <el-table-column  label="教师批阅数据" width="200" align="center">
-        <el-table-column prop="teacherScore" label="评分" />
-        <el-table-column prop="teacherComment" label="评语" />
-        <el-table-column prop="teacherName" label="批阅人" />
-        <el-table-column prop="teacherTime" label="批阅时间" />
+      <el-table-column label="教师批阅数据" width="200" align="center">
+        <el-table-column prop="teacherName" align="center" label="批阅人" sortable="custom" />
+        <el-table-column prop="teacherTime" align="center" label="批阅时间" sortable="custom" />
       </el-table-column>
-      <el-table-column label="操作" width="240" align="center">
+      <el-table-column label="操作" width="220" align="center">
         <template slot-scope="scope">
-          <!--          <el-button size="mini" type="primary" @click="toUpdate(scope.row.typeId)">修改</el-button>-->
-          <el-button slot="reference" size="mini" type="primary" >查看</el-button>
-          <el-button size="mini" type="danger" >删除</el-button>
+          <!--                    <el-button size="mini" type="primary" @click="toUpdate(scope.row.typeId)">编辑</el-button>-->
+          <el-button slot="reference" size="mini" type="primary" @click="toRead(scope.row)">查看</el-button>
+          <el-button size="mini" type="danger" @click="toDelete(scope.row.markingId)">清空</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -123,7 +152,7 @@ export default {
         totalCount: 0, // 总条数
         params: {}, // 查询参数对象
         list: [], // 数据
-        sortColumn: 'is_checked', // 排序列
+        sortColumn: 'group_time', // 排序列
         sortMethod: 'desc' // 排序方式
       },
       marking: {
@@ -161,7 +190,23 @@ export default {
           }
         }]
       },
-      content: '',
+      reportTypeList: [{
+        value: '0',
+        label: '日报'
+      }, {
+        value: '1',
+        label: '周报'
+      }],
+      markingTypeList: [{
+        value: 3,
+        label: '组长已批阅'
+      }, {
+        value: 1,
+        label: '班长已批阅'
+      }, {
+        value: 2,
+        label: '教师已批阅'
+      }],
       loading: true, // 控制是否显示加载效果
       addDialog: false, // 控制添加弹窗显示
       updateDialog: false // 控制修改弹窗显示
@@ -216,23 +261,29 @@ export default {
     },
     // 查看
     toRead(row) {
-      this.content = row
+      const $table = this.$refs.table
+      this.page.list.forEach(item => {
+        if (row.reportId !== item.reportId) {
+          $table.toggleRowExpansion(item, false)
+        }
+      })
+      $table.toggleRowExpansion(row)
     },
     // 删除
     toDelete(id) {
-      this.$confirm('此报告批阅数据也将一起删除且数据不可恢复,是否删除?', '提示', {
+      this.$confirm('清空此批阅数据,是否清空?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        reportApi.deleteById(id).then(res => {
+        reportMarkingApi.deleteById(id).then(res => {
           this.$message.success(res.msg)
           this.getByPage()
         })
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消删除'
+          message: '已取消清空'
         })
       })
     }

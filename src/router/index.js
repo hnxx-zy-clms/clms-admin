@@ -66,6 +66,12 @@ export const constantRoutes = [
         name: 'Marking',
         component: () => import('@/views/report/marking/marking-list'),
         meta: { title: '批阅管理', icon: 'table' }
+      },
+      {
+        path: 'statistics',
+        name: 'Statistics',
+        component: () => import('@/views/report/statistics/statistics'),
+        meta: { title: '报告数据统计', icon: 'table' }
       }
     ]
   },
@@ -130,14 +136,6 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/meeting',
-    component: Layout,
-    redirect: '/meeting/meeting',
-    name: 'Meeting',
-    meta: { title: '日报管理', icon: 'example' }
-  },
-
   // 任务通知
   {
     path: '/tasknotice',
