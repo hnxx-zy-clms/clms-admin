@@ -7,11 +7,25 @@
       <el-form-item label="用户名">
         <el-input v-model="page.params.userName" placeholder="用户名" clearable />
       </el-form-item>
-      <el-form-item label="组ID">
-        <el-input v-model="page.params.userGroupId" placeholder="组ID" clearable />
+      <el-form-item label="组别">
+        <el-select v-model="page.params.userGroupId" placeholder="组别" clearable filterable>
+          <el-option
+            v-for="item in groupList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="角色ID">
-        <el-input v-model="page.params.userPositionId" placeholder="角色ID" clearable />
+      <el-form-item label="角色">
+        <el-select v-model="page.params.userPositionId" placeholder="角色" clearable filterable>
+          <el-option
+            v-for="item in positionList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="起始日期">
         <el-date-picker
@@ -34,6 +48,7 @@
     </el-form>
     <!-- 分割线 -->
     <el-divider />
+    <el-button type="success" class="add-button" size="mini" @click="adminExcelDownloads">导出当前数据</el-button>
     <!-- 列表 -->
     <!--
       1. :data v-bind:model="page.list" 绑定数据 分页对象的的list数据
@@ -42,11 +57,33 @@
       4. @sort-change="changeSort" sort-change 事件回中可以获取当前排序的字段名[prop]和排序顺序[order]
      -->
     <el-table
+      ref="table"
       :data="page.list"
       border
       style="width: 100%"
       @sort-change="changeSort"
     >
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" class="demo-table-expand">
+            <el-form-item label="工作内容:">
+              <span>{{ props.row.workContent }}</span>
+            </el-form-item>
+            <el-form-item label="遇到的困难:">
+              <span>{{ props.row.difficulty }}</span>
+            </el-form-item>
+            <el-form-item label="解决方法:">
+              <span>{{ props.row.solution }}</span>
+            </el-form-item>
+            <el-form-item label="今日心得:">
+              <span>{{ props.row.experience }}</span>
+            </el-form-item>
+            <el-form-item label="下一天计划:">
+              <span>{{ props.row.plan }}</span>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
       <el-table-column prop="reportId" label="#" width="60" align="center" />
       <el-table-column prop="userName" align="center" label="用户名" width="200" show-overflow-tooltip />
       <el-table-column prop="userGroupId" label="组ID" width="120" sortable="custom" align="center" />
@@ -69,26 +106,10 @@
           <el-tag v-else type="info">不可编辑</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="240" align="center">
+      <el-table-column label="操作" width="208" align="center">
         <template slot-scope="scope">
           <!--          <el-button size="mini" type="primary" @click="toUpdate(scope.row.typeId)">修改</el-button>-->
-          <el-popover
-            placement="bottom-end"
-            title="内容详细信息"
-            width="1000"
-            trigger="click"
-          >
-            <p>工作内容：{{ content.workContent }}</p>
-            <br>
-            <p>所遇困难：{{ content.difficulty }}</p>
-            <br>
-            <p>解决方法：{{ content.solution }}</p>
-            <br>
-            <p>心得体会：{{ content.experience }}</p>
-            <br>
-            <p>后续计划：{{ content.plan }}</p>
-            <el-button slot="reference" size="mini" type="primary" @click="toRead(scope.row)">查看</el-button>
-          </el-popover>
+          <el-button slot="reference" size="mini" type="primary" @click="toRead(scope.row)">查看</el-button>
           <el-button size="mini" type="danger" @click="toDelete(scope.row.reportId)">删除</el-button>
         </template>
       </el-table-column>
@@ -189,7 +210,23 @@ export default {
           }
         }]
       },
-      content: '',
+      groupList: [{
+        value: '1',
+        label: '第一组'
+      }, {
+        value: '2',
+        label: '第二组'
+      }],
+      positionList: [{
+        value: '0',
+        label: '组员'
+      }, {
+        value: '1',
+        label: '组长'
+      }, {
+        value: '2',
+        label: '班长'
+      }],
       loading: true, // 控制是否显示加载效果
       addDialog: false, // 控制添加弹窗显示
       updateDialog: false // 控制修改弹窗显示
@@ -219,6 +256,36 @@ export default {
       this.page.currentPage = 1
       this.getByPage()
     },
+    adminExcelDownloads() {
+      this.$confirm('确认是否下载？', '确认信息', {
+        distinguishCancelAndClose: true,
+        confirmButtonText: '下载',
+        cancelButtonText: '放弃下载'
+      })
+        .then(() => {
+          reportApi.adminExcelDownloads(this.page).then(res => {
+            const link = document.createElement('a')
+            // link.style.display = 'none'
+            const blob = new Blob([res], { type: 'application/vnd.ms-excel' })
+            link.href = URL.createObjectURL(blob)
+            link.download = 'daliyInfo' // 下载的文件名
+            document.body.appendChild(link)
+            link.click()
+            this.$message({
+              type: 'success',
+              message: '下载成功'
+            })
+          }).catch(error => {
+            alert('下载失败' + error)
+          })
+        })
+        .catch(action => {
+          this.$message({
+            type: 'info',
+            message: '取消下载'
+          })
+        })
+    },
     // 分页方法 调用封装的方法 getByPage()
     getByPage() {
       reportApi.getByPage(this.page).then(res => {
@@ -244,7 +311,13 @@ export default {
     },
     // 查看
     toRead(row) {
-      this.content = row
+      const $table = this.$refs.table
+      this.page.list.forEach(item => {
+        if (row.reportId !== item.reportId) {
+          $table.toggleRowExpansion(item, false)
+        }
+      })
+      $table.toggleRowExpansion(row)
     },
     // 删除
     toDelete(id) {

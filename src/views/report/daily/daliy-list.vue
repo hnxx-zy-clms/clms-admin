@@ -7,11 +7,25 @@
       <el-form-item label="用户名">
         <el-input v-model="page.params.userName" placeholder="用户名" clearable />
       </el-form-item>
-      <el-form-item label="组ID">
-        <el-input v-model="page.params.userGroupId" placeholder="组ID" clearable />
+      <el-form-item label="组别">
+        <el-select v-model="page.params.userGroupId" placeholder="组别" clearable filterable>
+          <el-option
+            v-for="item in groupList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="角色ID">
-        <el-input v-model="page.params.userPositionId" placeholder="角色ID" clearable />
+      <el-form-item label="角色">
+        <el-select v-model="page.params.userPositionId" placeholder="角色" clearable filterable>
+          <el-option
+            v-for="item in positionList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="起始日期">
         <el-date-picker
@@ -61,10 +75,10 @@
             <el-form-item label="解决方法:">
               <span>{{ props.row.solution }}</span>
             </el-form-item>
-            <el-form-item label="心得体会:">
+            <el-form-item label="今日心得:">
               <span>{{ props.row.experience }}</span>
             </el-form-item>
-            <el-form-item label="后续计划:">
+            <el-form-item label="下一天计划:">
               <span>{{ props.row.plan }}</span>
             </el-form-item>
           </el-form>
@@ -92,7 +106,7 @@
           <el-tag v-else type="info">不可编辑</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="240" align="center">
+      <el-table-column label="操作" width="208" align="center">
         <template slot-scope="scope">
           <!--          <el-button size="mini" type="primary" @click="toUpdate(scope.row.typeId)">修改</el-button>-->
           <el-button slot="reference" size="mini" type="primary" @click="toRead(scope.row)">查看</el-button>
@@ -196,7 +210,23 @@ export default {
           }
         }]
       },
-      content: '',
+      groupList: [{
+        value: '1',
+        label: '第一组'
+      }, {
+        value: '2',
+        label: '第二组'
+      }],
+      positionList: [{
+        value: '0',
+        label: '组员'
+      }, {
+        value: '1',
+        label: '组长'
+      }, {
+        value: '2',
+        label: '班长'
+      }],
       loading: true, // 控制是否显示加载效果
       addDialog: false, // 控制添加弹窗显示
       updateDialog: false // 控制修改弹窗显示
@@ -235,11 +265,10 @@ export default {
         .then(() => {
           reportApi.adminExcelDownloads(this.page).then(res => {
             const link = document.createElement('a')
-            link.style.display = 'none'
+            // link.style.display = 'none'
             const blob = new Blob([res], { type: 'application/vnd.ms-excel' })
             link.href = URL.createObjectURL(blob)
-            // link.download = res.headers['content-disposition'] // 下载后文件名
-            link.download = 'info' // 下载的文件名
+            link.download = 'daliyInfo' // 下载的文件名
             document.body.appendChild(link)
             link.click()
             this.$message({
