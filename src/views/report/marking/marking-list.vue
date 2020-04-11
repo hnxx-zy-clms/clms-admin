@@ -9,8 +9,8 @@
             v-for="item in reportTypeList"
             :key="item.value"
             :label="item.label"
-            :value="item.value">
-          </el-option>
+            :value="item.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="批阅类型">
@@ -19,8 +19,8 @@
             v-for="item in markingTypeList"
             :key="item.value"
             :label="item.label"
-            :value="item.value">
-          </el-option>
+            :value="item.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="报告起始日期">

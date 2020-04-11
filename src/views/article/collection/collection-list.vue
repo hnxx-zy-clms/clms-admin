@@ -83,7 +83,7 @@ export default {
         sortColumn: 'collectionTime', // 排序列
         sortMethod: 'asc' // 排序方式
       },
-      loading: false // 控制是否显示加载效果
+      loading: true // 控制是否显示加载效果
     }
   },
   // 初始化函数
@@ -107,6 +107,7 @@ export default {
     getByPage() {
       collectionApi.getByPage(this.page).then(res => {
         this.page = res.data
+        this.loading = false
       })
     },
     // 条件排序

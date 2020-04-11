@@ -1,7 +1,6 @@
 <template>
-  <div>
+  <div v-loading="loading">
     <el-button type="primary" class="add-button" size="mini" @click="openAddDialog">添加</el-button>
-
     <!-- 列表 -->
     <el-table :data="typeList" border style="width: 100%">
       <el-table-column type="index" fixed="left" label="#" width="60" align="center" />
@@ -52,6 +51,7 @@ export default {
       type: {
         typeId: ''
       },
+      loading: true,
       updateDialog: false, // 控制修改弹窗展示
       addDialog: false, // 控制添加弹窗展示
       typeList: [] // 类型数组
@@ -64,8 +64,8 @@ export default {
     getTypeList() {
       // 查询类型列表
       typeApi.getAll().then(res => {
-        console.log(res)
         this.typeList = res.data
+        this.loading = false
       })
     },
     toUpdate(id) {

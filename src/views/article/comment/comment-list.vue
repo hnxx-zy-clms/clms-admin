@@ -147,7 +147,7 @@ export default {
         commentUser: '',
         pid: ''
       },
-      loading: false, // 控制是否显示加载效果
+      loading: true, // 控制是否显示加载效果
       readDialog: false // 控制阅读弹窗显示
     }
   },
@@ -172,7 +172,7 @@ export default {
     getByPage() {
       commentApi.getByPage(this.page).then(res => {
         this.page = res.data
-        console.log(res)
+        this.loading = false
       })
     },
     // 条件排序 e 和 val 都行
