@@ -30,11 +30,11 @@ export default {
       data: params
     })
   },
-  update(xxx) { // 修改更新
+  update(data) { // 修改更新
     return request({
       url: `/${group_name}/update`,
-      method: 'update',
-      data: xxx
+      method: 'put',
+      data: data
     })
   },
   get(id) { // 根据id查询
@@ -57,11 +57,17 @@ export default {
       method: 'get'
     })
   },
-  enable(id) { // 根据id启用
+  saveenable(id, time) { // 保存To发布
     return request({
-      url: `/${group_name}/enable/${id}`,
-      method: 'put',
-      data: id
+      url: `/${group_name}/saveTopush/${id}/${time}`,
+      method: 'put'
+    })
+  },
+  deleteenable(notice) { // 删除To发布
+    return request({
+      url: `/${group_name}/deleteTopush`,
+      method: 'post',
+      data: notice
     })
   },
   disable(id) { // 根据id弃用
