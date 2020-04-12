@@ -13,8 +13,8 @@
             v-for="item in groupList"
             :key="item.value"
             :label="item.label"
-            :value="item.value">
-          </el-option>
+            :value="item.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="角色">
@@ -23,8 +23,8 @@
             v-for="item in positionList"
             :key="item.value"
             :label="item.label"
-            :value="item.value">
-          </el-option>
+            :value="item.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="起始日期">
@@ -137,19 +137,6 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-
-    <!-- 添加弹窗 -->
-    <el-dialog title="添加" :visible.sync="addDialog">
-      <article-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" />
-    </el-dialog>
-    <!--
-      修改弹窗
-      :article="article" 用于传递参数对象
-    -->
-    <el-dialog title="修改" :visible.sync="updateDialog">
-      <article-update :article="article" @closeUpdateDialog="closeUpdateDialog" @getByPage="getByPage" />
-    </el-dialog>
-
   </div>
 </template>
 
