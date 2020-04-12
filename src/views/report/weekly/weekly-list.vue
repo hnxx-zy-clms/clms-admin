@@ -137,19 +137,6 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-
-    <!-- 添加弹窗 -->
-    <el-dialog title="添加" :visible.sync="addDialog">
-      <article-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" />
-    </el-dialog>
-    <!--
-      修改弹窗
-      :article="article" 用于传递参数对象
-    -->
-    <el-dialog title="修改" :visible.sync="updateDialog">
-      <article-update :article="article" @closeUpdateDialog="closeUpdateDialog" @getByPage="getByPage" />
-    </el-dialog>
-
   </div>
 </template>
 

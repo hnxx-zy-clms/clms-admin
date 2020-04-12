@@ -97,18 +97,18 @@ export const constantRoutes = [
     name: 'Answer',
     meta: { title: '答疑管理', icon: 'example' },
     children: [
-      {
-        path: 'question',
-        name: 'Question',
-        component: () => import('@/views/answer/question/question-list'),
-        meta: { title: '问题管理', icon: 'table' }
-      },
-      {
-        path: 'answer',
-        name: 'Answer',
-        component: () => import('@/views/answer/answer/answer-list'),
-        meta: { title: '答复管理', icon: 'table' }
-      }
+      // {
+      //   path: 'question',
+      //   name: 'Question',
+      //   component: () => import('@/views/answer/question/question-list'),
+      //   meta: { title: '问题管理', icon: 'table' }
+      // },
+      // {
+      //   path: 'answer',
+      //   name: 'Answer',
+      //   component: () => import('@/views/answer/answer/answer-list'),
+      //   meta: { title: '答复管理', icon: 'table' }
+      // }
     ]
   },
   {

@@ -12,11 +12,12 @@
       </el-form-item>
       <el-form-item label="创建时间">
         <el-col :span="18">
-          <el-date-picker type="date" placeholder="选择日期" v-model="page.params.createdTime" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
+          <el-date-picker v-model="page.params.createdTime" type="date" placeholder="选择日期" style="width: 100%;" value-format="yyyy-MM-dd" />
         </el-col>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" sizi="mini" @click="getByPage">查询</el-button>
+        <el-button type="primary" sizi="mini" @click="selectBy(page)" v-loading.fullscreen.lock="loading" element-loading-text="请稍后">查询</el-button>
+        <el-button type="success" class="add-button" size="mini" @click="refresh">恢复</el-button>
       </el-form-item>
     </el-form>
     <!-- 分割线 -->
@@ -42,11 +43,17 @@
         width="55"
       />
       <el-table-column prop="noticeId" label="编号" width="60" align="center" />
-      <el-table-column prop="noticeTitle" label="通知标题" width="150" align="center" />
-      <el-table-column prop="createdTime" label="创建时间" sortable="custom" width="150" align="center" />
-      <el-table-column prop="userName" label="创建人" width="150" align="center" />
-      <el-table-column prop="numRead" :label="this.reading" width="130" align="center" />
-      <el-table-column prop="isEnabled" label="状态" width="150" align="center">
+      <el-table-column prop="noticeTitle" label="通知标题" width="120" align="center" />
+      <el-table-column prop="createdTime" label="创建时间" sortable="custom" width="140" align="center" />
+      <el-table-column prop="pushedTime" label="发布时间" sortable="custom" width="140" align="center" />
+      <el-table-column prop="userName" label="创建人" width="80" align="center" />
+      <el-table-column prop="numRead" :label="this.reading" width="120" align="center" />
+      <el-table-column
+        prop="isEnabled"
+        label="状态"
+        width="100"
+        align="center"
+      >
         <template slot-scope="scope">
           <el-tag v-if="scope.row.isDeleted === true" type="danger" effect="dark">已删除</el-tag>
           <el-tag v-else-if="scope.row.isEnabled === true && scope.row.isDeleted === false" type="success" effect="dark">已发布</el-tag>
@@ -54,16 +61,34 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作">
+      <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button
             size="mini"
-            @click="handleEdit(scope.$index, scope.row)"
+            @click="handleEdit(scope.row)"
+            type="primary"
+            plain
+            :disabled="scope.row.isEnabled === true&&scope.row.isDeleted === false?true:false"
           >编辑</el-button>
           <el-button
             size="mini"
+            plain
+            @click="handleRead(scope.row)"
+            type="info"
+          >查看</el-button>
+          <el-button
+            size="mini"
+            plain
+            @click="scope.row.isDeleted === true?deletePushed(scope.row):savePushed(scope.row.noticeId)"
+            :disabled="scope.row.isEnabled === true && scope.row.isDeleted === false?true:false"
+            type="success"
+          >发布</el-button>
+          <el-button
+            size="mini"
             type="danger"
+            plain
             @click="handleDelete(scope.row.noticeId)"
+            :disabled="scope.row.isDeleted === true?true:false"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -94,7 +119,7 @@
 
     <!-- 添加弹窗 -->
     <el-dialog title="添加" :visible.sync="addDialog">
-      <notice-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" />
+      <notice-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" :data="notice" @deletePushed="deletePushed"/>
     </el-dialog>
 
   </div>
@@ -130,6 +155,7 @@ export default {
       loading: false, // 控制是否显示加载效果
       selectNotice: [], // 被选中的模版列
       addDialog: false, // 控制添加弹窗显示
+      notice: {},
       totalNum: 0 // 总人数
     }
   },
@@ -168,11 +194,28 @@ export default {
         })
       })
     },
+    handleEdit(row) {
+      this.notice = Object.assign({}, row)
+      this.addDialog = true
+    },
     // 分页方法 调用封装的方法 getByPage()
     getByPage() {
+      this.loading = true
       noticeApi.getByPage(this.page).then(res => {
+        this.loading = false
         this.page = res.data
       })
+    },
+    refresh() {
+      this.page.currentPage = 1
+      this.page.params.Title = null
+      this.page.params.createdName = null
+      this.page.params.createdTime = null
+      this.getByPage()
+    },
+    selectBy(data) {
+      data.currentPage = 1
+      this.getByPage()
     },
     getUserNum() {
       noticeApi.getUserNum().then(res => {
@@ -184,7 +227,6 @@ export default {
     changeSort(e) {
       if (e.order) {
         const sortcColum = this.getKebabCase(e.prop)
-        console.log(sortcColum)
         this.page.sortColumn = sortcColum
         this.page.sortMethod = e.order
       } else {
@@ -230,22 +272,31 @@ export default {
       }).join('')
       return str
     },
-    // 弃用，启用状态更新
-    // changeIsEnabled(val) {
-    //   const id = val.xxId
-    //   if (val.isEnabled) {
-    //     XxxApi.enable(id).then(res => {
-    //       this.$message.success(res.msg)
-    //     })
-    //   } else {
-    //     XxxApi.disable(id).then(res => {
-    //       this.$message.success(res.msg)
-    //     })
-    //   }
-    // },
+    handleRead(row) {
+      this.notice = Object.assign({}, row)
+      this.notice.Enabled = true
+      this.addDialog = true
+    },
+    // 保存转为发布
+    savePushed(id) {
+      const time = new Date()
+      console.log(time)
+      noticeApi.saveenable(id, time).then(res => {
+        this.$message.success(res.msg)
+        this.getByPage()
+      })
+    },
+    // 删除转为发布
+    deletePushed(val) {
+      noticeApi.deleteenable(val).then(res => {
+        this.$message.success(res.msg)
+        this.getByPage()
+      })
+    },
     // 模块功能组件
     openAddDialog() {
       // 打开添加弹窗
+      this.notice = {}
       this.addDialog = true
     },
     closeAddDialog() {
