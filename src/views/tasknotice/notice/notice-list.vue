@@ -16,7 +16,7 @@
         </el-col>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" sizi="mini" @click="selectBy(page)" v-loading.fullscreen.lock="loading" element-loading-text="请稍后">查询</el-button>
+        <el-button v-loading.fullscreen.lock="loading" type="primary" sizi="mini" element-loading-text="请稍后" @click="selectBy(page)">查询</el-button>
         <el-button type="success" class="add-button" size="mini" @click="refresh">恢复</el-button>
       </el-form-item>
     </el-form>
@@ -65,46 +65,35 @@
         <template slot-scope="scope">
           <el-button
             size="mini"
-            @click="handleEdit(scope.row)"
             type="primary"
             plain
             :disabled="scope.row.isEnabled === true&&scope.row.isDeleted === false?true:false"
+            @click="handleEdit(scope.row)"
           >编辑</el-button>
           <el-button
             size="mini"
             plain
-            @click="handleRead(scope.row)"
             type="info"
+            @click="handleRead(scope.row)"
           >查看</el-button>
           <el-button
             size="mini"
             plain
-            @click="scope.row.isDeleted === true?deletePushed(scope.row):savePushed(scope.row.noticeId)"
             :disabled="scope.row.isEnabled === true && scope.row.isDeleted === false?true:false"
             type="success"
+            @click="scope.row.isDeleted === true?deletePushed(scope.row):savePushed(scope.row.noticeId)"
           >发布</el-button>
           <el-button
             size="mini"
             type="danger"
             plain
-            @click="handleDelete(scope.row.noticeId)"
             :disabled="scope.row.isDeleted === true?true:false"
+            @click="handleDelete(scope.row.noticeId)"
           >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <!--
-      分页组件-最完整版
-      class : 分页组件
-      current-page : 当前页 此处为动态绑定page对象的currentPage属性
-      page-sizes : 每页显示个数选择器的选项设置
-      page-size : 每页大小
-      layout : 组件布局
-      total : 总条目数 此处动态绑定page对象的totalCount属性
-      @size-change="handleSizeChange"  pageSize 改变时会触发  参数:每页条数
-      @current-change="handleCurrentChange" currentPage 改变时会触发 参数:当前页
-     -->
     <el-pagination
       align="center"
       class="pagination"
@@ -116,10 +105,9 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-
     <!-- 添加弹窗 -->
     <el-dialog title="添加" :visible.sync="addDialog">
-      <notice-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" :data="notice" @deletePushed="deletePushed"/>
+      <notice-add :data="notice" @closeAddDialog="closeAddDialog" @getByPage="getByPage" @deletePushed="deletePushed" />
     </el-dialog>
 
   </div>
@@ -131,6 +119,7 @@ import noticeApi from '@/api/noticetask/notice'
 
 // 导入组件
 import NoticeAdd from './notice-add'
+import { mapGetters } from 'vuex'
 export default {
   //  定义添加的组件
   components: {
@@ -162,7 +151,11 @@ export default {
   computed: {
     reading: function() {
       return '已读(总人数:' + this.totalNum + ')'
-    }
+    },
+    ...mapGetters([
+      'name',
+      'userid'
+    ])
   },
   // 初始化函数
   created() {
@@ -219,7 +212,6 @@ export default {
     },
     getUserNum() {
       noticeApi.getUserNum().then(res => {
-        console.log(res.data)
         this.totalNum = res.data
       })
     },

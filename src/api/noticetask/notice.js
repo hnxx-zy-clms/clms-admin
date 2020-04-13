@@ -76,5 +76,11 @@ export default {
       method: 'put',
       data: id
     })
+  },
+  getUserId(name) { // 获取用户Id
+    return request({
+      url: `/${group_name}/getUserId/${name}`,
+      method: 'get'
+    })
   }
 }

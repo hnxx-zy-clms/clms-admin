@@ -5,14 +5,11 @@
       <el-form-item label="创建人">
         <el-input v-model="name" disabled/>
       </el-form-item>
-      <el-form-item label="创建人ID">
-        <el-input v-model="switchStatus.createdId" disabled/>
+      <el-form-item label="任务标题">
+        <el-input v-model="switchStatus.taskTitle" />
       </el-form-item>
-      <el-form-item label="通知标题">
-        <el-input v-model="switchStatus.noticeTitle" />
-      </el-form-item>
-      <el-form-item label="通知内容">
-        <el-input v-model="switchStatus.noticeContent" type="textarea" :autosize="{ minRows: 10, maxRows: 25}" />
+      <el-form-item label="任务内容">
+        <el-input v-model="switchStatus.taskContent" type="textarea" :autosize="{ minRows: 10, maxRows: 25}" />
       </el-form-item>
       <el-form-item>
         <el-button type="success" size="mini" :disabled="switchStatus.Enabled" @click="switchStatus.isDeleted === true || switchStatus.isEnabled === false?Pushed(switchStatus):onSubmit('push')">发布</el-button>
@@ -37,13 +34,10 @@ export default {
   },
   computed: {
     switchStatus: function() {
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.data.createdId = this.userid
       return this.data
     },
     ...mapGetters([
-      'name',
-      'userid'
+      'name'
     ])
   },
   methods: {
