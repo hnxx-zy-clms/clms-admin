@@ -86,8 +86,8 @@
       </el-table-column>
       <el-table-column prop="reportId" label="#" width="60" align="center" />
       <el-table-column prop="userName" align="center" label="用户名" width="200" show-overflow-tooltip />
-      <el-table-column prop="userGroupId" label="组ID" width="120" sortable="custom" align="center" />
-      <el-table-column prop="userClassesId" label="班级ID" width="120" sortable="custom" align="center" />
+      <el-table-column prop="userGroupId" label="组名" width="120" sortable="custom" align="center" />
+      <el-table-column prop="userClassesId" label="班级名" width="120" sortable="custom" align="center" />
       <el-table-column prop="createdTime" label="创建时间" width="200" sortable="custom" align="center" />
       <el-table-column prop="updatedTime" label="更新时间" width="200" sortable="custom" align="center" />
       <el-table-column prop="marking" label="批阅状态" width="110" align="center">
