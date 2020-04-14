@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import typeApi from '@/api/type'
+import typeApi from '@/api/article/type'
 export default {
   name: 'AppMain',
   computed: {

@@ -68,7 +68,7 @@
 
 <script>
 // 导入api接口定义的方法 接收变量为 xxxApi
-import goodApi from '@/api/good'
+import goodApi from '@/api/article/good'
 export default {
   data() {
     return {

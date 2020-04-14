@@ -98,7 +98,7 @@
 
 <script>
 // 导入api接口定义的方法 接收变量为 xxxApi
-import xxxApi from '@/api/xxx'
+import xxxApi from '@/api/sys/xxx'
 // 导入组件
 import XxxAdd from './xxx-add'
 import XxxUpdate from './xxx-update'

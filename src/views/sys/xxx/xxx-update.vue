@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import xxxApi from '@/api/xxx'
+import xxxApi from '@/api/sys/xxx'
 export default {
   // 父组件将数据传递给子组件
   props: {

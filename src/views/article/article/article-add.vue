@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import articleApi from '@/api/article'
+import articleApi from '@/api/article/article'
 // 导入富文本公共组件
 import Tinymce from '@/components/Tinymce/index'
 import { getToken } from '@/utils/auth'

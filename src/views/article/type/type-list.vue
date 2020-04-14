@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import typeApi from '@/api/type'
+import typeApi from '@/api/article/type'
 import TypeAdd from './type-add'
 import TypeUpdate from './type-update'
 export default {

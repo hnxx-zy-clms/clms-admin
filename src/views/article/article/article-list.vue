@@ -133,7 +133,7 @@
 
 <script>
 // 导入api接口定义的方法 接收变量为 articleApi
-import articleApi from '@/api/article'
+import articleApi from '@/api/article/article'
 // 导入组件
 import articleAdd from './article-add'
 import articleUpdate from './article-update'
@@ -194,12 +194,6 @@ export default {
       this.getByPage()
     },
     // 分页方法 调用封装的方法 getByPage()
-    // getByPage() {
-    //   articleApi.getByPage(this.page).then(res => {
-    //     this.page = res.data
-    //     console.log(res)
-    //   })
-    // },
     getByPage() {
       articleApi.getByPage(this.page).then(res => {
         this.page = res.data

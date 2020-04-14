@@ -113,7 +113,7 @@
 
 <script>
 // 导入api接口定义的方法 接收变量为 articleApi
-import commentApi from '@/api/comment'
+import commentApi from '@/api/article/comment'
 // 导入组件
 import CommentRead from './comment-read'
 export default {

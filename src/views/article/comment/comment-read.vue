@@ -32,7 +32,7 @@
   </div>
 </template>
 <script>
-import commentApi from '@/api/comment'
+import commentApi from '@/api/article/comment'
 export default {
 
   // 父组件将数据传递给子组件

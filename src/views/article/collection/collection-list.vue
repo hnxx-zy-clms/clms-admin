@@ -68,7 +68,7 @@
 
 <script>
 // 导入api接口定义的方法 接收变量为 xxxApi
-import collectionApi from '@/api/collection'
+import collectionApi from '@/api/article/collection'
 export default {
   data() {
     return {

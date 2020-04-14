@@ -94,7 +94,7 @@ export const constantRoutes = [
     path: '/answer',
     component: Layout,
     redirect: '/answer/question',
-    name: 'Answer',
+    name: 'answer',
     meta: { title: '答疑管理', icon: 'example' },
     children: [
       {
