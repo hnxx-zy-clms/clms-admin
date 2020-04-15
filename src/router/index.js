@@ -174,6 +174,13 @@ export const constantRoutes = [
         name: 'registration',
         component: () => import('@/views/tasknotice/Registration/registration'),
         meta: { title: '签到管理', icon: 'table' }
+      },
+      {
+        path: 'details',
+        name: 'details',
+        component: () => import('@/views/tasknotice/task/task-details'),
+        meta: { title: '任务详情', icon: 'table' },
+        hidden: true
       }
     ]
   },

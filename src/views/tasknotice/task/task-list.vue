@@ -47,7 +47,7 @@
       <el-table-column prop="createdTime" label="创建时间" sortable="custom" width="135" align="center" />
       <el-table-column prop="pushedTime" label="发布时间" sortable="custom" width="135" align="center" />
       <el-table-column prop="userName" label="创建人" width="80" align="center" />
-      <el-table-column prop="numDid" :label="this.reading" width="130" align="center" />
+      <el-table-column prop="numDid" :label="this.did" width="130" align="center" />
       <el-table-column
         prop="isEnabled"
         label="状态"
@@ -74,21 +74,21 @@
             size="mini"
             plain
             type="info"
-            @click="handleRead(scope.row)"
-          >查看</el-button>
+            @click="handleDetails(scope.row.taskId)"
+          >详情</el-button>
           <el-button
             size="mini"
             plain
             :disabled="scope.row.isEnabled === true && scope.row.isDeleted === false?true:false"
             type="success"
-            @click="scope.row.isDeleted === true?deletePushed(scope.row):savePushed(scope.row.noticeId)"
+            @click="scope.row.isDeleted === true?deletePushed(scope.row):savePushed(scope.row.taskId)"
           >发布</el-button>
           <el-button
             size="mini"
             type="danger"
             plain
             :disabled="scope.row.isDeleted === true?true:false"
-            @click="handleDelete(scope.row.noticeId)"
+            @click="handleDelete(scope.row.taskId)"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -110,6 +110,7 @@
     <el-dialog title="添加" :visible.sync="addDialog">
       <task-add :data="task" @closeAddDialog="closeAddDialog" @getByPage="getByPage" @deletePushed="deletePushed" />
     </el-dialog>
+    <router-view/>
 
   </div>
 </template>
@@ -143,14 +144,14 @@ export default {
         sortMethod: 'desc' // 排序方式
       },
       loading: false, // 控制是否显示加载效果
-      selectNotice: [], // 被选中的模版列
+      selectTask: [], // 被选中的模版列
       addDialog: false, // 控制添加弹窗显示
       task: {},
       totalNum: 0 // 总人数
     }
   },
   computed: {
-    reading: function() {
+    did: function() {
       return '已完成(总人数:' + this.totalNum + ')'
     },
     ...mapGetters([
@@ -191,7 +192,7 @@ export default {
       })
     },
     handleEdit(row) {
-      this.notice = Object.assign({}, row)
+      this.task = Object.assign({}, row)
       this.addDialog = true
     },
     // 分页方法 调用封装的方法 getByPage()
@@ -236,8 +237,8 @@ export default {
     },
     // 多选参数
     handleSelectionChange(val) {
-      this.selectNotice = val
-      console.log(this.selectNotice)
+      this.selectTask = val
+      console.log(this.selectTask)
     },
     deleteByIds() {
       // 批量删除
@@ -247,8 +248,8 @@ export default {
         type: 'error'
       }).then(() => {
         const ids = []
-        this.selectNotice.forEach(e => {
-          ids.push(e.noticeId)
+        this.selectTask.forEach(e => {
+          ids.push(e.taskId)
         })
         taskApi.deleteByIds(ids).then(res => {
           this.$message.success(res.msg)
@@ -268,15 +269,12 @@ export default {
       }).join('')
       return str
     },
-    handleRead(row) {
-      this.notice = Object.assign({}, row)
-      this.notice.Enabled = true
-      this.addDialog = true
+    handleDetails(id) {
+      this.$router.push({ path: 'details', query: { id }})
     },
     // 保存转为发布
     savePushed(id) {
       const time = new Date()
-      console.log(time)
       taskApi.saveenable(id, time).then(res => {
         this.$message.success(res.msg)
         this.getByPage()
@@ -292,7 +290,7 @@ export default {
     // 模块功能组件
     openAddDialog() {
       // 打开添加弹窗
-      this.notice = {}
+      this.task = {}
       this.addDialog = true
     },
     closeAddDialog() {

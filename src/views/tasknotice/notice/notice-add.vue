@@ -3,10 +3,10 @@
     <!--添加表单  -->
     <el-form ref="addForm" :model="switchStatus" label-width="80px" size="mini">
       <el-form-item label="创建人">
-        <el-input v-model="name" disabled/>
+        <el-input v-model="switchStatus.userName" disabled />
       </el-form-item>
       <el-form-item label="创建人ID">
-        <el-input v-model="switchStatus.createdId" disabled/>
+        <el-input v-model="switchStatus.createdId" disabled />
       </el-form-item>
       <el-form-item label="通知标题">
         <el-input v-model="switchStatus.noticeTitle" />
@@ -30,15 +30,9 @@ export default {
   props: {
     data: {}
   },
-  data() {
-    return {
-      notice: {}
-    }
-  },
   computed: {
     switchStatus: function() {
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.data.createdId = this.userid
+      this.panduan()
       return this.data
     },
     ...mapGetters([
@@ -47,6 +41,12 @@ export default {
     ])
   },
   methods: {
+    panduan() { // 判断id 、username 的值
+      if (this.data.createdId == null) {
+        this.data.createdId = this.userid
+        this.data.userName = this.name
+      }
+    },
     // 添加 确认
     /**
        * 1、父组件可以使用 props 把数据传给子组件。
@@ -78,8 +78,6 @@ export default {
       }
     },
     Saved(data) {
-      data.isEnabled = false
-      data.isDeleted = false
       this.update(data)
     },
     update(data) {

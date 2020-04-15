@@ -3,7 +3,10 @@
     <!--添加表单  -->
     <el-form ref="addForm" :model="switchStatus" label-width="80px" size="mini">
       <el-form-item label="创建人">
-        <el-input v-model="name" disabled/>
+        <el-input v-model="switchStatus.userName" disabled/>
+      </el-form-item>
+      <el-form-item label="创建人ID">
+        <el-input v-model="switchStatus.createdId" disabled />
       </el-form-item>
       <el-form-item label="任务标题">
         <el-input v-model="switchStatus.taskTitle" />
@@ -21,26 +24,29 @@
 </template>
 
 <script>
-import noticeApi from '@/api/noticetask/notice'
+import taskApi from '@/api/noticetask/task'
 import { mapGetters } from 'vuex'
 export default {
   props: {
     data: {}
   },
-  data() {
-    return {
-      notice: {}
-    }
-  },
   computed: {
     switchStatus: function() {
+      this.panduan()
       return this.data
     },
     ...mapGetters([
-      'name'
+      'name',
+      'userid'
     ])
   },
   methods: {
+    panduan() { // 判断id 、username 的值
+      if (this.data.createdId == null) {
+        this.data.createdId = this.userid
+        this.data.userName = this.name
+      }
+    },
     // 添加 确认
     /**
        * 1、父组件可以使用 props 把数据传给子组件。
@@ -55,10 +61,10 @@ export default {
       if (data == 'save') {
         this.data.isEnabled = 0
       }
-      noticeApi.save(this.data).then(res => {
+      taskApi.save(this.data).then(res => {
         this.$message.success(res.msg)
         this.$emit('closeAddDialog')
-        this.notice = {}
+        this.task = {}
         this.$emit('getByPage')
       })
     },
@@ -72,12 +78,10 @@ export default {
       }
     },
     Saved(data) {
-      data.isEnabled = false
-      data.isDeleted = false
       this.update(data)
     },
     update(data) {
-      noticeApi.update(this.data).then(res => {
+      taskApi.update(this.data).then(res => {
         this.$message.success(res.msg)
         this.$emit('closeAddDialog')
         this.$emit('getByPage')
@@ -85,7 +89,7 @@ export default {
     },
     close() {
       this.$emit('closeAddDialog')
-      this.notice = {}
+      this.task = {}
     }
   }
 }

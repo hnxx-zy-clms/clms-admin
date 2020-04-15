@@ -189,6 +189,7 @@ export default {
     },
     handleEdit(row) {
       this.notice = Object.assign({}, row)
+      this.notice.createdId = row.createdId
       this.addDialog = true
     },
     // 分页方法 调用封装的方法 getByPage()
@@ -233,7 +234,6 @@ export default {
     // 多选参数
     handleSelectionChange(val) {
       this.selectNotice = val
-      console.log(this.selectNotice)
     },
     deleteByIds() {
       // 批量删除
@@ -272,7 +272,6 @@ export default {
     // 保存转为发布
     savePushed(id) {
       const time = new Date()
-      console.log(time)
       noticeApi.saveenable(id, time).then(res => {
         this.$message.success(res.msg)
         this.getByPage()

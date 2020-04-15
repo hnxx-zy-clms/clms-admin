@@ -37,13 +37,6 @@ export default {
       data: data
     })
   },
-  get(id) { // 根据id查询
-    return request({
-      url: `/${group_name}/get/${id}`,
-      method: 'get',
-      data: id
-    })
-  },
   getByPage(page) { // 分页查询
     return request({
       url: `/${group_name}/getByPageAdmin`,
@@ -75,12 +68,6 @@ export default {
       url: `/${group_name}/disable/${id}`,
       method: 'put',
       data: id
-    })
-  },
-  getUserId(name) { // 获取用户Id
-    return request({
-      url: `/${group_name}/getUserId/${name}`,
-      method: 'get'
     })
   }
 }
