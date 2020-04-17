@@ -179,7 +179,12 @@ export const constantRoutes = [
         path: 'details',
         name: 'details',
         component: () => import('@/views/tasknotice/task/task-details'),
-        meta: { title: '任务详情', icon: 'table' },
+        hidden: true
+      },
+      {
+        path: 'reply',
+        name: 'reply',
+        component: () => import('@/views/tasknotice/task/task-reply'),
         hidden: true
       }
     ]

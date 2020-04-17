@@ -58,11 +58,29 @@ export default {
       method: 'get'
     })
   },
-  getTaskSituation(page, taskid) {
+  getTaskSituation(page, taskid) { // 获取任务完成情况
     return request({
       url: `/${group_name}/getTaskSituation/${taskid}`,
       method: 'post',
       data: page
+    })
+  },
+  getTask(id) { // 获取任务内容
+    return request({
+      url: `/${group_name}/gettask/${id}`,
+      method: 'get'
+    })
+  },
+  getTaskReply(taskid, userid) {
+    return request({
+      url: `/${group_name}/getTaskReply/${taskid}/${userid}`,
+      method: 'get'
+    })
+  },
+  setLevel(id, level) {
+    return request({
+      url: `/${group_name}/setlevel/${id}/${level}`,
+      method: 'put'
     })
   }
 }

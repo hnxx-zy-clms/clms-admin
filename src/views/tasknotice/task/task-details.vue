@@ -1,20 +1,56 @@
 <template>
   <div v-loading="loading">
+    <el-card class="box-card" shadow="hover">
+      <div slot="header" class="clearfix">
+        <span style="font-size: 22px">{{ task.taskTitle }}</span>
+        <el-button style="float: right; padding: 3px 0" type="text" @click="goback">返回</el-button>
+      </div>
+      <div>
+        <pre>{{ task.taskContent }}</pre>
+      </div>
+    </el-card>
+
+    <el-divider content-position="left">已完成{{ numDid.numdid }}人,未完成{{ numDid.numnotdid }}人</el-divider>
     <el-table
       ref="singleTable"
       :data="situation"
-      highlight-current-row
-      @current-change="handleCurrentChange"
-      style="width: 100%">
-      <el-table-column prop="userId" label="用户Id"  width="150"></el-table-column>
-      <el-table-column prop="userName" label="用户姓名"  width="150"></el-table-column>
-      <el-table-column prop="isDid" label="任务状态"  width="150">
+      style="width: 100%"
+    >
+      <el-table-column prop="userId" label="用户Id" width="180" align="center" />
+      <el-table-column prop="userName" label="用户姓名" width="180" align="center" />
+      <el-table-column prop="isDid" label="任务状态" width="180" align="center">
         <template scope="scope">
-          <sapn v-if="scope.row.isDid === true " style="color: rgb(41, 189, 139)">已完成</sapn>
-          <sapn v-else-if="scope.row.isDid === false" style="color:rgb(221, 23, 23)">未完成</sapn>
+          <span v-if="scope.row.isDid === true " style="color: rgb(41, 189, 139)">已完成</span>
+          <span v-else-if="scope.row.isDid === false" style="color:rgb(221, 23, 23)">未完成</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="didTime" label="完成时间" width="180" align="center" />
+      <el-table-column prop="level" label="任务评分" width="180" align="center">
+        <template scope="scope">
+          <span v-if="scope.row.level === 1 " style="color: rgb(41, 189, 139)">优秀</span>
+          <span v-if="scope.row.level === 2" style="color:rgb(246, 151, 7)">良好</span>
+          <span v-if="scope.row.level === 3 " style="color: rgb(255, 104, 0)">及格</span>
+          <span v-if="scope.row.level === 4 " style="color: rgb(221, 23, 23)">不及格</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="180" align="center">
+        <template scope="scope">
+          <el-link type="success" :disabled="!scope.row.isDid" @click="read(taskId,scope.row.userId)">查看</el-link>
         </template>
       </el-table-column>
     </el-table>
+
+    <el-pagination
+      align="center"
+      class="pagination"
+      :current-page="page.currentPage"
+      :page-sizes="[10,20,50,100]"
+      :page-size="page.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="page.totalCount"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
@@ -40,17 +76,76 @@ export default {
       selectTask: [], // 被选中的模版列
       addDialog: false, // 控制添加弹窗显示
       taskId: this.$route.query.id,
+      task: {}, // 任务内容
       situation: [] // 任务完成情况
+    }
+  },
+  computed: {
+    numDid() {
+      const num = {
+        numdid: 0,
+        numnotdid: 0
+      }
+      for (const i of this.situation) {
+        if (i.isDid === true) {
+          num.numdid++
+        } else {
+          num.numnotdid++
+        }
+      }
+      return num
     }
   },
   created() {
     this.loading = true
-    taskApi.getTaskSituation(this.page, this.taskId).then(res => {
-      this.situation = res.data.list
-      this.loading = false
-    })
+    this.getTaskSituation()
+    this.getTask(this.taskId)
   },
   methods: {
+    // 每页大小改变 参数 value 为每页大小(pageSize)
+    handleSizeChange(val) {
+      this.page.pageSize = val
+      // 重新请求,刷新页面
+      this.getTaskSituation()
+    },
+    stateFormat(row, column) {
+      if (row.level === 1) {
+        return '优秀'
+      }
+      if (row.level === 2) {
+        return '良好'
+      }
+      if (row.level === 3) {
+        return '及格'
+      }
+      if (row.level === 4) {
+        return '不及格'
+      }
+    },
+    read(taskid, userid) {
+      this.$router.push({ path: 'reply', query: { userid, taskid }})
+    },
+    goback() {
+      this.$router.go(-1)
+    },
+    // 当前页跳转 参数 value 当前页(currentPage)
+    handleCurrentChange(val) {
+      this.page.currentPage = val
+      this.getTaskSituation()
+    },
+    getTaskSituation() {
+      this.page.list = []
+      taskApi.getTaskSituation(this.page, this.taskId).then(res => {
+        this.page = res.data
+        this.situation = res.data.list
+        this.loading = false
+      })
+    },
+    getTask(taskId) {
+      taskApi.getTask(taskId).then(res => {
+        this.task = res.data
+      })
+    }
   }
 }
 </script>
