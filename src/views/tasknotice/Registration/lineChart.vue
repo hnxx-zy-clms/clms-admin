@@ -44,7 +44,18 @@ export default {
             offsetY: -10
           })
       })
-      this.chart.annotation.text({})
+      this.chart.annotation().text({
+        top: true,
+        position: ['start', 'end'],
+        content: '点击柱形查看姓名',
+        style: {
+          fill: '#aaaaaa',
+          fontSize: 16,
+          fontWeight: 300
+        },
+        offsetX: -10,
+        offsetY: 6
+      })
       this.chart.on('click', (ev) => {
         this.$emit('getRegistrationName', ev.data.data.class)
       })
