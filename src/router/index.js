@@ -75,21 +75,7 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/classes',
-    component: Layout,
-    redirect: '/classes/classes',
-    name: 'classes',
-    meta: { title: '班级管理', icon: 'example' },
-    children: [
-      {
-        path: 'classes',
-        name: 'Classes',
-        component: () => import('@/views/classes/classes/classes-list'),
-        meta: { title: '班级管理', icon: 'example' }
-      }
-    ]
-  },
+
   {
     path: '/answer',
     component: Layout,
@@ -186,6 +172,39 @@ export const constantRoutes = [
         name: 'reply',
         component: () => import('@/views/tasknotice/task/task-reply'),
         hidden: true
+      }
+    ]
+  },
+  {
+    path: '/classes',
+    component: Layout,
+    name: 'classes',
+    redirect: '/classes/classes',
+    meta: { title: '班级管理', icon: 'example' },
+    children: [
+      {
+        path: 'classes',
+        name: 'classes',
+        component: () => import('@/views/classes/classes/classes-list'),
+        meta: { title: '班级', icon: 'table' }
+      },
+      {
+        path: 'college',
+        name: 'college',
+        component: () => import('@/views/college/college/college-list'),
+        meta: { title: '学院', icon: 'table' }
+      },
+      {
+        path: 'group',
+        name: 'group',
+        component: () => import('@/views/group/group/group-list'),
+        meta: { title: '分组', icon: 'table' }
+      },
+      {
+        path: 'position',
+        name: 'position',
+        component: () => import('@/views/position/position/position-list'),
+        meta: { title: '职位', icon: 'table' }
       }
     ]
   },
