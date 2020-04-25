@@ -44,10 +44,10 @@
       />
       <el-table-column prop="noticeId" label="编号" width="60" align="center" />
       <el-table-column prop="noticeTitle" label="通知标题" width="120" align="center" />
-      <el-table-column prop="createdTime" label="创建时间" sortable="custom" width="140" align="center" />
-      <el-table-column prop="pushedTime" label="发布时间" sortable="custom" width="140" align="center" />
+      <el-table-column prop="createdTime" label="创建时间" sortable="custom" width="135" align="center" />
+      <el-table-column prop="pushedTime" label="发布时间" sortable="custom" width="135" align="center" />
       <el-table-column prop="userName" label="创建人" width="80" align="center" />
-      <el-table-column prop="numRead" :label="this.reading" width="120" align="center" />
+      <el-table-column prop="numRead" :label="this.reading" width="130" align="center" />
       <el-table-column
         prop="isEnabled"
         label="状态"

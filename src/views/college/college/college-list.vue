@@ -24,19 +24,19 @@
         align="center"
         width="45"
       />
-      <el-table-column prop="classesId" label="#" width="60" align="center"/>
-      <el-table-column prop="classesName" label="班级名称" width="150" align="center"/>
-      <el-table-column prop="classesStates" label="状态" width="100" align="center">
+      <el-table-column prop="collegeId" label="#" width="60" align="center"/>
+      <el-table-column prop="collegeName" label="学院名称" width="150" align="center"/>
+      <el-table-column prop="collegeStates" label="状态" width="100" align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.classesStates === 1">启用</el-tag>
+          <el-tag v-if="scope.row.collegeStates === 1">启用</el-tag>
           <el-tag v-else type="info">弃用</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="360" align="center">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.classesStates === 0" size="mini" type="success" @click="toEnable(scope.row.classesId)">启用
+          <el-button v-if="scope.row.collegeStates === 0" size="mini" type="success" @click="toEnable(scope.row.collegeId)">启用
           </el-button>
-          <el-button v-if="scope.row.classesStates === 1" size="mini" type="warning" @click="toDisable(scope.row.classesId)">弃用
+          <el-button v-if="scope.row.collegeStates === 1" size="mini" type="warning" @click="toDisable(scope.row.collegeId)">弃用
           </el-button>
         </template>
       </el-table-column>
@@ -82,9 +82,9 @@
 
 <script>
   // 导入api接口定义的方法 接收变量为 xxxApi
-  import xxxApi from '@/api/classes'
+  import xxxApi from '@/api/college'
   // 导入组件
-  import XxxAdd from './classes-add'
+  import XxxAdd from './college-add'
 
   export default {
     //  定义添加的组件 子组件/私有组件
@@ -94,7 +94,6 @@
     data() {
       return {
         // 定义page对象
-        length: 0,
         page: {
           currentPage: 1, // 当前页
           pageSize: 10, // 每页显示条数
@@ -166,7 +165,7 @@
         }).then(() => {
           const ids = []
           this.selectXxxs.forEach(e => {
-            ids.push(e.classesId)
+            ids.push(e.collegeId)
           })
           xxxApi.updateByIds(ids).then(res => {
             this.$message.success('res.msg')

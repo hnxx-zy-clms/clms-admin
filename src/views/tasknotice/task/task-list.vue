@@ -47,11 +47,11 @@
       <el-table-column prop="createdTime" label="创建时间" sortable="custom" width="135" align="center" />
       <el-table-column prop="pushedTime" label="发布时间" sortable="custom" width="135" align="center" />
       <el-table-column prop="userName" label="创建人" width="80" align="center" />
-      <el-table-column prop="numDid" :label="this.did" width="130" align="center" />
+      <el-table-column prop="numDid" :label="this.did" width="140" align="center" />
       <el-table-column
         prop="isEnabled"
         label="状态"
-        width="100"
+        width="80"
         align="center"
       >
         <template slot-scope="scope">

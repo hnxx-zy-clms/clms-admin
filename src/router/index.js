@@ -75,21 +75,7 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/classes',
-    component: Layout,
-    redirect: '/classes/classes',
-    name: 'classes',
-    meta: { title: '班级管理', icon: 'example' },
-    children: [
-      {
-        path: 'classes',
-        name: 'Classes',
-        component: () => import('@/views/classes/classes/classes-list'),
-        meta: { title: '班级管理', icon: 'example' }
-      }
-    ]
-  },
+
   {
     path: '/answer',
     component: Layout,

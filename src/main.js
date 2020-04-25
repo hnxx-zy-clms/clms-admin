@@ -10,7 +10,7 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import store from './store'
 import router from './router'
-import G2 from '@antv/g2';
+import G2 from '@antv/g2'
 
 import '@/icons' // icon
 import '@/permission' // permission control
