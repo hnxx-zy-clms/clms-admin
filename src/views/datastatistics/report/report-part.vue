@@ -154,6 +154,22 @@ export default {
       ]
     }
   },
+  watch: {
+    data3(b, a) {
+      // console.log('监听到总体数据', b)
+      this.chart3.changeData(b)
+      this.chart3.render()
+    },
+    data(b, a) {
+      this.chart.changeData(b)
+      this.chart.render()
+    },
+    scoredata(b, a) {
+      this.chart4.changeData(b)
+      this.chart4.render()
+      console.log("fenshu", b)
+    }
+  },
   mounted() {
     this.initComponent()
     this.initComponent1()
@@ -161,10 +177,10 @@ export default {
   },
   created() {
     // console.log('created')
-    // this.findByDate()
-    // this.getClassData()
-    // this.getGroupData()
-    // this.getMarkingScore()
+    this.findByDate()
+    this.getClassData()
+    this.getGroupData()
+    this.getMarkingScore()
     // this.initComponent()
     // this.initComponent1()
     // this.initComponent2()
@@ -211,7 +227,13 @@ export default {
       reportApi
         .getMarkingScore(this.scorepage)
         .then(res => {
-          this.scoredata = res.data.list
+          // this.scoredata = res.data.list
+          this.scoredata = []
+          for (let i = 0; i < res.data.list.length; i++) {
+            if ((i % 2) === 0) {
+              this.scoredata.push(res.data.list[i])
+            }
+          }
           console.log(this.scoredata)
         })
         .catch(error => {
@@ -223,10 +245,11 @@ export default {
       // this.initComponent()
       // this.initComponent1()
       // this.initComponent2()
-      this.chart.render()
-      this.chart1.render()
-      this.chart3.render()
-      this.chart4.render()
+      // this.chart.changeData(this.data)
+      // this.chart.render()
+      // this.chart1.render()
+      // this.chart3.render()
+      // this.chart4.render()
     },
     initComponent() {
       const chart = new Chart({
@@ -475,13 +498,13 @@ export default {
       chart4
         .line()
         .position('type*value')
-        .color('name')
+        .color('state')
         .shape('smooth')
 
       chart4
         .point()
         .position('type*value')
-        .color('name')
+        .color('state')
         .shape('circle')
       this.chart4 = chart4
       chart4.render()

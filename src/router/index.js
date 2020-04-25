@@ -176,6 +176,39 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/classes',
+    component: Layout,
+    name: 'classes',
+    redirect: '/classes/classes',
+    meta: { title: '班级管理', icon: 'example' },
+    children: [
+      {
+        path: 'classes',
+        name: 'classes',
+        component: () => import('@/views/classes/classes/classes-list'),
+        meta: { title: '班级', icon: 'table' }
+      },
+      {
+        path: 'college',
+        name: 'college',
+        component: () => import('@/views/college/college/college-list'),
+        meta: { title: '学院', icon: 'table' }
+      },
+      {
+        path: 'group',
+        name: 'group',
+        component: () => import('@/views/group/group/group-list'),
+        meta: { title: '分组', icon: 'table' }
+      },
+      {
+        path: 'position',
+        name: 'position',
+        component: () => import('@/views/position/position/position-list'),
+        meta: { title: '职位', icon: 'table' }
+      }
+    ]
+  },
+  {
     path: '/datastatistics',
     component: Layout,
     name: 'DataStatistics',

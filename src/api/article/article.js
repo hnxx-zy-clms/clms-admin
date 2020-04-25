@@ -51,5 +51,12 @@ export default {
       url: `/${group_name}/read/${id}`,
       method: 'get'
     })
+  },
+  getArticleCountInfo(topparam) {
+    return request({
+      url: `/${group_name}/getArticleCountInfo`,
+      method: 'post',
+      data: topparam
+    })
   }
 }

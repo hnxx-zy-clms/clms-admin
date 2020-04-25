@@ -33,9 +33,9 @@
         <el-card class="box-card">
           <!-- <div v-for="o in 4" :key="o" class="text item">{{'列表内容 ' + o }}</div> -->
           <h2>文章{{ this.value }}排名</h2>
-          <div class="text item">TOP1 张三</div>
-          <div class="text item">TOP2 李四</div>
-          <div class="text item">TOP3 王五</div>
+          <div class="text item">TOP1 {{ data[0].name }}</div>
+          <div class="text item">TOP2 {{ data[1].name }}</div>
+          <div class="text item">TOP3 {{ data[2].name }}</div>
         </el-card>
         <!-- </div> -->
       </el-tab-pane>
@@ -45,6 +45,7 @@
 
 <script>
 import typeApi from '@/api/article/type'
+import articleApi from '@/api/article/article'
 import G2 from '@antv/g2'
 import { Chart } from '@antv/g2'
 export default {
@@ -56,6 +57,12 @@ export default {
       chart2: null,
       typeparam: {
         sortColumn: 'type_count',
+        sortMethod: 'desc'
+      },
+      topparam: {
+        pageSize: 3,
+        currentPage: 1,
+        sortColumn: 'goodCounts',
         sortMethod: 'desc'
       },
       mydata: [
@@ -111,9 +118,26 @@ export default {
         {
           value: '浏览数',
           label: '浏览数'
+        },
+        {
+          value: '收藏数',
+          label: '收藏数'
         }
       ],
       value: '发表数'
+    }
+  },
+  watch: {
+    mydata(b, a) {
+      // console.log('监听到总体数据', b)
+      this.chart1.changeData(b)
+      this.chart.changeData(b)
+      this.chart1.render()
+      this.chart.render()
+    },
+    data(b, a) {
+      this.chart2.changeData(b)
+      this.chart2.render()
     }
   },
   mounted() {
@@ -121,21 +145,27 @@ export default {
     this.initComponent()
     this.initComponent1()
     // this.getData()
-    console.log('mounted开始')
+    // console.log('mounted开始')
   },
   created() {
-    //this.getData()
+    this.getData()
+    this.getTopData()
   },
 
   methods: {
     getData() {
       typeApi.getArticleTypeCountInfo(this.typeparam).then(res => {
-        console.log('获取的数据是:', res.data.list)
+        // console.log('获取的数据是:', res.data.list)
         this.mydata = res.data.list
-        console.log('现在的是:', this.mydata)
+        // console.log('现在的是:', this.mydata)
       })
     },
-
+    getTopData() {
+      articleApi.getArticleCountInfo(this.topparam).then(res => {
+        this.data = res.data.list
+        console.log('现在的是:', this.data)
+      })
+    },
     handleClick(tab, event) {
       // this.getData()
       // this.initComponent()
@@ -218,7 +248,7 @@ export default {
 
       // console.log ( "aaa",this.mydata[0].countMap.typeCount)
 
-      chart1.scale('count', {
+      chart1.scale('typeCounts', {
         nice: true
       })
 
@@ -230,7 +260,7 @@ export default {
 
       chart1
         .interval()
-        .position('name*count')
+        .position('name*typeCounts')
         .color('name')
 
       this.chart1 = chart1
