@@ -196,6 +196,7 @@ export default {
     // 分页方法 调用封装的方法 getByPage()
     getByPage() {
       articleApi.getByPage(this.page).then(res => {
+        console.log(res)
         this.page = res.data
         this.loading = false
       })

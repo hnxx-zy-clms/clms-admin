@@ -190,6 +190,26 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/datastatistics',
+    component: Layout,
+    name: 'DataStatistics',
+    meta: { title: '数据统计', icon: 'example' },
+    children: [
+      {
+        path: 'reportpart',
+        name: 'ReportPart',
+        component: () => import('@/views/datastatistics/report/report-part'),
+        meta: { title: '报告统计', icon: 'table' }
+      },
+      {
+        path: 'articlepart',
+        name: 'ArticlePart',
+        component: () => import('@/views/datastatistics/article/article-part'),
+        meta: { title: '文章统计', icon: 'table' }
+      }    
+    ]
+  },
+  {
     path: '/sys',
     component: Layout,
     redirect: '/sys/log',

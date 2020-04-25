@@ -35,5 +35,27 @@ export default {
       data: page,
       responseType: 'blob'
     })
+  },
+  getMainReportInfo(page) {
+    return request({
+      url: `/${group_name}/getMainReportInfo`,
+      method: 'post',
+      data: page
+    })
+  },
+  getUserReportInfo(page) {
+    return request({
+      url: `/${group_name}/getUserReportInfo`,
+      method: 'post',
+      data: page
+    })
+  },
+  getMarkingScore(page) {
+    return request({
+      url: `/reportMarking/getMarkingScore`,
+      method: 'post',
+      data: page
+    })
   }
+
 }
