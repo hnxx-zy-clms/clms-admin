@@ -88,19 +88,19 @@ export default {
             }
           }
         ]
-      },      
+      },   
       classpage: {
-        currentPage: 1, // 当前页
-        pageSize: 20, // 每页显示条数
+        currentPage: 1,
+        pageSize: 20,
         params: {
           reportType: 0,
           userClassesId: 1,
           time: ''
-        } // 查询参数对象
+        }
       },
       grouppage: {
-        currentPage: 1, // 当前页
-        pageSize: 20, // 每页显示条数
+        currentPage: 1,
+        pageSize: 20,
         params: {
           reportType: 0,
           userClassesId: 1,
@@ -116,18 +116,17 @@ export default {
         }
       },
       activeName: 'first',
-      chart: null,
-      chart1: null,
-      chart3: null,
-      chart4: null,
+      groupSubmitChart: null,
+      classSubmitChart: null,
+      scoreChart: null,
       data: [
-        { type: '第一组', value: 80 },
-        { type: '第二组', value: 90 },
-        { type: '第三组', value: 85 },
-        { type: '第四组', value: 93 },
-        { type: '第五组', value: 85 },
-        { type: '第六组', value: 95 },
-        { type: '第七组', value: 90 }
+        // { type: '第一组', value: 80 },
+        // { type: '第二组', value: 90 },
+        // { type: '第三组', value: 85 },
+        // { type: '第四组', value: 93 },
+        // { type: '第五组', value: 85 },
+        // { type: '第六组', value: 95 },
+        // { type: '第七组', value: 90 }
       ],
       data3: [
         { value: 50, state: '已提交', type: '教师批阅' },
@@ -137,54 +136,49 @@ export default {
         { value: 5, state: '未提交', type: '未提交' }
       ],
       scoredata: [
-        { day: '4-1', name: '平均', score: 7 },
-        { day: '4-1', name: '张三', score: 6 },
-        { day: '4-2', name: '平均', score: 6 },
-        { day: '4-2', name: '张三', score: 7 },
-        { day: '4-3', name: '平均', score: 8 },
-        { day: '4-3', name: '张三', score: 7.5 },
-        { day: '4-4', name: '平均', score: 7.5 },
-        { day: '4-4', name: '张三', score: 8.5 },
-        { day: '4-5', name: '平均', score: 8.5 },
-        { day: '4-5', name: '张三', score: 9 },
-        { day: '4-6', name: '平均', score: 8 },
-        { day: '4-6', name: '张三', score: 8 },
-        { day: '4-7', name: '平均', score: 7.5 },
-        { day: '4-7', name: '张三', score: 6 }
+        // { day: '4-1', name: '平均', score: 7 },
+        // { day: '4-1', name: '张三', score: 6 },
+        // { day: '4-2', name: '平均', score: 6 },
+        // { day: '4-2', name: '张三', score: 7 },
+        // { day: '4-3', name: '平均', score: 8 },
+        // { day: '4-3', name: '张三', score: 7.5 },
+        // { day: '4-4', name: '平均', score: 7.5 },
+        // { day: '4-4', name: '张三', score: 8.5 },
+        // { day: '4-5', name: '平均', score: 8.5 },
+        // { day: '4-5', name: '张三', score: 9 },
+        // { day: '4-6', name: '平均', score: 8 },
+        // { day: '4-6', name: '张三', score: 8 },
+        // { day: '4-7', name: '平均', score: 7.5 },
+        // { day: '4-7', name: '张三', score: 6 }
       ]
     }
   },
   watch: {
     data3(b, a) {
-      // console.log('监听到总体数据', b)
-      this.chart3.changeData(b)
-      this.chart3.render()
+      console.log('监听到总体数据', b)
+      this.classSubmitChart.changeData(b)
+      this.classSubmitChart.render()
     },
     data(b, a) {
-      this.chart.changeData(b)
-      this.chart.render()
+      console.log('监听到小组数据', b)
+      this.groupSubmitChart.changeData(b)
+      this.groupSubmitChart.render()
     },
     scoredata(b, a) {
-      this.chart4.changeData(b)
-      this.chart4.render()
-      console.log("fenshu", b)
+      this.scoreChart.changeData(b)
+      this.scoreChart.render()
     }
   },
   mounted() {
-    this.initComponent()
-    this.initComponent1()
-    this.initComponent2()
+    this.initGroupSubmit()
+    this.initClassSubmit()
+    this.initScore()
   },
   created() {
-    // console.log('created')
     this.findByDate()
     this.getClassData()
     this.getGroupData()
     this.getMarkingScore()
-    // this.initComponent()
-    // this.initComponent1()
-    // this.initComponent2()
-    // this.chart.render()
   },
   methods: {
     findByDate() {
@@ -193,7 +187,6 @@ export default {
       this.getClassData()
       this.getGroupData()
     },
-
     getClassData() {
       reportApi
         .getMainReportInfo(this.classpage)
@@ -227,7 +220,6 @@ export default {
       reportApi
         .getMarkingScore(this.scorepage)
         .then(res => {
-          // this.scoredata = res.data.list
           this.scoredata = []
           for (let i = 0; i < res.data.list.length; i++) {
             if ((i % 2) === 0) {
@@ -240,38 +232,20 @@ export default {
           console.log(error)
         })
     },
-    handleClick(tab, event) {
-      // location.reload()
-      // this.initComponent()
-      // this.initComponent1()
-      // this.initComponent2()
-      // this.chart.changeData(this.data)
-      // this.chart.render()
-      // this.chart1.render()
-      // this.chart3.render()
-      // this.chart4.render()
-    },
-    initComponent() {
-      const chart = new Chart({
+    handleClick(tab, event) {},
+    initGroupSubmit() {
+      const groupSubmitChart = new Chart({
         container: 'c1',
         autoFit: true,
         height: 300
       })
-
-      chart.data(this.data)
-
-      chart.legend(false)
-
-      // chart.legend({
-      //     position: "center"
-      // })
-
-      chart.tooltip({
+      groupSubmitChart.data(this.data)
+      groupSubmitChart.legend(false)
+      groupSubmitChart.tooltip({
         showMarkers: false
       })
-
       // 分面绘制
-      chart.facet('rect', {
+      groupSubmitChart.facet('rect', {
         fields: ['type'],
         padding: 20,
         showTitle: false, // 不显示图表上方标题
@@ -279,32 +253,27 @@ export default {
           const data = facet.data
           let color
           // console.log("changdushi",this.data.length)
-
-          if (data[0].type === '第一组') {
+          if (data[0].type === this.data[0].type) {
             color = '#0a9afe'
-          } else if (data[0].type === '第二组') {
+          } else if (data[0].type === this.data[1].type) {
             color = 'lightgreen'
-          } else if (data[0].type === '第三组') {
+          } else if (data[0].type === this.data[2].type) {
             color = 'purple'
-          } else if (data[0].type === '第五组') {
+          } else if (data[0].type === this.data[3].type) {
             color = '#FFFF99'
-          } else if (data[0].type === '第六组') {
+          } else if (data[0].type === this.data[4].type) {
             color = '#6666CC'
-          } else if (data[0].type === '第七组') {
+          } else if (data[0].type === this.data[5].type) {
             color = '#99CC66'
           } else {
             color = '#f0657d'
           }
-
           data.push({ type: '未提交', value: 100 - data[0].value })
-
           view.data(data)
-
           view.coordinate('theta', {
             radius: 0.8,
             innerRadius: 0.5
           })
-
           view
             .interval()
             .adjust('stack')
@@ -313,7 +282,6 @@ export default {
             .style({
               opacity: 1
             })
-
           // hover
           view.annotation().text({
             position: ['50%', '50%'],
@@ -327,7 +295,6 @@ export default {
             },
             offsetY: -12
           })
-
           view.annotation().text({
             position: ['50%', '50%'],
             content: data[0].value + '%',
@@ -339,34 +306,29 @@ export default {
             },
             offsetY: 10
           })
-
           view.interaction('element-active')
         }
       })
-      this.chart = chart
-      chart.render()
+      this.groupSubmitChart = groupSubmitChart
+      groupSubmitChart.render()
     },
-    initComponent1() {
+    initClassSubmit() {
       const dv = new DataView()
-
       dv.source(this.data3).transform({
         type: 'percent',
         field: 'value',
         dimension: 'state',
         as: 'percent'
       })
-
-      const chart3 = new Chart({
+      const classSubmitChart = new Chart({
         container: 'c3',
         autoFit: true,
         height: 400,
         padding: 0
         // theme: 'dark'
       })
-
-      chart3.data(dv.rows)
-
-      chart3.scale({
+      classSubmitChart.data(dv.rows)
+      classSubmitChart.scale({
         percent: {
           formatter: val => {
             val = (val * 100).toFixed(2) + '%'
@@ -374,19 +336,15 @@ export default {
           }
         }
       })
-
-      chart3.coordinate('theta', {
+      classSubmitChart.coordinate('theta', {
         radius: 0.5
       })
-
-      chart3.tooltip({
+      classSubmitChart.tooltip({
         showTitle: false,
         showMarkers: false
       })
-
-      chart3.legend(false)
-
-      chart3
+      classSubmitChart.legend(false)
+      classSubmitChart
         .interval()
         .adjust('stack')
         .position('percent')
@@ -405,20 +363,15 @@ export default {
           lineWidth: 1,
           stroke: '#fff'
         })
-
-      const outterView = chart3.createView()
-
+      const outterView = classSubmitChart.createView()
       const dv1 = new DataView()
-
       dv1.source(this.data3).transform({
         type: 'percent',
         field: 'value',
         dimension: 'type',
         as: 'percent'
       })
-
       outterView.data(dv1.rows)
-
       outterView.scale({
         percent: {
           formatter: val => {
@@ -427,12 +380,10 @@ export default {
           }
         }
       })
-
       outterView.coordinate('theta', {
         innerRadius: 0.5 / 0.75,
         radius: 0.75
       })
-
       outterView
         .interval()
         .adjust('stack')
@@ -457,21 +408,18 @@ export default {
           lineWidth: 1,
           stroke: '#fff'
         })
-
-      chart3.interaction('element-highlight')
-      this.chart3 = chart3
-      chart3.render()
+      classSubmitChart.interaction('element-highlight')
+      this.classSubmitChart = classSubmitChart
+      classSubmitChart.render()
     },
-    initComponent2() {
-      const chart4 = new Chart({
+    initScore() {
+      const scoreChart = new Chart({
         container: 'c4',
         autoFit: true,
         height: 400
       })
-
-      chart4.data(this.scoredata)
-
-      chart4.scale({
+      scoreChart.data(this.scoredata)
+      scoreChart.scale({
         type: {
           range: [0, 1]
         },
@@ -481,33 +429,29 @@ export default {
           nice: true
         }
       })
-
-      chart4.tooltip({
+      scoreChart.tooltip({
         showCrosshairs: true,
         shared: true
       })
-
-      chart4.axis('value', {
+      scoreChart.axis('value', {
         label: {
           formatter: val => {
             return val
           }
         }
       })
-
-      chart4
+      scoreChart
         .line()
         .position('type*value')
         .color('state')
         .shape('smooth')
-
-      chart4
+      scoreChart
         .point()
         .position('type*value')
         .color('state')
         .shape('circle')
-      this.chart4 = chart4
-      chart4.render()
+      this.scoreChart = scoreChart
+      scoreChart.render()
     }
   }
 }
@@ -543,5 +487,6 @@ export default {
   text-align: center;
   line-height: 50px;
   font-size: 15px;
+  margin: 13px;
 }
 </style>

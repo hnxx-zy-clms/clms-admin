@@ -13,7 +13,7 @@
       <el-tab-pane label="文章排名统计" name="second">
         <div id="choose">
           <span class="myspan">请选择排序规则：</span>
-          <el-select v-model="value" placeholder="请选择">
+          <el-select v-model="value" placeholder="请选择" @change="findType">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -21,7 +21,6 @@
               :value="item.value"
             />
           </el-select>
-          <!-- <el-button type="primary" class="mybutton" @click="makeit">提交</el-button> -->
         </div>
         <div id="c3" />
         <div class="tips">
@@ -29,15 +28,12 @@
             <el-button>Tips</el-button>
           </el-tooltip>
         </div>
-        <!-- <div id="card"> -->
         <el-card class="box-card">
-          <!-- <div v-for="o in 4" :key="o" class="text item">{{'列表内容 ' + o }}</div> -->
-          <h2>文章{{ this.value }}排名</h2>
-          <div class="text item">TOP1 {{ data[0].name }}</div>
-          <div class="text item">TOP2 {{ data[1].name }}</div>
-          <div class="text item">TOP3 {{ data[2].name }}</div>
+          <h2>文章{{ this.label }}排名</h2>
+          <div class="text item">TOP1 {{ data[0].author }}</div>
+          <div class="text item">TOP2 {{ data[5].author }}</div>
+          <div class="text item">TOP3 {{ data[10].author }}</div>
         </el-card>
-        <!-- </div> -->
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -52,9 +48,9 @@ export default {
   name: 'Bing',
   data() {
     return {
-      chart: null,
-      chart1: null,
-      chart2: null,
+      articlePercentchart: null,
+      articleNumchart: null,
+      articleTopchart: null,
       typeparam: {
         sortColumn: 'type_count',
         sortMethod: 'desc'
@@ -62,17 +58,15 @@ export default {
       topparam: {
         pageSize: 3,
         currentPage: 1,
-        sortColumn: 'goodCounts',
+        sortColumn: 'articleCounts',
         sortMethod: 'desc'
       },
-      mydata: [
+      typeData: [
         { name: 'SpringBoot', count: 30, percent: 0.4 },
         { name: 'Java', count: 21, percent: 0.21 },
         { name: 'C', count: 17, percent: 0.17 },
         { name: 'Python', count: 13, percent: 0.13 },
-        { name: 'MySql', count: 9, percent: 0.09 },
-        // { name: '软件工程', countMap: { typeCounts: 5 }, percent: 0.5 },
-        // { name: '软件工程1', countMap: { typeCounts: 5 }, percent: 0.5 }
+        { name: 'MySql', count: 9, percent: 0.09 }
       ],
       data: [
         { name: '发表数', author: '张三', count: 30 },
@@ -96,56 +90,47 @@ export default {
         { name: '浏览数', author: '王五', count: 88 }
       ],
       activeName: 'first',
-      // sortColumn: 'type_count',
-      // sortMethod: 'desc',
       options: [
         {
-          value: '发表数',
+          value: 'articleCounts',
           label: '发表数'
         },
         {
-          value: '获赞数',
+          value: 'goodCounts',
           label: '获赞数'
         },
         {
-          value: '收藏数',
+          value: 'collectionCounts',
           label: '收藏数'
         },
         {
-          value: '评论数',
+          value: 'commentCounts',
           label: '评论数'
         },
         {
-          value: '浏览数',
+          value: 'readCounts',
           label: '浏览数'
-        },
-        {
-          value: '收藏数',
-          label: '收藏数'
         }
       ],
-      value: '发表数'
+      value: '发表数',
+      label: '发表数'
     }
   },
   watch: {
-    mydata(b, a) {
-      // console.log('监听到总体数据', b)
-      this.chart1.changeData(b)
-      this.chart.changeData(b)
-      this.chart1.render()
-      this.chart.render()
+    typeData(b, a) {
+      this.articleNumchart.changeData(b)
+      this.articlePercentchart.changeData(b)
+      this.articleNumchart.render()
+      this.articlePercentchart.render()
     },
     data(b, a) {
-      this.chart2.changeData(b)
-      this.chart2.render()
+      this.articleTopchart.changeData(b)
+      this.articleTopchart.render()
     }
   },
   mounted() {
-    // this.getData()
-    this.initComponent()
-    this.initComponent1()
-    // this.getData()
-    // console.log('mounted开始')
+    this.initArticleType()
+    this.initArticleTop()
   },
   created() {
     this.getData()
@@ -153,61 +138,77 @@ export default {
   },
 
   methods: {
+    findType(type) {
+      console.log(type)
+      let obj = {}
+      obj = this.options.find((item) => { // 这里的userList就是上面遍历的数据源
+        return item.value === type // 筛选出匹配数据
+      })
+      console.log(obj.label)
+      this.label = obj.label
+      this.topparam.sortColumn = type
+      this.getTopData()
+    },
     getData() {
       typeApi.getArticleTypeCountInfo(this.typeparam).then(res => {
-        // console.log('获取的数据是:', res.data.list)
-        this.mydata = res.data.list
-        // console.log('现在的是:', this.mydata)
+        this.typeData = res.data.list
       })
     },
     getTopData() {
       articleApi.getArticleCountInfo(this.topparam).then(res => {
-        this.data = res.data.list
-        console.log('现在的是:', this.data)
+        console.log('top:', res)
+        this.data = []
+        for (let i = 0; i < res.data.list.length; i++) {
+          var articleCountsData = { name: '发表数', author: res.data.list[i].name, count: res.data.list[i].articleCounts }
+          var collectionCountsData = { name: '收藏数', author: res.data.list[i].name, count: res.data.list[i].collectionCounts }
+          var commontCountsData = { name: '评论数', author: res.data.list[i].name, count: res.data.list[i].commentCounts }
+          var goodCountsData = { name: '获赞数', author: res.data.list[i].name, count: res.data.list[i].goodCounts }
+          var readCountsData = { name: '收藏数', author: res.data.list[i].name, count: res.data.list[i].readCounts }
+          this.data.push(articleCountsData)
+          this.data.push(collectionCountsData)
+          this.data.push(commontCountsData)
+          this.data.push(goodCountsData)
+          this.data.push(readCountsData)
+        }
+        console.log(this.data)
       })
     },
     handleClick(tab, event) {
-      // this.getData()
-      // this.initComponent()
-      // this.initComponent1()
-      this.chart.render()
-      this.chart1.render()
-      this.chart2.render()
-      // console.log(tab, event)
+      this.articlePercentchart.render()
+      this.articleNumchart.render()
+      this.articleTopchart.render()
     },
-    initComponent() {
-      const chart = new Chart({
+    initArticleType() {
+      const articlePercentchart = new Chart({
         container: 'c1',
         autoFit: true,
         height: 400
       })
 
-      chart.data(this.mydata)
+      articlePercentchart.data(this.typeData)
 
       // 设置坐标系类型
-      chart.coordinate('theta', {
+      articlePercentchart.coordinate('theta', {
         radius: 0.7
       })
 
-      console.log(this.mydata)
-
       // 设置percent字段显示方式
-      chart.scale('percent', {
+      articlePercentchart.scale('percent', {
         formatter: val => {
           val = (val * 100).toFixed(2) + '%'
           return val
         }
       })
 
-      chart.tooltip({
+      articlePercentchart.tooltip({
         showTitle: false,
         showMarkers: false
       })
 
       // 不显示坐标轴
-      chart.axis(false)
+      articlePercentchart.axis(false)
 
-      const interval = chart
+      const interval = articlePercentchart
         .interval()
         .adjust('stack') // 数据调整方式
         .position('percent')
@@ -233,58 +234,56 @@ export default {
           stroke: '#fff'
         })
 
-      chart.interaction('element-single-selected')
+      articlePercentchart.interaction('element-single-selected')
 
-      this.chart = chart
-      chart.render()
+      this.articlePercentchart = articlePercentchart
+      articlePercentchart.render()
 
-      const chart1 = new Chart({
+      const articleNumchart = new Chart({
         container: 'c2',
         autoFit: true,
         height: 500
       })
 
-      chart1.data(this.mydata)
+      articleNumchart.data(this.typeData)
 
-      // console.log ( "aaa",this.mydata[0].countMap.typeCount)
-
-      chart1.scale('typeCounts', {
+      articleNumchart.scale('typeCounts', {
         nice: true
       })
 
-      chart1.tooltip({
+      articleNumchart.tooltip({
         showMarkers: false
       })
 
-      chart1.interaction('active-region')
+      articleNumchart.interaction('active-region')
 
-      chart1
+      articleNumchart
         .interval()
         .position('name*typeCounts')
         .color('name')
 
-      this.chart1 = chart1
-      chart1.render()
+      this.articleNumchart = articleNumchart
+      articleNumchart.render()
     },
-    initComponent1() {
-      const chart2 = new Chart({
+    initArticleTop() {
+      const articleTopchart = new Chart({
         container: 'c3',
         autoFit: true,
         height: 500
       })
 
-      chart2.data(this.data)
+      articleTopchart.data(this.data)
 
-      chart2.scale('count', {
+      articleTopchart.scale('count', {
         nice: true
       })
 
-      chart2.tooltip({
+      articleTopchart.tooltip({
         showMarkers: false,
         shared: true // hover时数据一起展示
       })
 
-      chart2
+      articleTopchart
         .interval() // 创建几何标记
         .position('author*count')
         .color('name')
@@ -295,10 +294,10 @@ export default {
           }
         ])
 
-      chart2.interaction('active-region')
+      articleTopchart.interaction('active-region')
 
-      this.chart2 = chart2
-      chart2.render()
+      this.articleTopchart = articleTopchart
+      articleTopchart.render()
     }
 
   }
@@ -344,15 +343,6 @@ export default {
   margin-left: 20px;
   font-family: "微软雅黑";
 }
-/* #card{
-  margin-left: 100px;
-} */
-/* #c1 {
-    float: right
-  } */
-/* #el-card__body{
-    margin-left: 100px;
-  } */
 .text {
   font-size: 14px;
 }
