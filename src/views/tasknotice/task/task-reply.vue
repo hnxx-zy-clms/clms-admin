@@ -53,12 +53,6 @@ export default {
       if (this.reply.level === 3) { return '及格' }
       if (this.reply.level === 4) { return '不及格' }
       if (this.reply.level == null) { return '暂未评分' }
-    },
-    // eslint-disable-next-line vue/return-in-computed-property
-    isdisabled() {
-      if (this.reply.level != null || this.reply.level !== '') {
-        return true
-      }
     }
   },
   methods: {

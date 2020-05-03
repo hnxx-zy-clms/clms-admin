@@ -71,7 +71,7 @@ export default {
       method: 'get'
     })
   },
-  getTaskReply(taskid, userid) {
+  getTaskReply(taskid, userid) { // 获取学生任务回复内容
     return request({
       url: `/${group_name}/getTaskReply/${taskid}/${userid}`,
       method: 'get'

@@ -119,7 +119,6 @@ import noticeApi from '@/api/noticetask/notice'
 
 // 导入组件
 import NoticeAdd from './notice-add'
-import { mapGetters } from 'vuex'
 export default {
   //  定义添加的组件
   components: {
@@ -151,11 +150,7 @@ export default {
   computed: {
     reading: function() {
       return '已读(总人数:' + this.totalNum + ')'
-    },
-    ...mapGetters([
-      'name',
-      'userid'
-    ])
+    }
   },
   // 初始化函数
   created() {
