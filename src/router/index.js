@@ -39,7 +39,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/user/user',
     name: 'User',
-    meta: { title: '用户管理', icon: 'example' }
+    meta: { title: '用户管理', icon: 'user-tool' }
   },
 
   {
@@ -47,31 +47,31 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/report/report',
     name: 'Report',
-    meta: { title: '报告管理', icon: 'example' },
+    meta: { title: '报告管理', icon: 'report-tool' },
     children: [
       {
         path: 'daily',
         name: 'Daily',
         component: () => import('@/views/report/daily/daliy-list'),
-        meta: { title: '日报管理', icon: 'table' }
+        meta: { title: '日报管理', icon: 'report-day' }
       },
       {
         path: 'weekly',
         name: 'Weekly',
         component: () => import('@/views/report/weekly/weekly-list'),
-        meta: { title: '周报管理', icon: 'table' }
+        meta: { title: '周报管理', icon: 'report-week' }
       },
       {
         path: 'marking',
         name: 'Marking',
         component: () => import('@/views/report/marking/marking-list'),
-        meta: { title: '批阅管理', icon: 'table' }
+        meta: { title: '批阅管理', icon: 'report-mark' }
       },
       {
         path: 'statistics',
         name: 'Statistics',
         component: () => import('@/views/report/statistics/statistics'),
-        meta: { title: '报告数据统计', icon: 'table' }
+        meta: { title: '报告数据统计', icon: 'report-data' }
       }
     ]
   },
@@ -81,19 +81,19 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/answer/question',
     name: 'answer',
-    meta: { title: '答疑管理', icon: 'example' },
+    meta: { title: '答疑管理', icon: 'answer-tool' },
     children: [
       {
         path: 'question',
         name: 'Question',
         component: () => import('@/views/answer/question/question-list'),
-        meta: { title: '问题管理', icon: 'table' }
+        meta: { title: '问题管理', icon: 'question' }
       },
       {
         path: 'answer',
         name: 'Answer',
         component: () => import('@/views/answer/answer/answer-list'),
-        meta: { title: '答复管理', icon: 'table' }
+        meta: { title: '答复管理', icon: 'answer' }
       }
     ]
   },
@@ -102,37 +102,37 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/article/article',
     name: 'article',
-    meta: { title: '文章管理', icon: 'example' },
+    meta: { title: '文章管理', icon: 'article-tool' },
     children: [
       {
         path: 'type',
         name: 'Type',
         component: () => import('@/views/article/type/type-list'),
-        meta: { title: '分类管理', icon: 'table' }
+        meta: { title: '分类管理', icon: 'type' }
       },
       {
         path: 'article',
         name: 'Article',
         component: () => import('@/views/article/article/article-list'),
-        meta: { title: '文章管理', icon: 'table' }
+        meta: { title: '文章管理', icon: 'article' }
       },
       {
         path: 'comment',
         name: 'Comment',
         component: () => import('@/views/article/comment/comment-list'),
-        meta: { title: '评论管理', icon: 'table' }
+        meta: { title: '评论管理', icon: 'comment' }
       },
       {
         path: 'collection',
         name: 'Collection',
         component: () => import('@/views/article/collection/collection-list.vue'),
-        meta: { title: '收藏管理', icon: 'table' }
+        meta: { title: '收藏管理', icon: 'collection' }
       },
       {
         path: 'good',
         name: 'Good',
         component: () => import('@/views/article/good/good-list.vue'),
-        meta: { title: '点赞管理', icon: 'table' }
+        meta: { title: '点赞管理', icon: 'good' }
       }
     ]
   },
@@ -141,25 +141,25 @@ export const constantRoutes = [
     path: '/tasknotice',
     component: Layout,
     name: 'TaskNotice',
-    meta: { title: '任务通知', icon: 'example' },
+    meta: { title: '任务通知', icon: 'task-tool' },
     children: [
       {
         path: 'tasklist',
         name: 'TaskList',
         component: () => import('@/views/tasknotice/task/task-list'),
-        meta: { title: '任务管理', icon: 'table' }
+        meta: { title: '任务管理', icon: 'task-tool' }
       },
       {
         path: 'notice',
         name: 'notice',
         component: () => import('@/views/tasknotice/notice/notice-list'),
-        meta: { title: '通知管理', icon: 'table' }
+        meta: { title: '通知管理', icon: 'notice' }
       },
       {
         path: 'registration',
         name: 'registration',
         component: () => import('@/views/tasknotice/Registration/registration'),
-        meta: { title: '签到管理', icon: 'table' }
+        meta: { title: '签到管理', icon: 'registration' }
       },
       {
         path: 'details',
@@ -180,31 +180,31 @@ export const constantRoutes = [
     component: Layout,
     name: 'classes',
     redirect: '/classes/classes',
-    meta: { title: '班级管理', icon: 'example' },
+    meta: { title: '班级管理', icon: 'class-tool' },
     children: [
       {
         path: 'classes',
         name: 'classes',
         component: () => import('@/views/classes/classes/classes-list'),
-        meta: { title: '班级', icon: 'table' }
+        meta: { title: '班级', icon: 'class' }
       },
       {
         path: 'college',
         name: 'college',
         component: () => import('@/views/college/college/college-list'),
-        meta: { title: '学院', icon: 'table' }
+        meta: { title: '学院', icon: 'school' }
       },
       {
         path: 'group',
         name: 'group',
         component: () => import('@/views/group/group/group-list'),
-        meta: { title: '分组', icon: 'table' }
+        meta: { title: '分组', icon: 'group' }
       },
       {
         path: 'position',
         name: 'position',
         component: () => import('@/views/position/position/position-list'),
-        meta: { title: '职位', icon: 'table' }
+        meta: { title: '职位', icon: 'position' }
       }
     ]
   },
@@ -212,7 +212,7 @@ export const constantRoutes = [
     path: '/datastatistics',
     component: Layout,
     name: 'DataStatistics',
-    meta: { title: '数据统计', icon: 'example' },
+    meta: { title: '数据统计', icon: 'statistics' },
     children: [
       {
         path: 'reportpart',
@@ -233,7 +233,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/sys/log',
     name: 'System',
-    meta: { title: '系统管理', icon: 'example' },
+    meta: { title: '系统管理', icon: 'sys-tool' },
     children: [
       {
         path: 'log',
@@ -255,7 +255,7 @@ export const constantRoutes = [
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })

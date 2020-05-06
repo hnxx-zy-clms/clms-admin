@@ -15,6 +15,18 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="文章封面">
+        <el-upload
+          class="avatar-uploader"
+          :action="uploadUrl"
+          :show-file-list="false"
+          :on-success="uploadSuccess"
+          :headers="headers"
+        >
+          <img v-if="imageUrl" :src="imageUrl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon" />
+        </el-upload>
+      </el-form-item>
       <el-form-item label="内容">
         <tinymce v-model="article.articleContent" />
       </el-form-item>
@@ -63,6 +75,12 @@ export default {
         this.$emit('closeUpdateDialog')
         this.$emit('getByPage')
       })
+      this.imageUrl = null
+    },
+    uploadSuccess(res, file) {
+      this.$message.success(res.msg)
+      this.imageUrl = res.data
+      this.article.articleImage = res.data
     },
     close() {
       this.$emit('closeUpdateDialog')

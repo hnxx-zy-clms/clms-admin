@@ -51,11 +51,11 @@ export default {
       method: 'get'
     })
   },
-  getArticleTypeCountInfo(typeparam) {
+  getArticleTypeCountInfo(page) {
     return request({
       url: `/${group_name}/getArticleTypeCountInfo`,
       method: 'post',
-      data: typeparam
+      data: page
     })
   }
 }

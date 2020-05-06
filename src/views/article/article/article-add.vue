@@ -15,6 +15,18 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="文章封面">
+        <el-upload
+          class="avatar-uploader"
+          :action="uploadUrl"
+          :show-file-list="false"
+          :on-success="uploadSuccess"
+          :headers="headers"
+        >
+          <img v-if="imageUrl" :src="imageUrl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon" />
+        </el-upload>
+      </el-form-item>
       <el-form-item label="内容">
         <tinymce v-model="article.articleContent" />
       </el-form-item>
@@ -40,6 +52,7 @@ export default {
     return {
       article: {},
       imageUrl: null, // 上传图片回显
+      uploadUrl: process.env.VUE_APP_UPLOAD_URL, // 上传图片路径
       headers: { // 上传文件的请求头
         Authorization: getToken()
       },
@@ -60,6 +73,11 @@ export default {
         this.$emit('getByPage')
       })
     },
+    uploadSuccess(res, file) {
+      this.$message.success(res.msg)
+      this.imageUrl = res.data
+      this.article.articleImage = res.data
+    },
     close() {
       this.$emit('closeAddDialog')
       this.article = {}
@@ -67,3 +85,29 @@ export default {
   }
 }
 </script>
+
+<style>
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 300px;
+    height: 150px;
+    line-height: 150px;
+    text-align: center;
+  }
+  .avatar {
+    width: 300px;
+    height: 150px;
+    display: block;
+  }
+</style>

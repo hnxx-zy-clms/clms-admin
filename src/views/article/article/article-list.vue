@@ -37,16 +37,15 @@
       <el-table-column prop="articleTitle" align="center" label="标题" width="200" show-overflow-tooltip />
       <el-table-column prop="typeName" label="分类" width="120" align="center" />
       <el-table-column prop="articleAuthor" label="作者" width="160" sortable="custom" align="center" />
-
-      <!-- <el-table-column prop="articleImage" label="图片" width="120">
+      <el-table-column prop="articleImage" label="图片" width="120" align="center">
         <template slot-scope="scope">
           <el-image
-            style="width: 100%;height: 100px"
+            style="width: 100%;height: 50px"
             :src="scope.row.articleImage"
             :preview-src-list="[scope.row.articleImage]"
           />
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column prop="articleGood" label="点赞数" width="100" sortable="custom" align="center" />
       <el-table-column prop="articleRead" label="阅读数" width="100" sortable="custom" align="center" />
       <el-table-column prop="articleCollection" label="收藏数" width="100" sortable="custom" align="center" />
@@ -174,6 +173,9 @@ export default {
   // 初始化函数
   created() {
     this.getByPage()
+    setTimeout(() => {
+      this.typeList = this.$store.getters.typeList
+    }, 500)
   },
   // 定义方法
   methods: {
