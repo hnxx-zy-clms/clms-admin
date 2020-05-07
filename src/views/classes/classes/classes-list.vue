@@ -34,9 +34,11 @@
       </el-table-column>
       <el-table-column label="操作" width="360" align="center">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.classesStates === 0" size="mini" type="success" @click="toEnable(scope.row.classesId)">启用
+          <el-button v-if="scope.row.classesStates === 0" size="mini" type="success"
+                     @click="toEnable(scope.row.classesId)">启用
           </el-button>
-          <el-button v-if="scope.row.classesStates === 1" size="mini" type="warning" @click="toDisable(scope.row.classesId)">弃用
+          <el-button v-if="scope.row.classesStates === 1" size="mini" type="warning"
+                     @click="toDisable(scope.row.classesId)">弃用
           </el-button>
         </template>
       </el-table-column>
@@ -133,7 +135,7 @@
       },
       // 分页方法 调用封装的方法 getByPage()
       getByPage() {
-        xxxApi.getByPage(this.page.currentPage,this.page.pageSize).then(res => {
+        xxxApi.getByPage(this.page.currentPage, this.page.pageSize).then(res => {
           this.page.currentPage = res.data.pageNum
           this.page.pageSize = res.data.pageSize
           this.page.totalPage = res.data.pages
@@ -198,7 +200,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          xxxApi.update(id,1).then(res => {
+          xxxApi.update(id, 1).then(res => {
             this.$message.success(res.msg)
             this.getByPage()
           })
@@ -216,7 +218,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          xxxApi.update(id,0).then(res => {
+          xxxApi.update(id, 0).then(res => {
             this.$message.success(res.msg)
             this.getByPage()
           })

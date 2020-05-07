@@ -2,7 +2,7 @@
   <div>
     <!--添加表单  -->
     <el-form ref="addForm" :model="xxx" label-width="80px" size="mini">
-      <el-form-item label="xxName">
+      <el-form-item label="班级名称">
         <el-input v-model="classes.classesName" />
       </el-form-item>
       <el-form-item>

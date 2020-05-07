@@ -225,6 +225,12 @@ export const constantRoutes = [
         name: 'ArticlePart',
         component: () => import('@/views/datastatistics/article/article-part'),
         meta: { title: '文章统计', icon: 'table' }
+      },
+      {
+        path: 'test',
+        name: 'test',
+        component: () => import('@/views/datastatistics/test/city-list'),
+        meta: { title: '测试报表', icon: 'table' }
       }
     ]
   },
