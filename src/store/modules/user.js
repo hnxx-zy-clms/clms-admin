@@ -1,13 +1,13 @@
 import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken, getName, setName, setUserId, getUserId } from '@/utils/auth'
+import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
-    name: getName(),
+    name: '',
     avatar: '',
-    userid: getUserId()
+    userid: ''
   }
 }
 
@@ -34,15 +34,9 @@ const mutations = {
 const actions = {
   // 用户登录
   login({ commit }, userInfo) {
-    // const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login(true).then(res => {
-        alert(res.msg)
+      login(userInfo).then(res => {
         commit('SET_TOKEN', res.msg)
-        commit('SET_NAME', res.data.userName)
-        commit('SET_USERID', res.data.userId)
-        setUserId(res.data.userId)
-        setName(res.data.userName)
         setToken(res.msg)
         resolve()
       }).catch(error => {
@@ -56,9 +50,9 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo().then(res => {
         const { data } = res
-        const { name, header } = data
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', header)
+        const { user } = data
+        commit('SET_NAME', user.userName)
+        commit('SET_USERID', user.userId)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -68,15 +62,10 @@ const actions = {
 
   // 退出登录
   logout({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        removeToken() // must remove  token  first
-        resetRouter()
-        commit('RESET_STATE')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+    return new Promise((resolve) => {
+      removeToken()
+      resolve()
+      commit('SET_TOKEN', '')
     })
   },
 

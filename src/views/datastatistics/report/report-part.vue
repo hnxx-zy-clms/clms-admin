@@ -88,7 +88,7 @@ export default {
             }
           }
         ]
-      },   
+      },
       classpage: {
         currentPage: 1,
         pageSize: 20,
