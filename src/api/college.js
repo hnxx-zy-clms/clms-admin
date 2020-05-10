@@ -26,6 +26,12 @@ export default {
       method: 'put',
       data: ids
     })
+  },
+  getAll(page) { // 查询
+    return request({
+      url: `/${group_name}/findAll`,
+      method: 'post'
+    })
   }
 }
 

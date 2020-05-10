@@ -26,6 +26,7 @@
       />
       <el-table-column prop="classesId" label="#" width="60" align="center"/>
       <el-table-column prop="classesName" label="班级名称" width="150" align="center"/>
+      <el-table-column prop="collegeName" label="所属学院" width="150" align="center"/>
       <el-table-column prop="classesStates" label="状态" width="100" align="center">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.classesStates === 1">启用</el-tag>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--添加表单  -->
-    <el-form ref="addForm" :model="xxx" label-width="80px" size="mini">
+    <el-form ref="addForm" :model="classes" label-width="80px" size="mini">
       <el-form-item label="组名称">
         <el-input v-model="classes.groupName" />
       </el-form-item>
