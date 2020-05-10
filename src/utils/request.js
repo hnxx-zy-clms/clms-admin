@@ -6,7 +6,7 @@ import { getToken } from '@/utils/auth'
 // 创建一个 axios 实例
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  timeout: 10000 // 请求超时
+  timeout: 100000 // 请求超时
 })
 
 /**
@@ -69,7 +69,7 @@ service.interceptors.response.use(
     Message({
       message: '请求超时!',
       type: 'error',
-      duration: 10 * 1000
+      duration: 10 * 10000
     })
     return Promise.reject(error)
   }

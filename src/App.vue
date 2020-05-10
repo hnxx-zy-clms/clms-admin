@@ -21,4 +21,7 @@ export default {
 .pagination {
   margin-top: 15px;
 }
+.el-divider--horizontal {
+  margin: 0px 0px 15px 0px !important;
+}
 </style>

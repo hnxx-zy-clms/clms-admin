@@ -29,12 +29,12 @@
       </el-form-item>
       <!-- 表单按钮 -->
       <el-form-item>
-        <el-button type="primary" sizi="mini" @click="getByPage">查询</el-button>
+        <el-button type="primary" icon="el-icon-search" sizi="mini" @click="getByPage">查询</el-button>
       </el-form-item>
     </el-form>
     <!-- 分割线 -->
     <el-divider />
-    <el-button type="danger" class="add-button" size="mini" @click="deleteByIds">批量删除</el-button>
+    <el-button type="danger" icon="el-icon-delete" class="add-button" size="mini" @click="deleteByIds">批量删除</el-button>
 
     <!-- 列表 -->
     <!--
