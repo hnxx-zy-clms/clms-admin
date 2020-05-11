@@ -5,7 +5,7 @@
         <span style="font-size: 22px">{{ task.taskTitle }}</span>
         <el-button style="float: right; padding: 3px 0" type="text" @click="goback">返回</el-button>
       </div>
-      <div>positionArr
+      <div>
         <pre>{{ task.taskContent }}</pre>
       </div>
     </el-card>
