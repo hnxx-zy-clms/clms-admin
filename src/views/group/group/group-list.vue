@@ -1,16 +1,7 @@
 <template>
-  <!-- 加载 -->
   <div v-loading="loading">
     <el-button type="primary" class="add-button" size="mini" @click="openAddDialog">添加</el-button>
     <el-button type="danger" class="add-button" size="mini" @click="updateByIds">批量禁用</el-button>
-
-    <!-- 列表 -->
-    <!--
-      1. :data v-bind:model="page.list" 绑定数据 分页对象的的list数据
-      2. show-overflow-tooltip 超出部分隐藏
-      3. @selection-change="handleSelectionChange" selection-change	当选择项发生变化时会触发该事件
-      4. @sort-change="changeSort" sort-change 事件回中可以获取当前排序的字段名[prop]和排序顺序[order]
-     -->
     <el-table
       :data="page.list"
       border
@@ -41,18 +32,6 @@
         </template>
       </el-table-column>
     </el-table>
-
-    <!--
-      分页组件-最完整版
-      class : 分页组件
-      current-page : 当前页 此处为动态绑定page对象的currentPage属性
-      page-sizes : 每页显示个数选择器的选项设置
-      page-size : 每页大小
-      layout : 组件布局
-      total : 总条目数 此处动态绑定page对象的totalCount属性
-      @size-change="handleSizeChange"  pageSize 改变时会触发  参数:每页条数
-      @current-change="handleCurrentChange" currentPage 改变时会触发 参数:当前页
-     -->
     <el-pagination
       align="center"
       class="pagination"
@@ -64,15 +43,9 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-
-    <!-- 添加弹窗 -->
     <el-dialog title="添加" :visible.sync="addDialog">
       <xxx-add @closeAddDialog="closeAddDialog" @getByPage="getByPage"/>
     </el-dialog>
-    <!--
-      修改弹窗
-      :xxx="xxx" 用于传递参数对象
-    -->
     <el-dialog title="修改" :visible.sync="updateDialog">
       <xxx-update :xxx="xxx" @closeUpdateDialog="closeUpdateDialog" @getByPage="getByPage"/>
     </el-dialog>
@@ -81,183 +54,164 @@
 </template>
 
 <script>
-  // 导入api接口定义的方法 接收变量为 xxxApi
-  import xxxApi from '@/api/group'
-  // 导入组件
-  import XxxAdd from './group-add'
+import xxxApi from '@/api/group'
+import XxxAdd from './group-add'
 
-  export default {
-    //  定义添加的组件 子组件/私有组件
-    components: {
-      XxxAdd
-    },
-    data() {
-      return {
-        // 定义page对象
-        page: {
-          currentPage: 1, // 当前页
-          pageSize: 10, // 每页显示条数
-          totalPage: 0, // 总页数
-          totalCount: 0, // 总条数
-          params: {}, // 查询参数对象
-          list: [], // 数据
-          sortColumn: 'createdTime', // 排序列
-          sortMethod: 'asc' // 排序方式
-        },
-        xxx: {
-          classesId: ''
-        },
-        loading: false, // 控制是否显示加载效果
-        selectXxxs: [], // 被选中的模版列
-        addDialog: false, // 控制添加弹窗显示
-        updateDialog: false // 控制修改弹窗显示
-      }
-    },
-    // 初始化函数
-    created() {
+export default {
+  components: {
+    XxxAdd
+  },
+  data() {
+    return {
+      // 定义page对象
+      page: {
+        currentPage: 1, // 当前页
+        pageSize: 10, // 每页显示条数
+        totalPage: 0, // 总页数
+        totalCount: 0, // 总条数
+        params: {}, // 查询参数对象
+        list: [], // 数据
+        sortColumn: 'createdTime', // 排序列
+        sortMethod: 'asc' // 排序方式
+      },
+      xxx: {
+        classesId: ''
+      },
+      loading: false, // 控制是否显示加载效果
+      selectXxxs: [], // 被选中的模版列
+      addDialog: false, // 控制添加弹窗显示
+      updateDialog: false // 控制修改弹窗显示
+    }
+  },
+  created() {
+    this.getByPage()
+  },
+  // 定义方法
+  methods: {
+    handleSizeChange(val) {
+      this.page.pageSize = val
       this.getByPage()
     },
-    // 定义方法
-    methods: {
-      // 每页大小改变 参数 value 为每页大小(pageSize)
-      handleSizeChange(val) {
-        this.page.pageSize = val
-        // 重新请求,刷新页面
-        this.getByPage()
-      },
-      // 当前页跳转 参数 value 当前页(currentPage)
-      handleCurrentChange(val) {
-        this.page.currentPage = val
-        this.getByPage()
-      },
-      // 分页方法 调用封装的方法 getByPage()
-      getByPage() {
-        xxxApi.getByPage(this.page.currentPage,this.page.pageSize).then(res => {
-          this.page.currentPage = res.data.pageNum
-          this.page.pageSize = res.data.pageSize
-          this.page.totalPage = res.data.pages
-          this.page.totalCount = res.data.total
-          this.page.list = res.data.list
-        })
-      },
-      // 条件排序 e 和 val 都行
-      changeSort(e) {
-        if (e.order) {
-          this.page.sortColumn = e.prop
-          this.page.sortMethod = e.order
-        } else {
-          this.page.sortColumn = ''
-          this.page.sortMethod = 'asc'
-        }
-        this.$message.success('操作成功!')
-        this.getByPage()
-      },
-      // 多选参数
-      handleSelectionChange(val) {
-        this.selectXxxs = val
-      },
-      updateByIds() {
-        // 批量删除
-        this.$confirm('删除之后无法恢复，是否删除?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'error'
-        }).then(() => {
-          const ids = []
-          this.selectXxxs.forEach(e => {
-            ids.push(e.groupId)
-          })
-          xxxApi.updateByIds(ids).then(res => {
-            this.$message.success('res.msg')
-            this.getByPage()
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-      },
-      // 操作部分相关方法
-      // 修改
-      toUpdate(id) {
-        xxxApi.get(id).then(res => {
-          this.xxx = res.data
-          this.updateDialog = true
-        })
-      },
-      // 查看
-      toRead() {
-        this.$message.success('QAQ')
-      },
-      // 启用
-      toEnable(id) {
-        this.$confirm('是否启用？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          xxxApi.update(id,1).then(res => {
-            this.$message.success(res.msg)
-            this.getByPage()
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消启用'
-          })
-        })
-      },
-      // 弃用
-      toDisable(id) {
-        this.$confirm('是否弃用?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          xxxApi.update(id,0).then(res => {
-            this.$message.success(res.msg)
-            this.getByPage()
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消弃用'
-          })
-        })
-      },
-      // 删除
-      toDelete(id) {
-        this.$confirm('是否删除?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          xxxApi.delete(id).then(res => {
-            this.$message.success(res.msg)
-            this.getByPage()
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-      },
-
-      // 模块功能组件
-      openAddDialog() {
-        // 打开添加弹窗
-        this.addDialog = true
-      },
-      closeAddDialog() {
-        // 关闭添加弹窗
-        this.addDialog = false
-      },
-      closeUpdateDialog() {
-        // 关闭修改弹窗
-        this.updateDialog = false
+    handleCurrentChange(val) {
+      this.page.currentPage = val
+      this.getByPage()
+    },
+    getByPage() {
+      xxxApi.getByPage(this.page.currentPage,this.page.pageSize).then(res => {
+        this.page.currentPage = res.data.pageNum
+        this.page.pageSize = res.data.pageSize
+        this.page.totalPage = res.data.pages
+        this.page.totalCount = res.data.total
+        this.page.list = res.data.list
+      })
+    },
+    changeSort(e) {
+      if (e.order) {
+        this.page.sortColumn = e.prop
+        this.page.sortMethod = e.order
+      } else {
+        this.page.sortColumn = ''
+        this.page.sortMethod = 'asc'
       }
+      this.$message.success('操作成功!')
+      this.getByPage()
+    },
+    handleSelectionChange(val) {
+      this.selectXxxs = val
+    },
+    updateByIds() {
+      this.$confirm('删除之后无法恢复，是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'error'
+      }).then(() => {
+        const ids = []
+        this.selectXxxs.forEach(e => {
+          ids.push(e.groupId)
+        })
+        xxxApi.updateByIds(ids).then(res => {
+          this.$message.success('res.msg')
+          this.getByPage()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    toUpdate(id) {
+      xxxApi.get(id).then(res => {
+        this.xxx = res.data
+        this.updateDialog = true
+      })
+    },
+    // 查看
+    toRead() {
+      this.$message.success('QAQ')
+    },
+    // 启用
+    toEnable(id) {
+      this.$confirm('是否启用？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        xxxApi.update(id, 1).then(res => {
+          this.$message.success(res.msg)
+          this.getByPage()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消启用'
+        })
+      })
+    },
+    // 弃用
+    toDisable(id) {
+      this.$confirm('是否弃用?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        xxxApi.update(id,0).then(res => {
+          this.$message.success(res.msg)
+          this.getByPage()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消弃用'
+        })
+      })
+    },
+    toDelete(id) {
+      this.$confirm('是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        xxxApi.delete(id).then(res => {
+          this.$message.success(res.msg)
+          this.getByPage()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    openAddDialog() {
+      this.addDialog = true
+    },
+    closeAddDialog() {
+      this.addDialog = false
+    },
+    closeUpdateDialog() {
+      this.updateDialog = false
     }
   }
+}
 </script>

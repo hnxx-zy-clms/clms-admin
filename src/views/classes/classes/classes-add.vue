@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!--添加表单  -->
     <el-form ref="addForm" :model="classes" label-width="80px" size="mini">
       <el-form-item label="班级名称">
         <el-input v-model="classes.classesName"/>
@@ -19,44 +18,39 @@
 </template>
 
 <script>
-  import xxxApi from '@/api/classes'
-  import collegeApi from '@/api/college'
+import xxxApi from '@/api/classes'
+import collegeApi from '@/api/college'
 
-  export default {
-    data() {
-      return {
-        classes: {
-          'classesName': '',
-        },
-        a: []
-      }
-    },
-    created() {
-      this.getAll()
-    },
-    methods: {
-      getAll() {
-        collegeApi.getAll().then(res => {
-          this.a = res.data
-        })
+export default {
+  data() {
+    return {
+      classes: {
+        'classesName': ''
       },
-      // 添加 确认
-      /**
-       * 1、父组件可以使用 props 把数据传给子组件。
-       * 2、子组件可以使用 $emit 触发父组件的自定义事件
-       */
-      onSubmit() {
-        xxxApi.save(this.classes).then(res => {
-          this.$message.success(res.msg)
-          this.$emit('closeAddDialog')
-          this.classes = {}
-          this.$emit('getByPage')
-        })
-      },
-      close() {
+      a: []
+    }
+  },
+  created() {
+    this.getAll()
+  },
+  methods: {
+    getAll() {
+      collegeApi.getAll().then(res => {
+        this.a = res.data
+      })
+    },
+    onSubmit() {
+      xxxApi.save(this.classes).then(res => {
+        this.$message.success(res.msg)
         this.$emit('closeAddDialog')
         this.classes = {}
-      }
+        this.$emit('getByPage')
+      })
+    },
+    close() {
+      this.$emit('closeAddDialog')
+      this.classes = {}
     }
   }
+}
 </script>

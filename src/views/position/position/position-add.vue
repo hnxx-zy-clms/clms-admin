@@ -14,33 +14,28 @@
 </template>
 
 <script>
-  import xxxApi from '@/api/position'
-  export default {
-    data() {
-      return {
-        classes: {
-          "positionName":""
-        }
-      }
-    },
-    methods: {
-      // 添加 确认
-      /**
-       * 1、父组件可以使用 props 把数据传给子组件。
-       * 2、子组件可以使用 $emit 触发父组件的自定义事件
-       */
-      onSubmit() {
-        xxxApi.save(this.classes).then(res => {
-          this.$message.success(res.msg)
-          this.$emit('closeAddDialog')
-          this.classes = {}
-          this.$emit('getByPage')
-        })
-      },
-      close() {
-        this.$emit('closeAddDialog')
-        this.classes = {}
+import xxxApi from '@/api/position'
+export default {
+  data() {
+    return {
+      classes: {
+        'positionName': ''
       }
     }
+  },
+  methods: {
+    onSubmit() {
+      xxxApi.save(this.classes).then(res => {
+        this.$message.success(res.msg)
+        this.$emit('closeAddDialog')
+        this.classes = {}
+        this.$emit('getByPage')
+      })
+    },
+    close() {
+      this.$emit('closeAddDialog')
+      this.classes = {}
+    }
   }
+}
 </script>
