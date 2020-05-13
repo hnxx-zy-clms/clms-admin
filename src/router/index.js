@@ -39,7 +39,27 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/user/user',
     name: 'User',
-    meta: { title: '用户管理', icon: 'user-tool' }
+    meta: { title: '用户管理', icon: 'user-tool' },
+    children: [
+      {
+        path: 'table',
+        name: 'Table',
+        component: () => import('@/views/user/user/index'),
+        meta: { title: '用户管理', icon: 'user' }
+      },
+      {
+        path: 'tree',
+        name: 'Tree',
+        component: () => import('@/views/user/role/index'),
+        meta: { title: '角色管理', icon: 'tree' }
+      },
+      {
+        path: 'right',
+        name: 'right',
+        component: () => import('@/views/user/right/index'),
+        meta: { title: '权限管理', icon: 'table' }
+      }
+    ]
   },
 
   {
