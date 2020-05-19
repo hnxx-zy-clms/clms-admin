@@ -82,5 +82,12 @@ export default {
       url: `/${group_name}/setlevel/${id}/${level}`,
       method: 'put'
     })
+  },
+  deleteFile(fileUrl) {
+    return request({
+      url: `/upload/deleteFile`,
+      method: 'post',
+      data: { baseUrl: fileUrl }
+    })
   }
 }

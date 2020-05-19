@@ -12,8 +12,23 @@
         <el-input v-model="switchStatus.taskTitle" />
       </el-form-item>
       <el-form-item label="任务内容" prop="taskContent">
-        <el-input v-model="switchStatus.taskContent" type="textarea" :autosize="{ minRows: 10, maxRows: 25}" />
+        <editor :catchData="catchData" :content="taskContent"></editor>
+<!--        <el-input v-model="switchStatus.taskContent" type="textarea" :autosize="{ minRows: 10, maxRows: 25}" />-->
       </el-form-item>
+      <el-upload
+        class="upload-demo"
+        ref="upload"
+        :action="uploadUrl"
+        :multiple=false
+        :headers="header"
+        :before-remove="beforeMove"
+        :on-remove="handleRemove"
+        :on-success="uploadSuccess"
+        :file-list="fileList"
+        :auto-upload="false">
+        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+      </el-upload>
       <el-form-item>
         <el-button type="success" size="mini" :disabled="switchStatus.Enabled" @click="switchStatus.isDeleted === true || switchStatus.isEnabled === false?Pushed(switchStatus):onSubmit('push')">发布</el-button>
         <el-button type="primary" size="mini" :disabled="switchStatus.Enabled || switchStatus.isDeleted" @click="switchStatus.isDeleted === true || switchStatus.isEnabled === false?Saved(switchStatus):onSubmit('save')">保存</el-button>
@@ -26,7 +41,12 @@
 <script>
 import taskApi from '@/api/noticetask/task'
 import { mapGetters } from 'vuex'
+import editor from './WangEditor'
+import { getToken } from '@/utils/auth'
 export default {
+  components: {
+    editor
+  },
   data() {
     return {
       rules: {
@@ -36,7 +56,11 @@ export default {
         taskContent: [
           { required: true, message: '任务内容不能为空', trigger: 'blur' }
         ]
-      }
+      },
+      taskContent: '',
+      uploadUrl: process.env.VUE_APP_UPLOAD_URL_FILE,
+      header: { Authorization: getToken() },
+      fileList: []
     }
   },
   props: {
@@ -53,10 +77,16 @@ export default {
     ])
   },
   methods: {
+    catchData(data) {
+      this.data.taskContent = data
+    },
     panduan() { // 判断id 、username 的值
       if (this.data.createdId == null) {
         this.data.createdId = this.userid
         this.data.userName = this.name
+      } else {
+        console.log(this.data.taskContent)
+        this.taskContent = this.data.taskContent
       }
     },
     // 添加 确认
@@ -111,7 +141,33 @@ export default {
     },
     close() {
       this.$emit('closeAddDialog')
+      this.taskContent = ''
       this.task = {}
+    },
+    submitUpload() {
+      this.$refs.upload.submit()
+    },
+    uploadSuccess(file) {
+      this.data.fileName = file.name
+      console.log(file)
+      console.log('sucess')
+      console.log(this.data.fileName)
+    },
+    beforeMove(file, fileList) {
+      if (typeof file.response !== 'undefined') {
+        taskApi.deleteFile(file.response.data).then(res => {
+          if (res.code === 200) {
+            console.log(res)
+          } else {
+            return false
+          }
+        })
+      }
+    },
+    handleRemove(file, fileList) {
+      console.log(file)
+      this.fileList = fileList
+      console.log(this.fileList)
     }
   }
 }
