@@ -1,6 +1,53 @@
 <template>
-  <!-- 用户数据表格 -->
-  <div>
+  <div v-loading="loading">
+    <!-- 搜索栏 模糊查询-->
+    <el-form :inline="true" :model="page" class="demo-form-inline" size="mini">
+      <el-form-item label="用户名">
+        <el-input v-model="page.params.userName" placeholder="用户名" clearable />
+      </el-form-item>
+      <el-form-item label="组别">
+        <el-select v-model="page.params.userGroupId" placeholder="组别" clearable filterable>
+          <el-option
+            v-for="item in groupList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="角色">
+        <el-select v-model="page.params.userPositionId" placeholder="角色" clearable filterable>
+          <el-option
+            v-for="item in positionList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="起始日期">
+        <el-date-picker
+          v-model="page.params.reportDate"
+          type="daterange"
+          align="right"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :default-time="['00:00:00', '23:59:59']"
+          :picker-options="pickerOptions"
+          format="yyyy 年 MM 月 dd 日"
+          value-format="yyyy-MM-dd HH:mm:ss"
+        />
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" sizi="mini" @click="query">查询</el-button>
+      </el-form-item>
+    </el-form>
+    <!-- 分割线 -->
+    <el-divider />
+    <el-button type="success" class="add-button" size="mini" @click="adminExcelDownloads">导出当前数据</el-button>
+    <!-- 用户数据表格 -->
     <el-table
       :data="table"
       style="width: 100%"
