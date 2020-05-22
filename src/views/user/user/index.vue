@@ -3,7 +3,7 @@
     <!-- 搜索栏 模糊查询-->
     <el-form :inline="true" :model="page" class="demo-form-inline" size="mini">
       <el-form-item label="用户名">
-        <el-input v-model="page.params.userName" placeholder="用户名" clearable />
+        <el-input v-model="page.params.userName" placeholder="输入用户名搜索" clearable />
       </el-form-item>
       <el-form-item label="组别">
         <el-select v-model="page.params.userGroupId" placeholder="组别" clearable filterable>
@@ -40,10 +40,25 @@
           value-format="yyyy-MM-dd HH:mm:ss"
         />
       </el-form-item>
-      <el-form-item>
-        <el-button type="primary" sizi="mini" @click="query">查询</el-button>
-      </el-form-item>
-    </el-form>
+      <el-select
+        clearable
+        size="small"
+        placeholder="状态"
+        class="filter-item"
+        style="width: 80px;margin-top:-2px;"
+      >
+        <el-option
+          v-for="item in enabledTypeOptions"
+          :key="item.key"
+          :label="item.display_name"
+          :value="item.key"
+        />
+      </el-select>
+      <span>
+        <el-form-item style="margin-left:9px;margin-top:-2px">
+          <el-button type="primary" size="small" @click="query">查询</el-button>
+        </el-form-item>
+      </span></el-form>
     <!-- 分割线 -->
     <!-- 增删改查 -->
     <div style="margin-bottom:28px">
@@ -64,73 +79,48 @@
         <i class="el-icon-download" /><span>导出</span></button>
     </div>
     <!--  -->
-    <!-- 用户数据表格 -->
-    <el-table
-      :data="table"
-      style="width: 100%"
-    >
-      <el-table-column :selectable="checkboxT" type="selection" width="55" />
-      <el-table-column
-        prop="id"
-        label="用户ID"
-        width="80"
-      />
-      <el-table-column
-        prop="name"
-        label="登录名"
-      />
-      <el-table-column
-        prop="class"
-        label="班级"
-        width="120"
-      />
-      <el-table-column
-        prop="group"
-        label="小组"
-        width="120"
-      />
-      <el-table-column
-        prop="status"
-        label="用户状态"
-        width="120"
-      />
-      <el-table-column
-        prop="created_time"
-        label="创建日期"
-        width="180"
-      />
-      <el-table-column
-        prop="updated_time"
-        label="更新日期"
-        width="180"
-      />
-      <el-table-column
-        prop="operation"
-        label="操作"
-      />
-    </el-table>
-    <!-- 分页插件 -->
-    <el-form :inline="true" class="demo-form-inline" size="mini" style="margin-left:150px">
-      <!--  分页排序-->
-      <el-form-item>
-        <el-pagination
-          align="left"
-          class="pagination"
-          :current-page="page.currentPage"
-          :page-sizes="[2,10,20,50]"
-          :page-size="page.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="page.totalCount"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
-      </el-form-item>
-      <!-- 跳转页按钮 -->
-      <el-form-item style="margin-top:17px;margin-left:10px">
-        <el-button type="primary" sizi="mini" @click="query">确定</el-button>
-      </el-form-item>
-    </el-form>
 
+    <el-row :gutter="20">
+      <el-col>
+        <!-- 用户数据表格 -->
+        <el-table
+          :data="table"
+          style="width: 100%"
+        >
+          <el-table-column :selectable="checkboxT" type="selection" width="55" />
+          <el-table-column prop="id" label="用户ID" width="80" />
+          <el-table-column prop="name" label="用户名" />
+          <el-table-column prop="userIcon" label="头像" />
+          <el-table-column prop="class" label="班级" width="120" />
+          <el-table-column prop="group" label="小组" width="120" />
+          <el-table-column prop="created_time" label="创建日期" width="180" />
+          <el-table-column prop="updated_time" label="更新日期" width="180" />
+          <el-table-column prop="status" label="用户状态" width="120" />
+          <el-table-column prop="operation" label="操作" />
+        </el-table>
+        <!-- 分页插件 -->
+        <el-form :inline="true" class="demo-form-inline" size="mini" style="margin-left:150px">
+          <!--  分页排序-->
+          <el-form-item>
+            <el-pagination
+              align="left"
+              class="pagination"
+              :current-page="page.currentPage"
+              :page-sizes="[2,10,20,50]"
+              :page-size="page.pageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="page.totalCount"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+            />
+          </el-form-item>
+          <!-- 跳转页按钮 -->
+          <el-form-item style="margin-top:17px;margin-left:10px">
+            <el-button type="primary" sizi="mini" @click="query">确定</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
   </div>
 
 </template>

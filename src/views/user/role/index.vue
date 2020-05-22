@@ -52,7 +52,9 @@
             <span class="role-span">角色列表</span>
           </div>
           <!-- 角色表格 -->
-          <el-table>
+          <el-table
+            :data="table-role"
+          >
             <el-table-column :selectable="checkboxT" type="selection" width="55" />
             <el-table-column prop="name" label="名称" />
             <el-table-column prop="dataScope" label="数据权限" />
@@ -93,6 +95,8 @@
 export default {
   data() {
     return {
+      // 角色表格
+
       // 定义page对象
       page: {
         currentPage: 1, // 当前页
