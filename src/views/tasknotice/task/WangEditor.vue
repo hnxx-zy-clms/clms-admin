@@ -58,9 +58,7 @@ export default {
     }
 
     this.editor.create() // 创建富文本实例
-    if (!this.content) {
-      this.editor.txt.html('请编辑内容1')
-    } else {
+    if (this.content) {
       this.editor.txt.html(this.content)
     }
   }

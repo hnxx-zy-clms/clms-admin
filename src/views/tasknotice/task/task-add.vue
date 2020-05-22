@@ -3,7 +3,7 @@
     <!--添加表单  -->
     <el-form ref="addForm" :model="switchStatus" label-width="80px" size="mini" :rules="rules">
       <el-form-item label="创建人">
-        <el-input v-model="switchStatus.userName" disabled/>
+        <el-input v-model="switchStatus.userName" disabled />
       </el-form-item>
       <el-form-item label="创建人ID">
         <el-input v-model="switchStatus.createdId" disabled />
@@ -12,22 +12,23 @@
         <el-input v-model="switchStatus.taskTitle" />
       </el-form-item>
       <el-form-item label="任务内容" prop="taskContent">
-        <editor :catchData="catchData" :content="taskContent"></editor>
-<!--        <el-input v-model="switchStatus.taskContent" type="textarea" :autosize="{ minRows: 10, maxRows: 25}" />-->
+        <editor :catch-data="catchData" :content="taskContent" />
       </el-form-item>
       <el-upload
-        class="upload-demo"
         ref="upload"
+        class="upload-demo"
         :action="uploadUrl"
-        :multiple=false
+        :multiple="false"
         :headers="header"
         :before-remove="beforeMove"
         :on-remove="handleRemove"
         :on-success="uploadSuccess"
-        :file-list="fileList"
-        :auto-upload="false">
+        :file-list="newFileList"
+        :limit="1"
+        :on-exceed="overmaxFile"
+        :auto-upload="true"
+      >
         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
       </el-upload>
       <el-form-item>
         <el-button type="success" size="mini" :disabled="switchStatus.Enabled" @click="switchStatus.isDeleted === true || switchStatus.isEnabled === false?Pushed(switchStatus):onSubmit('push')">发布</el-button>
@@ -47,6 +48,9 @@ export default {
   components: {
     editor
   },
+  props: {
+    data: {}
+  },
   data() {
     return {
       rules: {
@@ -59,17 +63,28 @@ export default {
       },
       taskContent: '',
       uploadUrl: process.env.VUE_APP_UPLOAD_URL_FILE,
-      header: { Authorization: getToken() },
-      fileList: []
+      header: { Authorization: getToken() }
     }
-  },
-  props: {
-    data: {}
   },
   computed: {
     switchStatus: function() {
       this.panduan()
       return this.data
+    },
+    newFileList: {
+      get: function() {
+        if (typeof this.data.fileUrl !== 'undefined') {
+          var list = [{ name: '', url: '' }]
+          list[0].name = this.data.fileName
+          list[0].url = this.data.fileUrl
+          return list
+        } else {
+          return undefined
+        }
+      },
+      set: function() {
+        return undefined
+      }
     },
     ...mapGetters([
       'name',
@@ -85,7 +100,6 @@ export default {
         this.data.createdId = this.userid
         this.data.userName = this.name
       } else {
-        console.log(this.data.taskContent)
         this.taskContent = this.data.taskContent
       }
     },
@@ -107,9 +121,9 @@ export default {
       }
       taskApi.save(this.data).then(res => {
         this.$message.success(res.msg)
-        this.$emit('closeAddDialog')
-        this.task = {}
+        this.beforeclose()
         this.$emit('getByPage')
+        this.$emit('closeAddDialog')
       })
     },
     Pushed(data) {
@@ -117,7 +131,7 @@ export default {
         this.$message.warning('请输入内容')
         return false
       }
-      this.$emit('closeAddDialog')
+      this.beforeclose()
       if (this.data.isDeleted === true) {
         this.$emit('deletePushed', this.data)
       } else if (this.data.isEnabled === false) {
@@ -135,39 +149,51 @@ export default {
       }
       taskApi.update(this.data).then(res => {
         this.$message.success(res.msg)
-        this.$emit('closeAddDialog')
+        this.beforeclose()
         this.$emit('getByPage')
+        this.$emit('closeAddDialog')
       })
     },
-    close() {
-      this.$emit('closeAddDialog')
+    beforeclose() {
       this.taskContent = ''
       this.task = {}
+    },
+    close() {
+      this.beforeclose()
+      this.$emit('closeAddDialog')
     },
     submitUpload() {
       this.$refs.upload.submit()
     },
-    uploadSuccess(file) {
+    uploadSuccess(response, file, fileList) {
+      this.data.fileUrl = response.data
       this.data.fileName = file.name
-      console.log(file)
-      console.log('sucess')
-      console.log(this.data.fileName)
+      this.$message.success('上传成功')
     },
     beforeMove(file, fileList) {
       if (typeof file.response !== 'undefined') {
         taskApi.deleteFile(file.response.data).then(res => {
           if (res.code === 200) {
-            console.log(res)
+            this.$message.success('删除成功')
+          } else {
+            return false
+          }
+        })
+      } else {
+        taskApi.deleteFile(file.url).then(res => {
+          if (res.code === 200) {
+            this.$message.success('删除成功')
           } else {
             return false
           }
         })
       }
     },
-    handleRemove(file, fileList) {
-      console.log(file)
+    handleRemove(fileList) {
       this.fileList = fileList
-      console.log(this.fileList)
+    },
+    overmaxFile(file, fileList) {
+      this.$message.info('只允许上传一个文件')
     }
   }
 }

@@ -43,9 +43,9 @@
         width="55"
       />
       <el-table-column prop="taskId" label="编号" width="60" align="center" />
-      <el-table-column prop="taskTitle" label="通知标题" width="120" align="center" />
-      <el-table-column prop="createdTime" label="创建时间" sortable="custom" width="135" align="center" />
-      <el-table-column prop="pushedTime" label="发布时间" sortable="custom" width="135" align="center" />
+      <el-table-column prop="taskTitle" label="通知标题" width="120" align="center" :show-overflow-tooltip="true"/>
+      <el-table-column prop="createdTime" label="创建时间" sortable="custom" width="135" align="center" :show-overflow-tooltip="true" />
+      <el-table-column prop="pushedTime" label="发布时间" sortable="custom" width="135" align="center" :show-overflow-tooltip="true"/>
       <el-table-column prop="userName" label="创建人" width="80" align="center" />
       <el-table-column prop="numDid" :label="this.did" width="140" align="center" />
       <el-table-column
@@ -107,8 +107,8 @@
     />
 
     <!-- 添加弹窗 -->
-    <el-dialog title="添加" :visible.sync="addDialog">
-      <task-add :data="task" @closeAddDialog="closeAddDialog" @getByPage="getByPage" @deletePushed="deletePushed" />
+    <el-dialog title="添加" :visible="addDialog">
+      <task-add :data="task" @closeAddDialog="closeAddDialog" @getByPage="getByPage" @deletePushed="deletePushed" v-if="addDialog" />
     </el-dialog>
     <router-view/>
 
@@ -216,7 +216,6 @@ export default {
     },
     getUserNum() {
       taskApi.getUserNum().then(res => {
-        console.log(res.data)
         this.totalNum = res.data
       })
     },
@@ -238,7 +237,6 @@ export default {
     // 多选参数
     handleSelectionChange(val) {
       this.selectTask = val
-      console.log(this.selectTask)
     },
     deleteByIds() {
       // 批量删除
@@ -284,6 +282,7 @@ export default {
     deletePushed(val) {
       taskApi.deleteenable(val).then(res => {
         this.$message.success(res.msg)
+        this.addDialog = false
         this.getByPage()
       })
     },

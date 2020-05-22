@@ -6,7 +6,9 @@
         <el-button style="float: right; padding: 3px 0" type="text" @click="goback">返回</el-button>
       </div>
       <div class="taskContent" v-html="task.taskContent">
-<!--        <pre>{{ task.taskContent }}</pre>-->
+      </div>
+      <div class="taskFile" v-if="task.fileName">
+        <a :href="task.fileUrl+'?filename='+task.fileName"><el-button type="primary">下载附件<i class="el-icon-upload el-icon--right"></i></el-button></a>
       </div>
     </el-card>
 

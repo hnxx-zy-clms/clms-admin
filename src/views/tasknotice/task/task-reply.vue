@@ -1,35 +1,38 @@
 <template>
- <div>
-   <el-card class="box-card" shadow="hover" body-style="{height:100px}">
-     <div slot="header" class="clearfix" >
-       <span>详情</span>
-       <el-button style="float: right; padding: 3px 0" type="text" @click="goback">返回</el-button>
-     </div>
-     <div>
-       <p style="font-size: 30px">{{reply.userName}}</p>
-       <p style="color: #999999">任务状态：已完成</p>
-       <p style="color: #999999">完成时间：{{reply.didTime}}</p>
-       <p style="color: #999999">任务评分：<span style="color: #FF6800">{{taskLevel}}</span></p>
-     </div>
-     <el-divider>回复内容</el-divider>
-     <div>
-       <div class="replyContent" v-html="reply.replyContent">
-       </div>
-     </div>
-     <div>
-       <template>
-         <el-radio-group v-model="radio" :disabled = "this.reply.level != null?true:false">
-           <el-radio :label="1">优秀</el-radio>
-           <el-radio :label="2">良好</el-radio>
-           <el-radio :label="3">及格</el-radio>
-           <el-radio :label="4">未及格</el-radio>
-         </el-radio-group>
-         <el-button @click="setlevel(radio)" :disabled="this.reply.level != null?true:false"> 批阅</el-button>
-       </template>
-     </div>
-   </el-card>
+  <div>
+    <el-card class="box-card" shadow="hover" body-style="{height:100px}">
+      <div slot="header" class="clearfix">
+        <span>详情</span>
+        <el-button style="float: right; padding: 3px 0" type="text" @click="goback">返回</el-button>
+      </div>
+      <div>
+        <p style="font-size: 30px">{{ reply.userName }}</p>
+        <p style="color: #999999">任务状态：已完成</p>
+        <p style="color: #999999">完成时间：{{ reply.didTime }}</p>
+        <p style="color: #999999">任务评分：<span style="color: #FF6800">{{ taskLevel }}</span></p>
+      </div>
+      <el-divider>回复内容</el-divider>
+      <div>
+        <div class="replyContent" v-html="reply.replyContent">
+        </div>
+        <div class="taskFile" v-if="reply.fileName">
+          <a :href="reply.fileUrl+'?filename='+reply.fileName"><el-button type="primary">下载附件<i class="el-icon-upload el-icon--right" /></el-button></a>
+        </div>
+      </div>
+      <div>
+        <template>
+          <el-radio-group v-model="radio" :disabled="this.reply.level != null?true:false">
+            <el-radio :label="1">优秀</el-radio>
+            <el-radio :label="2">良好</el-radio>
+            <el-radio :label="3">及格</el-radio>
+            <el-radio :label="4">未及格</el-radio>
+          </el-radio-group>
+          <el-button :disabled="this.reply.level != null?true:false" @click="setlevel(radio)"> 批阅</el-button>
+        </template>
+      </div>
+    </el-card>
 
- </div>
+  </div>
 </template>
 
 <script>
@@ -43,9 +46,6 @@ export default {
       radio: 0 // 等级
     }
   },
-  created() {
-    this.getTaskReply()
-  },
   computed: {
     // eslint-disable-next-line vue/return-in-computed-property
     taskLevel() {
@@ -55,6 +55,9 @@ export default {
       if (this.reply.level === 4) { return '不及格' }
       if (this.reply.level == null) { return '暂未评分' }
     }
+  },
+  created() {
+    this.getTaskReply()
   },
   methods: {
     getTaskReply() {
