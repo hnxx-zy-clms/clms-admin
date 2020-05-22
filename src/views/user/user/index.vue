@@ -45,13 +45,31 @@
       </el-form-item>
     </el-form>
     <!-- 分割线 -->
-    <el-divider />
-    <el-button type="success" class="add-button" size="mini" @click="adminExcelDownloads">导出当前数据</el-button>
+    <!-- 增删改查 -->
+    <div style="margin-bottom:28px">
+      <!-- crud组件 -->
+      <button type="button" class="el-button filter-item el-button--primary el-button--mini"><!----><i class="el-icon-plus" /><span>
+        新增
+      </span>
+      </button>
+      <button disabled="disabled" type="button" class="el-button filter-item el-button--success el-button--mini is-disabled"><!----><i class="el-icon-edit" /><span>
+        修改
+      </span>
+      </button>
+      <button slot="reference" disabled="disabled" type="button" class="el-button filter-item el-button--danger el-button--mini is-disabled"><!----><i class="el-icon-delete" /><span>
+        删除
+      </span>
+      </button>
+      <button type="button" class="el-button filter-item el-button--warning el-button--mini"><!---->
+        <i class="el-icon-download" /><span>导出</span></button>
+    </div>
+    <!--  -->
     <!-- 用户数据表格 -->
     <el-table
       :data="table"
       style="width: 100%"
     >
+      <el-table-column :selectable="checkboxT" type="selection" width="55" />
       <el-table-column
         prop="id"
         label="用户ID"
@@ -121,7 +139,7 @@
 export default {
   data() {
     return {
-    //
+    // 模拟数据
       table: [{
         id: 1,
         name: '南街北巷',

@@ -54,10 +54,10 @@ export const constantRoutes = [
         meta: { title: '角色管理', icon: 'tree' }
       },
       {
-        path: 'right',
-        name: 'right',
-        component: () => import('@/views/user/right/index'),
-        meta: { title: '权限管理', icon: 'table' }
+        path: 'menu',
+        name: 'Menu',
+        component: () => import('@/views/user/menu/index'),
+        meta: { title: '菜单管理', icon: 'table' }
       }
     ]
   },
