@@ -27,6 +27,9 @@
           <i v-else class="el-icon-plus avatar-uploader-icon" />
         </el-upload>
       </el-form-item>
+      <el-form-item label="描述">
+        <el-input v-model="article.articleDesc" />
+      </el-form-item>
       <el-form-item label="内容">
         <tinymce v-model="article.articleContent" />
       </el-form-item>
@@ -55,7 +58,7 @@ export default {
   },
   data() {
     return {
-      imageUrl: '', // 上传图片回显
+      imageUrl: this.article.articleImage, // 上传图片回显
       headers: { // 上传文件的请求头
         Authorization: getToken()
       },

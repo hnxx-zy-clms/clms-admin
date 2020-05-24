@@ -27,6 +27,9 @@
           <i v-else class="el-icon-plus avatar-uploader-icon" />
         </el-upload>
       </el-form-item>
+      <el-form-item label="描述">
+        <el-input v-model="article.articleDesc" type="textarea" />
+      </el-form-item>
       <el-form-item label="内容">
         <tinymce v-model="article.articleContent" />
       </el-form-item>

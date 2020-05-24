@@ -3,7 +3,7 @@ var group_name = 'good'
 export default {
   save(good) { // 添加，保存
     return request({
-      url: `/${group_name}/doGood`,
+      url: `/${group_name}/save`,
       method: 'post',
       data: good
     })

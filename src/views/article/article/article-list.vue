@@ -19,7 +19,6 @@
     <!-- 分割线 -->
     <el-divider />
     <el-button type="primary" class="add-button" size="mini" @click="openAddDialog">添加</el-button>
-
     <!-- 列表 -->
     <!--
       1. :data v-bind:model="page.list" 绑定数据 分页对象的的list数据
@@ -87,7 +86,6 @@
         </template>
       </el-table-column>
     </el-table>
-
     <!--
       分页组件-最完整版
       class : 分页组件
@@ -110,7 +108,6 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-
     <!-- 添加弹窗 -->
     <el-dialog title="添加" :visible.sync="addDialog">
       <article-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" />
