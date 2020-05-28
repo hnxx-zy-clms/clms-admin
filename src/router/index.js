@@ -86,12 +86,6 @@ export const constantRoutes = [
         name: 'Marking',
         component: () => import('@/views/report/marking/marking-list'),
         meta: { title: '批阅管理', icon: 'report-mark' }
-      },
-      {
-        path: 'statistics',
-        name: 'Statistics',
-        component: () => import('@/views/report/statistics/statistics'),
-        meta: { title: '报告数据统计', icon: 'report-data' }
       }
     ]
   },
@@ -272,6 +266,12 @@ export const constantRoutes = [
         name: 'Xxx',
         component: () => import('@/views/sys/xxx/xxx-list'),
         meta: { title: '模版', icon: 'table' }
+      },
+      {
+        path: 'druid',
+        name: 'Druid',
+        component: () => import('@/views/sys/druid/index'),
+        meta: { title: 'Druid', icon: 'table' }
       }
     ]
   },

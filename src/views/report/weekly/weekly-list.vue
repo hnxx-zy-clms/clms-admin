@@ -85,7 +85,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="reportId" label="#" width="60" align="center" />
-      <el-table-column prop="userName" align="center" label="用户名" width="200" show-overflow-tooltip />
+      <el-table-column prop="name" align="center" label="用户名" width="200" show-overflow-tooltip />
       <el-table-column prop="userGroupId" label="组名" width="120" sortable="custom" align="center" />
       <el-table-column prop="userClassesId" label="班级名" width="120" sortable="custom" align="center" />
       <el-table-column prop="createdTime" label="创建时间" width="200" sortable="custom" align="center" />
@@ -106,7 +106,7 @@
           <el-tag v-else type="info">不可编辑</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="208" align="center">
+      <el-table-column  fixed="right"  label="操作" width="208" align="center">
         <template slot-scope="scope">
           <!--          <el-button size="mini" type="primary" @click="toUpdate(scope.row.typeId)">修改</el-button>-->
           <el-button slot="reference" size="mini" type="primary" @click="toRead(scope.row)">查看</el-button>
@@ -162,7 +162,7 @@ export default {
       report: {
         reportId: '',
         reportType: '',
-        userName: '',
+        name: '',
         userGroupId: '',
         userClassesId: '',
         workContent: '',
