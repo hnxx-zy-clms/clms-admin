@@ -21,19 +21,23 @@
         :multiple="false"
         :headers="header"
         :before-remove="beforeMove"
+        :before-upload="beforeUpload"
         :on-remove="handleRemove"
         :on-success="uploadSuccess"
         :file-list="newFileList"
         :limit="1"
         :on-exceed="overmaxFile"
         :auto-upload="true"
+        v-loading="loadingFile"
+        element-loading-text="文件上传中"
       >
         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
       </el-upload>
       <el-form-item>
-        <el-button type="success" size="mini" :disabled="switchStatus.Enabled" @click="switchStatus.isDeleted === true || switchStatus.isEnabled === false?Pushed(switchStatus):onSubmit('push')">发布</el-button>
-        <el-button type="primary" size="mini" :disabled="switchStatus.Enabled || switchStatus.isDeleted" @click="switchStatus.isDeleted === true || switchStatus.isEnabled === false?Saved(switchStatus):onSubmit('save')">保存</el-button>
-        <el-button type="danger" size="mini" @click="close">取消</el-button>
+        <!--任务处的发布按钮禁用判断有点问题-->
+        <el-button type="success" size="mini" :disabled="switchStatus.Enabled || loadingFile" @click="switchStatus.isDeleted === true || switchStatus.isEnabled === false?Pushed(switchStatus):onSubmit('push')">发布</el-button>
+        <el-button type="primary" size="mini" :disabled="switchStatus.Enabled || switchStatus.isDeleted || loadingFile" @click="switchStatus.isDeleted === true || switchStatus.isEnabled === false?Saved(switchStatus):onSubmit('save')">保存</el-button>
+        <el-button :disabled="loadingFile" type="danger" size="mini" @click="close">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -62,6 +66,7 @@ export default {
         ]
       },
       taskContent: '',
+      loadingFile: false,
       uploadUrl: process.env.VUE_APP_UPLOAD_URL_FILE,
       header: { Authorization: getToken() }
     }
@@ -169,6 +174,10 @@ export default {
       this.data.fileUrl = response.data
       this.data.fileName = file.name
       this.$message.success('上传成功')
+      this.loadingFile = false
+    },
+    beforeUpload(file) {
+      this.loadingFile = true
     },
     beforeMove(file, fileList) {
       if (typeof file.response !== 'undefined') {
@@ -190,6 +199,7 @@ export default {
       }
     },
     handleRemove(fileList) {
+      this.loadingFile = false
       this.fileList = fileList
     },
     overmaxFile(file, fileList) {
