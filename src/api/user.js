@@ -1,4 +1,23 @@
 import request from '@/utils/request'
+var group_name = 'user'
+export default {
+  getByPage(page) { // 分页查询用户信息
+    // 向前端发送查询请求,传递的参数为page
+    return request({
+      url: `/${group_name}/get/byPage`,
+      method: 'post',
+      data: page
+    })
+  },
+  getByGroup(user) { // 根据用户id和用户名查询用户信息
+    return request({
+      url: `/${group_name}/get/byGroup`,
+      method: 'post',
+      data: user
+    })
+  }
+}
+
 export function login(data) {
   return request({
     url: `/login?username=${data.username}&password=${data.password}`,

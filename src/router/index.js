@@ -42,14 +42,14 @@ export const constantRoutes = [
     meta: { title: '用户管理', icon: 'user-tool' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
+        path: 'user',
+        name: 'User',
         component: () => import('@/views/user/user/index'),
         meta: { title: '用户管理', icon: 'user' }
       },
       {
-        path: 'tree',
-        name: 'Tree',
+        path: 'role',
+        name: 'Role',
         component: () => import('@/views/user/role/index'),
         meta: { title: '角色管理', icon: 'tree' }
       },

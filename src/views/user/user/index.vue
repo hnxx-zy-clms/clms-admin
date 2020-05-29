@@ -84,19 +84,22 @@
       <el-col>
         <!-- 用户数据表格 -->
         <el-table
-          :data="table"
+          ref="table"
+          border
+          :data="page.list"
           style="width: 100%"
+          @selection-change="handleSelectionChange"
+          @sort-change="changeSort"
         >
           <el-table-column :selectable="checkboxT" type="selection" width="55" />
-          <el-table-column prop="id" label="用户ID" width="80" />
-          <el-table-column prop="name" label="用户名" />
+          <el-table-column prop="userId" label="用户ID" width="80" />
+          <el-table-column prop="userName" label="用户名" />
           <el-table-column prop="userIcon" label="头像" />
-          <el-table-column prop="class" label="班级" width="120" />
-          <el-table-column prop="group" label="小组" width="120" />
-          <el-table-column prop="created_time" label="创建日期" width="180" />
-          <el-table-column prop="updated_time" label="更新日期" width="180" />
-          <el-table-column prop="status" label="用户状态" width="120" />
-          <el-table-column prop="operation" label="操作" />
+          <el-table-column prop="userClass" label="班级" width="120" />
+          <el-table-column prop="userGroup" label="小组" width="120" />
+          <el-table-column prop="createdTime" label="创建日期" width="180" />
+          <el-table-column prop="updatedTime" label="更新日期" width="180" />
+          <el-table-column prop="isEnabled" label="用户状态" width="120" />
         </el-table>
         <!-- 分页插件 -->
         <el-form :inline="true" class="demo-form-inline" size="mini" style="margin-left:150px">
@@ -106,7 +109,7 @@
               align="left"
               class="pagination"
               :current-page="page.currentPage"
-              :page-sizes="[2,10,20,50]"
+              :page-sizes="[5,10,20,50]"
               :page-size="page.pageSize"
               layout="total, sizes, prev, pager, next, jumper"
               :total="page.totalCount"
@@ -126,62 +129,103 @@
 </template>
 
 <script>
+import userApi from '@/api/user'// 或者是'./api/user'
 export default {
   data() {
     return {
-    // 模拟数据
-      table: [{
-        id: 1,
-        name: '南街北巷',
-        class: '卓越一班',
-        group: 'ZYT-1',
-        status: '1',
-        created_time: '2016-05-02',
-        updated_time: '2020-05-13',
-        opearation: ''
-      }, {
-        id: 2,
-        name: '南街北巷',
-        class: '卓越一班',
-        group: 'ZYT-1',
-        status: '1',
-        created_time: '2016-05-02',
-        updated_time: '2020-05-13',
-        opearation: ''
-      }, {
-        id: 3,
-        name: '南街北巷',
-        class: '卓越一班',
-        group: 'ZYT-1',
-        status: '1',
-        created_time: '2016-05-02',
-        updated_time: '2020-05-13',
-        opearation: ''
-      }, {
-        id: 4,
-        name: '南街北巷',
-        class: '卓越一班',
-        group: 'ZYT-1',
-        status: '1',
-        created_time: '2016-05-02',
-        updated_time: '2020-05-13',
+    // 用户信息
+      user: [{
+        userId: '',
+        userName: '',
+        userPassword: '',
+        userCollegeId: '',
+        userClassId: '',
+        userGroupId: '',
+        userIcon: '',
+        userDescription: '',
+        createdTime: '',
+        updatedTime: '',
+        userPositionId: '',
+        isEnabled: '',
+        isDeleted: '',
+        groupName: '',
         opearation: ''
       }],
       // 定义page对象
+      length: 0,
       page: {
         currentPage: 1, // 当前页
         pageSize: 10, // 每页显示条数
         totalPage: 0, // 总页数
         totalCount: 0, // 总条数
-        params: {
-          'reportType': 0,
-          'reportDate': ['', '']
-        }, // 查询参数对象
+        params: {}, // 查询参数对象
         list: [], // 数据
-        sortColumn: 'created_time', // 排序列
+        sortColumn: 'createdTime', // 排序列
         sortMethod: 'asc' // 排序方式
+      },
+      // loading: true, // 控制是否显示延迟加载效果(懒加载)
+      addDialog: false, // 控制添加弹窗显示
+      updateDialog: false // 控制修改弹窗显示
+    }
+  },
+  // 初始化函数
+  created() {
+    this.getByPage()
+  },
+  // 定义方法
+  methods: {
+    // 每页大小改变 参数 value 为每页大小(pageSize)
+    handleSizeChange(val) {
+      this.page.pageSize = val
+      // 重新请求,刷新页面
+      this.getByPage()
+    },
+    // 当前页跳转 参数 value 当前页(currentPage)
+    handleCurrentChange(val) {
+      this.page.currentPage = val
+      this.getByPage()
+    },
+    // 分页查询,调用api/user.js中封装的getByPage方法
+    // 进行参数的绑定
+    getByPage() {
+      userApi.getByPage(this.page).then(res => {
+        this.page.currentPage = res.data.pageNum
+        this.page.pageSize = res.data.pageSize
+        this.page.totalPage = res.data.pages
+        this.page.totalCount = res.data.total
+        this.page.list = res.data.list
+      })
+    },
+    changeSort(e) {
+      if (e.order) {
+        this.page.sortColumn = e.prop
+        this.page.sortMethod = e.order
+      } else {
+        this.page.sortColumn = ''
+        this.page.sortMethod = 'asc'
       }
-      // 分隔线
+      this.$message.success('操作成功!')
+      this.getByPage()
+    },
+    handleSelectionChange(val) {
+      this.selectXxxs = val
+    },
+    // 获取用户
+    getByGroup() {
+      userApi.getByGroup(this.page).then(res => {
+        console.log(res)
+        this.loading = false
+        this.user = res.data
+      }).catch(error => {
+        console.log(error)
+      }
+      )
+    },
+    // 查询用户数据
+    query() {
+      this.loading = false
+      this.page.currentPage = 1
+      this.getByPage()
     }
   }
 }

@@ -39,6 +39,7 @@ module.exports = {
     // 6. devServer.proxy --> API 请求代理服务器
     proxy: {
       [process.env.VUE_APP_BASE_API]: {
+        // target: `http://175.24.9.127:8080`,
         target: `http://localhost:8080`,
         changeOrigin: true,
         pathRewrite: {

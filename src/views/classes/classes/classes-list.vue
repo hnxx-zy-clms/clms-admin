@@ -15,9 +15,9 @@
         align="center"
         width="45"
       />
-      <el-table-column prop="classesId" label="#" width="60" align="center"/>
-      <el-table-column prop="classesName" label="班级名称" width="150" align="center"/>
-      <el-table-column prop="collegeName" label="所属学院" width="150" align="center"/>
+      <el-table-column prop="classesId" label="#" width="60" align="center" />
+      <el-table-column prop="classesName" label="班级名称" width="150" align="center" />
+      <el-table-column prop="collegeName" label="所属学院" width="150" align="center" />
       <el-table-column prop="classesStates" label="状态" width="100" align="center">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.classesStates === 1">启用</el-tag>
@@ -26,11 +26,19 @@
       </el-table-column>
       <el-table-column label="操作" width="360" align="center">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.classesStates === 0" size="mini" type="success"
-                     @click="toEnable(scope.row.classesId)">启用
+          <el-button
+            v-if="scope.row.classesStates === 0"
+            size="mini"
+            type="success"
+            @click="toEnable(scope.row.classesId)"
+          >启用
           </el-button>
-          <el-button v-if="scope.row.classesStates === 1" size="mini" type="warning"
-                     @click="toDisable(scope.row.classesId)">弃用
+          <el-button
+            v-if="scope.row.classesStates === 1"
+            size="mini"
+            type="warning"
+            @click="toDisable(scope.row.classesId)"
+          >弃用
           </el-button>
         </template>
       </el-table-column>
@@ -47,10 +55,10 @@
       @current-change="handleCurrentChange"
     />
     <el-dialog title="添加" :visible.sync="addDialog">
-      <xxx-add @closeAddDialog="closeAddDialog" @getByPage="getByPage"/>
+      <xxx-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" />
     </el-dialog>
     <el-dialog title="修改" :visible.sync="updateDialog">
-      <xxx-update :xxx="xxx" @closeUpdateDialog="closeUpdateDialog" @getByPage="getByPage"/>
+      <xxx-update :xxx="xxx" @closeUpdateDialog="closeUpdateDialog" @getByPage="getByPage" />
     </el-dialog>
   </div>
 </template>
