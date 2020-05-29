@@ -180,7 +180,7 @@ export default {
       this.getByPage()
     },
     handleDelete(val) {
-      this.$confirm('是否确定删除?', '提示', {
+      this.$confirm('删除将会导致任务回复内容丢失,是否确定删除?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'error'
@@ -240,7 +240,7 @@ export default {
     },
     deleteByIds() {
       // 批量删除
-      this.$confirm('是否确定删除?', '提示', {
+      this.$confirm('删除将会导致任务回复内容丢失,是否确定删除?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'error'

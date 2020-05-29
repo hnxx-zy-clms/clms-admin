@@ -7,6 +7,7 @@ const getDefaultState = () => {
     token: getToken(),
     name: '',
     avatar: '',
+    userIcon: '',
     userid: ''
   }
 }
@@ -28,6 +29,9 @@ const mutations = {
   },
   SET_USERID: (state, userid) => {
     state.userid = userid
+  },
+  SET_USERICON: (state, usericon) => {
+    state.userIcon = usericon
   }
 }
 
@@ -53,6 +57,7 @@ const actions = {
         const { user } = data
         commit('SET_NAME', user.userName)
         commit('SET_USERID', user.userId)
+        commit('SET_USERICON', user.userIcon)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -63,6 +68,7 @@ const actions = {
   // 退出登录
   logout({ commit, state }) {
     return new Promise((resolve) => {
+      logout()
       removeToken()
       resolve()
       commit('SET_TOKEN', '')
