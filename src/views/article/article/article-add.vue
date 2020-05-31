@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="write-article-container">
     <!--添加表单  -->
-    <el-form ref="addForm" :model="article" label-width="80px" size="mini">
-      <el-form-item label="标题">
+    <el-form ref="addForm" :model="article" label-width="40px" size="mini">
+      <el-form-item label="标题" style="width: 50%">
         <el-input v-model="article.articleTitle" />
       </el-form-item>
-      <el-form-item label="分类">
+      <el-form-item label="分类" style="width: 20%">
         <el-select v-model="article.articleType" clearable filterable placeholder="请选择" style="width: 100%">
           <el-option
             v-for="type in typeList"
@@ -15,7 +15,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="文章封面">
+      <el-form-item label="封面">
         <el-upload
           class="avatar-uploader"
           :action="uploadUrl"
@@ -90,6 +90,13 @@ export default {
 </script>
 
 <style>
+.write-article-container  {
+    /* padding: 20px; */
+    width: 100%;
+    min-height: 800px;
+    /* border: 1px solid #9c9ea8; */
+    background-color: white;
+  }
 .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
