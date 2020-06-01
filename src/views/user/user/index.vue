@@ -94,12 +94,45 @@
           <el-table-column :selectable="checkboxT" type="selection" width="55" />
           <el-table-column prop="userId" label="用户ID" width="80" />
           <el-table-column prop="userName" label="用户名" />
-          <el-table-column prop="userIcon" label="头像" />
-          <el-table-column prop="userClass" label="班级" width="120" />
-          <el-table-column prop="userGroup" label="小组" width="120" />
+          <el-table-column prop="userIcon" label="头像">
+            <template slot-scope="scope">
+              <el-image
+                style="width: 60px;height: 50px"
+                :src="scope.row.userIcon"
+                :preview-src-list="[scope.row.userIcon]"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column prop="classesName" label="班级" width="120" />
+          <el-table-column prop="groupName" label="小组" width="120" />
           <el-table-column prop="createdTime" label="创建日期" width="180" />
           <el-table-column prop="updatedTime" label="更新日期" width="180" />
-          <el-table-column prop="isEnabled" label="用户状态" width="120" />
+          <el-table-column prop="isEnabled" label="用户状态" width="120">
+            <template slot-scope="scope">
+              <el-switch
+                v-model="scope.row.isEnabled"
+                :disabled="user.id === scope.row.id"
+                active-color="#409EFF"
+                inactive-color="#F56C6C"
+                @change="changeEnabled(scope.row, scope.row.isEnabled)"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            width="115"
+            align="center"
+            fixed="right"
+          >
+            <template slot-scope="scope">
+                <el-button size="mini" type="primary" icon="el-icon-edit">
+                  操作
+                </el-button>
+                <el-button style="margin-top:4px;margin-left: -2px" size="mini" type="primary" icon="el-icon-view" >
+                  查看
+                </el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <!-- 分页插件 -->
         <el-form :inline="true" class="demo-form-inline" size="mini" style="margin-left:150px">
@@ -129,7 +162,7 @@
 </template>
 
 <script>
-import userApi from '@/api/user'// 或者是'./api/user'
+import userApi from '@/api/user' // 或者是'./api/user'
 export default {
   data() {
     return {
@@ -149,7 +182,8 @@ export default {
         isEnabled: '',
         isDeleted: '',
         groupName: '',
-        opearation: ''
+        classesName: ''
+        // opearation: ''
       }],
       // 定义page对象
       length: 0,

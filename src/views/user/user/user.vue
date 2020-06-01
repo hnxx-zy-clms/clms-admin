@@ -125,7 +125,6 @@ export default {
         xxId: ''
       },
       loading: false, // 控制是否显示加载效果
-      selectXxxs: [], // 被选中的模版列
       addDialog: false, // 控制添加弹窗显示
       updateDialog: false // 控制修改弹窗显示
     }

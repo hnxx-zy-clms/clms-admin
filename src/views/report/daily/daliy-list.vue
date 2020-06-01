@@ -106,7 +106,7 @@
           <el-tag v-else type="info">不可编辑</el-tag>
         </template>
       </el-table-column>
-      <el-table-column  fixed="right"  label="操作" width="208" align="center">
+      <el-table-column fixed="right" label="操作" width="208" align="center">
         <template slot-scope="scope">
           <!--          <el-button size="mini" type="primary" @click="toUpdate(scope.row.typeId)">修改</el-button>-->
           <el-button slot="reference" size="mini" type="primary" @click="toRead(scope.row)">查看</el-button>

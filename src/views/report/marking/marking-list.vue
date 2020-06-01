@@ -104,7 +104,7 @@
         <el-table-column prop="teacherName" align="center" label="批阅人" sortable="custom" />
         <el-table-column prop="teacherTime" align="center" label="批阅时间" sortable="custom" />
       </el-table-column>
-      <el-table-column  fixed="right"  label="操作" width="220" align="center">
+      <el-table-column fixed="right" label="操作" width="220" align="center">
         <template slot-scope="scope">
           <!--                    <el-button size="mini" type="primary" @click="toUpdate(scope.row.typeId)">编辑</el-button>-->
           <el-button slot="reference" size="mini" type="primary" @click="toRead(scope.row)">查看</el-button>
