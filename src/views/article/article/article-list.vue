@@ -109,18 +109,18 @@
       @current-change="handleCurrentChange"
     />
     <!-- 添加弹窗 -->
-    <el-dialog title="添加" :visible.sync="addDialog">
+    <el-dialog title="添加" :visible.sync="addDialog" width="80%">
       <article-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" />
     </el-dialog>
     <!--
       修改弹窗
       :article="article" 用于传递参数对象
     -->
-    <el-dialog title="修改" :visible.sync="updateDialog">
+    <el-dialog title="修改" :visible.sync="updateDialog" width="80%">
       <article-update :article="article" @closeUpdateDialog="closeUpdateDialog" @getByPage="getByPage" />
     </el-dialog>
     <!-- 阅读弹窗 -->
-    <el-dialog title="文章内容" :visible.sync="readDialog" width="50%">
+    <el-dialog title="文章内容" :visible.sync="readDialog" width="80%">
       <div v-html="article.articleContent" />
     </el-dialog>
 
