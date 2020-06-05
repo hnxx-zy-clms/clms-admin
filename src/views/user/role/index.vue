@@ -18,7 +18,7 @@
     />
     <!--  搜索和重置-->
     <span data-v-51d9ec9c="">
-      <button type="button" class="el-button filter-item el-button--success el-button--mini">
+      <button type="button" class="el-button filter-item el-button--success el-button--mini"  @click="query">
         <!---->
         <i class="el-icon-search" />
         <span>搜索</span></button>
@@ -53,14 +53,16 @@
           </div>
           <!-- 角色表格 -->
           <el-table
-            :data="table-role"
+            ref="table"
+            border
+            :data="page.list"
           >
             <el-table-column :selectable="checkboxT" type="selection" width="55" />
-            <el-table-column prop="name" label="名称" />
-            <el-table-column prop="dataScope" label="数据权限" />
-            <el-table-column prop="level" label="角色级别" />
+            <el-table-column prop="roleName" label="名称" />
+            <el-table-column prop="rolePosition" label="数据权限" />
+            <el-table-column prop="rolePositionId" label="角色级别" />
             <el-table-column prop="description" label="描述" />
-            <el-table-column width="135px" prop="createTime" label="创建日期" />
+            <el-table-column width="135px" prop="createdTime" label="创建日期" />
             <el-table-column v-permission="['admin','roles:edit','roles:del']" label="操作" width="130px" align="center" fixed="right">
               <template slot-scope="scope">
                 <udOperation
@@ -75,7 +77,7 @@
           <div class="block" style="padding-top:17px">
             <el-pagination
               :current-page="currentPage4"
-              :page-sizes="[100, 200, 300, 400]"
+              :page-sizes="[5, 10, 20, 50]"
               :page-size="100"
               layout="total, sizes, prev, pager, next, jumper"
               :total="400"
@@ -92,11 +94,19 @@
 </template>
 
 <script>
+import roleApi from '@/api/role'
 export default {
   data() {
     return {
-      // 角色表格
-
+      // 角色信息
+      role: [{
+        roleId: '',
+        roleName: '',
+        rolePosition: '',
+        rolePositionId: '',
+        createdTime: '',
+        updatedTime: ''
+      }],
       // 定义page对象
       page: {
         currentPage: 1, // 当前页
@@ -112,6 +122,65 @@ export default {
         sortMethod: 'asc' // 排序方式
       }
     }
+  },
+  // 初始化函数
+  created() {
+    this.getByPage()
+  },
+  // 定义方法
+  methods: {
+    // 每页大小改变 参数 value 为每页大小(pageSize)
+    handleSizeChange(val) {
+      this.page.pageSize = val
+      // 重新请求,刷新页面
+      this.getByPage()
+    },
+    // 当前页跳转 参数 value 当前页(currentPage)
+    handleCurrentChange(val) {
+      this.page.currentPage = val
+      this.getByPage()
+    },
+    // 分页查询,调用api/user.js中封装的getByPage方法
+    // 进行参数的绑定
+    getByPage() {
+      roleApi.getByPage(this.page).then(res => {
+        this.page.currentPage = res.data.pageNum
+        this.page.pageSize = res.data.pageSize
+        this.page.totalPage = res.data.pages
+        this.page.totalCount = res.data.total
+        this.page.list = res.data.list
+      })
+    },
+    changeSort(e) {
+      if (e.order) {
+        this.page.sortColumn = e.prop
+        this.page.sortMethod = e.order
+      } else {
+        this.page.sortColumn = ''
+        this.page.sortMethod = 'asc'
+      }
+      this.$message.success('操作成功!')
+      this.getByPage()
+    },
+    handleSelectionChange(val) {
+      this.selectXxxs = val
+    },
+    // 获取用户
+    getByGroup() {
+      roleApi.getByGroup(this.page).then(res => {
+        console.log(res)
+        this.loading = false
+        this.user = res.data
+      }).catch(error => {
+        console.log(error)
+      }
+      )
+    },
+    // 查询用户数据
+    query() {
+      this.loading = false
+      this.page.currentPage = 1
+      this.getByPage()
+    }
   }
 }
-

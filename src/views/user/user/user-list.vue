@@ -3,7 +3,7 @@
     <!-- 搜索栏 模糊查询-->
     <el-form :inline="true" :model="page" class="demo-form-inline" size="mini">
       <el-form-item label="用户名">
-        <el-input v-model="page.params.userName" placeholder="输入用户名搜索" clearable />
+        <el-input v-model="page.params.userName" placeholder="输入用户名搜索" clearable/>
       </el-form-item>
       <el-form-item label="组别">
         <el-select v-model="page.params.userGroupId" placeholder="组别" clearable filterable>
@@ -63,7 +63,8 @@
     <!-- 增删改查 -->
     <div style="margin-bottom:28px">
       <!-- crud组件 -->
-      <button type="button" class="el-button filter-item el-button--primary el-button--mini"><!----><i class="el-icon-plus" /><span>
+      <button type="button" class="el-button filter-item el-button--primary el-button--mini"  @click="openAddDialog">
+        <i class="el-icon-plus" /><span>
         新增
       </span>
       </button>
@@ -163,6 +164,7 @@
 
 <script>
 import userApi from '@/api/user' // 或者是'./api/user'
+// import userAdd from './user-add'
 export default {
   data() {
     return {
@@ -183,7 +185,6 @@ export default {
         isDeleted: '',
         groupName: '',
         classesName: ''
-        // opearation: ''
       }],
       // 定义page对象
       length: 0,
@@ -260,6 +261,41 @@ export default {
       this.loading = false
       this.page.currentPage = 1
       this.getByPage()
+    },
+    // 新增用户
+    add() {
+      this.insertUser()
+    },
+    // 启用
+    updateEnable(id) {
+      this.$confirm('是否启用？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        userApi.enable(id).then(res => {
+          this.$message.success(res.msg)
+          this.getByPage()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消启用'
+        })
+      })
+    },
+    // 模块功能组件
+    openAddDialog() {
+      // 打开添加弹窗
+      this.addDialog = true
+    },
+    closeAddDialog() {
+      // 关闭添加弹窗
+      this.addDialog = false
+    },
+    closeUpdateDialog() {
+      // 关闭修改弹窗
+      this.updateDialog = false
     }
   }
 }
