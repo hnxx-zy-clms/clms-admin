@@ -68,13 +68,15 @@
           新增
         </span>
       </button>
-      <button disabled="disabled" type="button" class="el-button filter-item el-button--success el-button--mini is-disabled"><!----><i class="el-icon-edit" /><span>
-        修改
-      </span>
+      <button disabled="disabled" type="button" class="el-button filter-item el-button--success el-button--mini is-disabled" @click="openAddDialog">
+        <i class="el-icon-edit" /><span>
+          修改
+        </span>
       </button>
-      <button slot="reference" disabled="disabled" type="button" class="el-button filter-item el-button--danger el-button--mini is-disabled"><!----><i class="el-icon-delete" /><span>
-        删除
-      </span>
+      <button slot="reference" disabled="disabled" type="button" class="el-button filter-item el-button--danger el-button--mini is-disabled" @click="openDeleteMsgBOX">
+        <i class="el-icon-delete" /><span>
+          删除
+        </span>
       </button>
       <button type="button" class="el-button filter-item el-button--warning el-button--mini"><!---->
         <i class="el-icon-download" /><span>导出</span></button>
@@ -117,11 +119,22 @@
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.isEnabled"
-                :disabled="user.id === scope.row.id"
-                active-color="#409EFF"
-                inactive-color="#F56C6C"
+                :disabled="user.isEnabled === scope.row.isEnabled"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                active-value="1"
+                inactive-value="0"
                 @change="changeEnabled(scope.row, scope.row.isEnabled)"
               />
+              <!--              <el-tooltip :content="'Switch value: ' + user.isEnabled" placement="top">-->
+              <!--                <el-switch-->
+              <!--                  v-model="user.isEnabled"-->
+              <!--                  active-color="#13ce66"-->
+              <!--                  inactive-color="#ff4949"-->
+              <!--                  active-value="1"-->
+              <!--                  inactive-value="0"-->
+              <!--                />-->
+              <!--              </el-tooltip>-->
             </template>
           </el-table-column>
           <el-table-column
@@ -130,7 +143,7 @@
             align="center"
             fixed="right"
           >
-            <template slot-scope="scope">
+            <template>
               <el-button size="mini" type="primary" icon="el-icon-edit">
                 操作
               </el-button>
@@ -158,7 +171,7 @@
           </el-form-item>
           <!-- 跳转页按钮 -->
           <el-form-item style="margin-top:17px;margin-left:10px">
-            <el-button type="primary" sizi="mini" @click="query">确定</el-button>
+            <el-button type="primary" sizi="mini" @click="handleCurrentChange">确定</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -279,6 +292,28 @@ export default {
     // 新增用户
     add() {
       this.insertUser()
+    },
+    // 更新用户
+    update() {
+      this.updateById()
+    },
+    // 删除用户
+    openDeleteMsgBOX() {
+      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
     // 启用
     updateEnable(id) {

@@ -22,6 +22,13 @@ export default {
       method: 'post',
       data: user
     })
+  },
+  updateById(user) { // 添加用户
+    return request({
+      url: `/${group_name}/update/byId`,
+      method: 'post',
+      data: user
+    })
   }
 }
 
