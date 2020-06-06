@@ -18,7 +18,7 @@
     />
     <!--  搜索和重置-->
     <span data-v-51d9ec9c="">
-      <button type="button" class="el-button filter-item el-button--success el-button--mini"  @click="query">
+      <button type="button" class="el-button filter-item el-button--success el-button--mini" @click="query">
         <!---->
         <i class="el-icon-search" />
         <span>搜索</span></button>
@@ -54,37 +54,49 @@
           <!-- 角色表格 -->
           <el-table
             ref="table"
-            border
             :data="page.list"
+            @selection-change="handleSelectionChange"
+            @sort-change="changeSort"
           >
-            <el-table-column :selectable="checkboxT" type="selection" width="55" />
-            <el-table-column prop="roleName" label="名称" />
-            <el-table-column prop="rolePosition" label="数据权限" />
-            <el-table-column prop="rolePositionId" label="角色级别" />
-            <el-table-column prop="description" label="描述" />
-            <el-table-column width="135px" prop="createdTime" label="创建日期" />
-            <el-table-column v-permission="['admin','roles:edit','roles:del']" label="操作" width="130px" align="center" fixed="right">
+            <el-table-column :selectable="checkboxT" type="selection" width="50px" />
+            <el-table-column prop="roleId" label="角色ID" width="70px" />
+            <el-table-column prop="roleName" label="名称" width="160px" />
+            <el-table-column prop="rolePosition" label="数据权限" width="130px" />
+            <el-table-column prop="rolePositionId" label="角色级别" width="130px" />
+            <el-table-column prop="roleDescription" label="描述" />
+            <el-table-column prop="createdTime" label="创建日期" width="200px" />
+            <el-table-column
+              label="操作"
+              width="115"
+              align="center"
+              fixed="right"
+            >
               <template slot-scope="scope">
-                <udOperation
-                  v-if="scope.row.level >= level"
-                  :data="scope.row"
-                  :permission="permission"
-                />
+                <el-button size="mini" type="primary" icon="el-icon-edit">
+                  操作
+                </el-button>
+                <el-button style="margin-top:4px;margin-left: 0px" size="mini" type="primary" icon="el-icon-view">
+                  查看
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
           <!--分页组件-->
-          <div class="block" style="padding-top:17px">
+          <div style="padding-top:17px">
             <el-pagination
-              :current-page="currentPage4"
+              :current-page="page.currentPage"
               :page-sizes="[5, 10, 20, 50]"
-              :page-size="100"
+              :page-size="page.pageSize"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="400"
+              :total="page.totalCount"
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
             />
           </div>
+          <!-- 跳转页按钮 -->
+          <el-form-item style="margin-top:17px;margin-left:10px">
+            <el-button type="primary" sizi="mini" @click="query">确定</el-button>
+          </el-form-item>
           <!--  -->
         </el-card>
       </el-col>
@@ -94,7 +106,7 @@
 </template>
 
 <script>
-import roleApi from '@/api/role'
+import roleApi from '../../../api/role'
 export default {
   data() {
     return {
@@ -104,6 +116,7 @@ export default {
         roleName: '',
         rolePosition: '',
         rolePositionId: '',
+        roleDescription: '',
         createdTime: '',
         updatedTime: ''
       }],
@@ -118,9 +131,12 @@ export default {
           'reportDate': ['', '']
         }, // 查询参数对象
         list: [], // 数据
-        sortColumn: 'created_time', // 排序列
+        sortColumn: 'createdTime', // 排序列
         sortMethod: 'asc' // 排序方式
-      }
+      },
+      loading: true, // 控制是否显示延迟加载效果(懒加载)
+      addDialog: false, // 控制添加弹窗显示
+      updateDialog: false // 控制修改弹窗显示
     }
   },
   // 初始化函数
@@ -140,7 +156,7 @@ export default {
       this.page.currentPage = val
       this.getByPage()
     },
-    // 分页查询,调用api/user.js中封装的getByPage方法
+    // 分页查询,调用api/role.js中封装的getByPage方法
     // 进行参数的绑定
     getByPage() {
       roleApi.getByPage(this.page).then(res => {
@@ -149,6 +165,8 @@ export default {
         this.page.totalPage = res.data.pages
         this.page.totalCount = res.data.total
         this.page.list = res.data.list
+        this.loading = false
+        // 这里的loading一定要设置为false，否则会一直加载下去
       })
     },
     changeSort(e) {
@@ -165,14 +183,14 @@ export default {
     handleSelectionChange(val) {
       this.selectXxxs = val
     },
-    // 获取用户
+    // 获取角色
     getByGroup() {
       roleApi.getByGroup(this.page).then(res => {
         console.log(res)
-        this.loading = false
-        this.user = res.data
+        this.role = res.data
       }).catch(error => {
         console.log(error)
+        this.loading = false
       }
       )
     },
@@ -184,3 +202,4 @@ export default {
     }
   }
 }
+</script>

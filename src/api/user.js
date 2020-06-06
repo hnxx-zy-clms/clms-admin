@@ -16,7 +16,7 @@ export default {
       data: user
     })
   },
-  insertUser(user) { // 根据用户id和用户名查询用户信息
+  insertUser(user) { // 添加用户
     return request({
       url: `/${group_name}/add`,
       method: 'post',

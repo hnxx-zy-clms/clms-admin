@@ -3,7 +3,7 @@
     <!-- 搜索栏 模糊查询-->
     <el-form :inline="true" :model="page" class="demo-form-inline" size="mini">
       <el-form-item label="用户名">
-        <el-input v-model="page.params.userName" placeholder="输入用户名搜索" clearable/>
+        <el-input v-model="page.params.userName" placeholder="输入用户名搜索" clearable />
       </el-form-item>
       <el-form-item label="组别">
         <el-select v-model="page.params.userGroupId" placeholder="组别" clearable filterable>
@@ -63,10 +63,10 @@
     <!-- 增删改查 -->
     <div style="margin-bottom:28px">
       <!-- crud组件 -->
-      <button type="button" class="el-button filter-item el-button--primary el-button--mini"  @click="openAddDialog">
+      <button type="button" class="el-button filter-item el-button--primary el-button--mini" @click="openAddDialog">
         <i class="el-icon-plus" /><span>
-        新增
-      </span>
+          新增
+        </span>
       </button>
       <button disabled="disabled" type="button" class="el-button filter-item el-button--success el-button--mini is-disabled"><!----><i class="el-icon-edit" /><span>
         修改
@@ -79,6 +79,10 @@
       <button type="button" class="el-button filter-item el-button--warning el-button--mini"><!---->
         <i class="el-icon-download" /><span>导出</span></button>
     </div>
+    <!-- 添加弹窗 -->
+    <el-dialog title="添加" :visible.sync="addDialog" width="570px">
+      <user-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" />
+    </el-dialog>
     <!--  -->
 
     <el-row :gutter="20">
@@ -95,6 +99,7 @@
           <el-table-column :selectable="checkboxT" type="selection" width="55" />
           <el-table-column prop="userId" label="用户ID" width="80" />
           <el-table-column prop="userName" label="用户名" />
+          <el-table-column prop="name" label="姓名" />
           <el-table-column prop="userIcon" label="头像">
             <template slot-scope="scope">
               <el-image
@@ -126,12 +131,12 @@
             fixed="right"
           >
             <template slot-scope="scope">
-                <el-button size="mini" type="primary" icon="el-icon-edit">
-                  操作
-                </el-button>
-                <el-button style="margin-top:4px;margin-left: -2px" size="mini" type="primary" icon="el-icon-view" >
-                  查看
-                </el-button>
+              <el-button size="mini" type="primary" icon="el-icon-edit">
+                操作
+              </el-button>
+              <el-button style="margin-top:4px;margin-left: 0px" size="mini" type="primary" icon="el-icon-view">
+                查看
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -163,9 +168,14 @@
 </template>
 
 <script>
-import userApi from '@/api/user' // 或者是'./api/user'
-// import userAdd from './user-add'
+import userApi from '@/api/user'
+import userAdd from './user-add'
+import user from '../../../api/user'
 export default {
+  //  定义添加的组件 子组件/私有组件
+  components: {
+    userAdd
+  },
   data() {
     return {
     // 用户信息
@@ -173,6 +183,8 @@ export default {
         userId: '',
         userName: '',
         userPassword: '',
+        mobile: '',
+        sex: '',
         userCollegeId: '',
         userClassId: '',
         userGroupId: '',
@@ -198,7 +210,7 @@ export default {
         sortColumn: 'createdTime', // 排序列
         sortMethod: 'asc' // 排序方式
       },
-      // loading: true, // 控制是否显示延迟加载效果(懒加载)
+      loading: true, // 控制是否显示延迟加载效果(懒加载)
       addDialog: false, // 控制添加弹窗显示
       updateDialog: false // 控制修改弹窗显示
     }
@@ -229,6 +241,8 @@ export default {
         this.page.totalPage = res.data.pages
         this.page.totalCount = res.data.total
         this.page.list = res.data.list
+        this.loading = false
+        // 这里的loading一定要设置为false，否则会一直加载下去
       })
     },
     changeSort(e) {
@@ -287,6 +301,7 @@ export default {
     // 模块功能组件
     openAddDialog() {
       // 打开添加弹窗
+      this.user = user
       this.addDialog = true
     },
     closeAddDialog() {
