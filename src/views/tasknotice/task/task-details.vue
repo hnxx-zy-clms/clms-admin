@@ -18,16 +18,16 @@
       :data="situation"
       style="width: 100%"
     >
-      <el-table-column prop="userId" label="用户Id" width="180" align="center" />
-      <el-table-column prop="userName" label="用户姓名" width="180" align="center" />
-      <el-table-column prop="isDid" label="任务状态" width="180" align="center">
+      <el-table-column prop="userId" label="用户Id" align="center" />
+      <el-table-column prop="name" label="用户姓名" align="center" />
+      <el-table-column prop="isDid" label="任务状态" align="center">
         <template scope="scope">
           <span v-if="scope.row.isDid === true " style="color: rgb(41, 189, 139)">已完成</span>
           <span v-else-if="scope.row.isDid === false" style="color:rgb(221, 23, 23)">未完成</span>
         </template>
       </el-table-column>
-      <el-table-column prop="didTime" label="完成时间" width="180" align="center" />
-      <el-table-column prop="level" label="任务评分" width="180" align="center">
+      <el-table-column prop="didTime" label="完成时间" align="center" />
+      <el-table-column prop="level" label="任务评分" align="center">
         <template scope="scope">
           <span v-if="scope.row.level === 1 " style="color: rgb(41, 189, 139)">优秀</span>
           <span v-if="scope.row.level === 2" style="color:rgb(246, 151, 7)">良好</span>
@@ -35,7 +35,7 @@
           <span v-if="scope.row.level === 4 " style="color: rgb(221, 23, 23)">不及格</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="180" align="center">
+      <el-table-column label="操作" align="center">
         <template scope="scope">
           <el-link type="success" :disabled="!scope.row.isDid" @click="read(taskId,scope.row.userId)">查看</el-link>
         </template>

@@ -1,6 +1,6 @@
 <template>
   <!-- 加载 -->
-  <div v-loading="loading">
+  <div v-loading="loading" element-loading-text="请稍后" >
 
     <!-- 搜索栏 模糊查询-->
     <el-form :inline="true" :model="page" class="demo-form-inline" size="mini">
@@ -16,7 +16,7 @@
         </el-col>
       </el-form-item>
       <el-form-item>
-        <el-button v-loading.fullscreen.lock="loading" type="primary" sizi="mini" element-loading-text="请稍后" @click="selectBy(page)">查询</el-button>
+        <el-button type="primary" sizi="mini" @click="selectBy(page)">查询</el-button>
         <el-button type="success" class="add-button" size="mini" @click="refresh">恢复</el-button>
       </el-form-item>
     </el-form>
@@ -46,7 +46,7 @@
       <el-table-column prop="noticeTitle" label="通知标题" width="120" align="center" />
       <el-table-column prop="createdTime" label="创建时间" sortable="custom" width="135" align="center" />
       <el-table-column prop="pushedTime" label="发布时间" sortable="custom" width="135" align="center" />
-      <el-table-column prop="userName" label="创建人" width="80" align="center" />
+      <el-table-column prop="name" label="创建人" width="80" align="center" />
       <el-table-column prop="numRead" :label="this.reading" width="130" align="center" />
       <el-table-column
         prop="isEnabled"
@@ -134,7 +134,7 @@ export default {
         totalPage: 0, // 总页数
         totalCount: 0, // 总条数
         params: {
-          role: 'teacher'
+          role: 'admin'
         }, // 查询参数对象
         list: [], // 数据
         sortColumn: 'created_time', // 排序列

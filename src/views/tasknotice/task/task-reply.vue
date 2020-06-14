@@ -6,7 +6,7 @@
         <el-button style="float: right; padding: 3px 0" type="text" @click="goback">返回</el-button>
       </div>
       <div>
-        <p style="font-size: 30px">{{ reply.userName }}</p>
+        <p style="font-size: 30px">{{ reply.name }}</p>
         <p style="color: #999999">任务状态：已完成</p>
         <p style="color: #999999">完成时间：{{ reply.didTime }}</p>
         <p style="color: #999999">任务评分：<span style="color: #FF6800">{{ taskLevel }}</span></p>
