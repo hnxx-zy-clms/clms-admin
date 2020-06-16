@@ -73,11 +73,11 @@
           修改
         </span>
       </button>
-      <button slot="reference" disabled="disabled" type="button" class="el-button filter-item el-button--danger el-button--mini is-disabled" @click="openDeleteMsgBOX">
+      <el-button slot="reference" size="mini" type="warning" class="filter-item" @click="deleteOne">
         <i class="el-icon-delete" /><span>
           删除
         </span>
-      </button>
+      </el-button>
       <button type="button" class="el-button filter-item el-button--warning el-button--mini"><!---->
         <i class="el-icon-download" /><span>导出</span></button>
     </div>
@@ -116,25 +116,17 @@
           <el-table-column prop="createdTime" label="创建日期" width="180" />
           <el-table-column prop="updatedTime" label="更新日期" width="180" />
           <el-table-column prop="isEnabled" label="用户状态" width="120">
+            <!--            注意:这里获取page中的list中的isEnabled对象的每一个用户的弃用弃用状态一定要用:active-value绑定每一个用户的状态字符否则会出现前端显示isEnabled为0的bug-->
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.isEnabled"
-                :disabled="user.isEnabled === scope.row.isEnabled"
+                :disabled="user.userId === scope.row.userId"
+                :active-value="1"
+                :inactive-value="0"
                 active-color="#13ce66"
                 inactive-color="#ff4949"
-                active-value="1"
-                inactive-value="0"
-                @change="changeEnabled(scope.row, scope.row.isEnabled)"
+                @change="updateEnable(scope.row.userId, scope.row.isEnabled)"
               />
-              <!--              <el-tooltip :content="'Switch value: ' + user.isEnabled" placement="top">-->
-              <!--                <el-switch-->
-              <!--                  v-model="user.isEnabled"-->
-              <!--                  active-color="#13ce66"-->
-              <!--                  inactive-color="#ff4949"-->
-              <!--                  active-value="1"-->
-              <!--                  inactive-value="0"-->
-              <!--                />-->
-              <!--              </el-tooltip>-->
             </template>
           </el-table-column>
           <el-table-column
@@ -211,6 +203,30 @@ export default {
         groupName: '',
         classesName: ''
       }],
+      multipleSelection: [], // 被选中的行
+      groupList: [],
+      positionList: [],
+      enabledTypeOptions: [],
+      // checkboxT: [],
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', [start, end])
+          }
+        }]
+      },
       // 定义page对象
       length: 0,
       page: {
@@ -269,9 +285,13 @@ export default {
       this.$message.success('操作成功!')
       this.getByPage()
     },
+    // 改变选中状态
     handleSelectionChange(val) {
-      this.selectXxxs = val
+      this.multipleSelection = val
     },
+    // checkboxT(row, rowIndex) {
+    //   return row.id !== this.user.userId
+    // },
     // 获取用户
     getByGroup() {
       userApi.getByGroup(this.page).then(res => {
@@ -298,15 +318,22 @@ export default {
       this.updateById()
     },
     // 删除用户
-    openDeleteMsgBOX() {
+    deleteOne() {
       this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        const selectedId = []
+        this.multipleSelection.forEach(e => {
+          selectedId.push(e.userId)
+        })
+        userApi.deleteOneById(selectedId).then(res => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.getByPage()
         })
       }).catch(() => {
         this.$message({
@@ -315,23 +342,43 @@ export default {
         })
       })
     },
-    // 启用
-    updateEnable(id) {
-      this.$confirm('是否启用？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        userApi.enable(id).then(res => {
-          this.$message.success(res.msg)
+    updateEnable(userId, isEnabled) {
+      // 启用
+      if (isEnabled === 1) {
+        this.$confirm('是否启用？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          userApi.updateEnable(userId, isEnabled).then(res => {
+            this.$message.success(res.msg)
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消启用'
+          })
           this.getByPage()
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消启用'
+      }
+      if (isEnabled === 0) {
+        // 弃用
+        this.$confirm('是否弃用？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          userApi.updateEnable(userId, isEnabled).then(res => {
+            this.$message.success(res.msg)
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消弃用'
+          })
+          this.getByPage()
         })
-      })
+      }
     },
     // 模块功能组件
     openAddDialog() {

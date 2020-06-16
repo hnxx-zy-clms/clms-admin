@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-var group_name = 'user'
+const group_name = 'user' // 或者var
 export default {
   getByPage(page) { // 分页查询用户信息
     // 向前端发送查询请求,传递的参数为page(page中封装了三个对象)
@@ -23,11 +23,23 @@ export default {
       data: user
     })
   },
-  updateById(user) { // 添加用户
+  updateById(user) { // 更新用户
     return request({
       url: `/${group_name}/update/byId`,
-      method: 'post',
+      method: 'put',
       data: user
+    })
+  },
+  updateEnable(userId, isEnabled) { // 启用和弃用
+    return request({
+      url: `/${group_name}/status/${userId}/${isEnabled}`,
+      method: 'put'
+    })
+  },
+  deleteOneById(userId) { // 删除用户
+    return request({
+      url: `/${group_name}/delete/by/${userId}`,
+      method: 'delete'
     })
   }
 }

@@ -10,7 +10,7 @@
       <el-form-item label="小组" prop="groupName"><el-input v-model="user.groupName" /></el-form-item>
       <el-form-item label="性别" prop="sex">
         <el-radio-group v-model="user.sex" style="width: 178px">
-          <el-radio label="男">男</el-radio>
+          <el-radio :label="男">男</el-radio>
           <el-radio label="女">女</el-radio>
         </el-radio-group>
       </el-form-item><br>
