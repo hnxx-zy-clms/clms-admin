@@ -68,7 +68,7 @@
           新增
         </span>
       </button>
-      <button disabled="disabled" type="button" class="el-button filter-item el-button--success el-button--mini is-disabled" @click="openAddDialog">
+      <button type="button" class="el-button filter-item el-button--success el-button--mini" @click="openUpdateDialog">
         <i class="el-icon-edit" /><span>
           修改
         </span>
@@ -85,7 +85,10 @@
     <el-dialog title="添加" :visible.sync="addDialog" width="570px">
       <user-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" />
     </el-dialog>
-    <!--  -->
+    <!-- 修改弹窗 -->
+    <el-dialog title="修改" :visible.sync="updateDialog" width="570px">
+      <user-update @closeUpdateDialog="closeUpdateDialog" @getByPage="getByPage" />
+    </el-dialog>
 
     <el-row :gutter="20">
       <el-col>
@@ -175,11 +178,13 @@
 <script>
 import userApi from '@/api/user'
 import userAdd from './user-add'
+import userUpdate from './user-update'
 import user from '../../../api/user'
 export default {
   //  定义添加的组件 子组件/私有组件
   components: {
-    userAdd
+    userAdd,
+    userUpdate
   },
   data() {
     return {
@@ -393,6 +398,11 @@ export default {
     closeAddDialog() {
       // 关闭添加弹窗
       this.addDialog = false
+    },
+    openUpdateDialog() {
+      // 打开修改弹窗
+      this.user = user
+      this.updateDialog = true
     },
     closeUpdateDialog() {
       // 关闭修改弹窗

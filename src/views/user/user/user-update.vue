@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!--添加弹窗表单-->
+    <!--修改弹窗表单-->
     <el-form ref="form" :inline="true" :model="user" :rules="rules" size="small" label-width="66px" class="addForm">
       <el-form-item label="用户名" prop="username"><el-input v-model="user.userName" /></el-form-item>
       <el-form-item label="密码" prop="userPassword"><el-input v-model="user.userPassword" /></el-form-item>
@@ -54,18 +54,18 @@ export default {
   methods: {
     // 添加 确认
     /**
-     * 1、父组件可以使用 props 把数据传给子组件。
-     * 2、子组件可以使用 $emit 触发父组件的自定义事件
-     */
+       * 1、父组件可以使用 props 把数据传给子组件。
+       * 2、子组件可以使用 $emit 触发父组件的自定义事件
+       */
     onSubmit() {
-      userApi.insertUser(this.user).then(res => {
+      userApi.updateById(this.user).then(res => {
         this.$message.success(res.msg)
-        this.$emit('closeAddDialog')
+        this.$emit('closeUpdateDialog')
         this.$emit('getByPage')
       })
     },
     close() {
-      this.$emit('closeAddDialog')
+      this.$emit('closeUpdateDialog')
       this.user = {}
     }
     // 分隔线
