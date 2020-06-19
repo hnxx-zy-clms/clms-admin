@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-form ref="addForm" :model="classes" label-width="80px" size="mini">
-      <el-form-item label="学院名称">
+    <el-form ref="addForm" :model="classes" label-width="80px" size="mini" :rules="addformrules">
+      <el-form-item label="学院名称" prop="collegeName">
         <el-input v-model="classes.collegeName" />
       </el-form-item>
       <el-form-item>
@@ -19,16 +19,22 @@ export default {
     return {
       classes: {
         'collegeName': ''
+      },
+      addformrules: {
+        collegeName: [{ required: true, message: '请输入学院名称', trigger: 'blur' }]
       }
     }
   },
   methods: {
     onSubmit() {
-      xxxApi.save(this.classes).then(res => {
-        this.$message.success(res.msg)
-        this.$emit('closeAddDialog')
-        this.classes = {}
-        this.$emit('getByPage')
+      this.$refs.addForm.validate(valid => {
+        if (!valid) return
+        xxxApi.save(this.classes).then(res => {
+          this.$message.success(res.msg)
+          this.$emit('closeAddDialog')
+          this.classes = {}
+          this.$emit('getByPage')
+        })
       })
     },
     close() {
