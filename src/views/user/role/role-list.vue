@@ -55,23 +55,24 @@
           <el-table
             ref="table"
             :data="page.list"
+            style="width: 100%"
             @selection-change="handleSelectionChange"
             @sort-change="changeSort"
           >
-            <el-table-column :selectable="checkboxT" type="selection" width="50px" />
-            <el-table-column prop="roleId" label="角色ID" width="70px" />
-            <el-table-column prop="roleName" label="名称" width="160px" />
-            <el-table-column prop="rolePosition" label="数据权限" width="130px" />
-            <el-table-column prop="rolePositionId" label="角色级别" width="130px" />
-            <el-table-column prop="roleDescription" label="描述" />
-            <el-table-column prop="createdTime" label="创建日期" width="200px" />
+            <el-table-column :selectable="checkboxT" type="selection" width="50px" align="center" />
+            <el-table-column prop="roleId" label="角色ID" width="70px" align="center" />
+            <el-table-column prop="roleName" label="名称" width="160px" align="center" />
+            <el-table-column prop="rolePosition" label="数据权限" width="130px" align="center" />
+            <el-table-column prop="rolePositionId" label="角色级别" width="130px" align="center" />
+            <el-table-column prop="roleDescription" label="描述" align="center" />
+            <el-table-column prop="createdTime" label="创建日期" width="200px" align="center" />
             <el-table-column
               label="操作"
               width="115"
               align="center"
               fixed="right"
             >
-              <template slot-scope="scope">
+              <template>
                 <el-button size="mini" type="primary" icon="el-icon-edit">
                   操作
                 </el-button>

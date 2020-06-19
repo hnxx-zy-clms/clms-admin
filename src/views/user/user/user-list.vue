@@ -98,11 +98,11 @@
           @selection-change="handleSelectionChange"
           @sort-change="changeSort"
         >
-          <el-table-column :selectable="checkboxT" type="selection" width="55" />
-          <el-table-column prop="userId" label="用户ID" width="80" />
-          <el-table-column prop="userName" label="用户名" />
-          <el-table-column prop="name" label="姓名" />
-          <el-table-column prop="userIcon" label="头像">
+          <el-table-column :selectable="checkboxT" type="selection" width="60" align="center" />
+          <el-table-column prop="userId" label="用户ID" width="80" align="center" />
+          <el-table-column prop="userName" label="用户名" align="center" />
+          <el-table-column prop="name" label="姓名" align="center" width="100px" />
+          <el-table-column prop="userIcon" label="头像" align="center">
             <template slot-scope="scope">
               <el-image
                 style="width: 60px;height: 50px"
@@ -111,11 +111,11 @@
               />
             </template>
           </el-table-column>
-          <el-table-column prop="classesName" label="班级" width="120" />
-          <el-table-column prop="groupName" label="小组" width="120" />
-          <el-table-column prop="createdTime" label="创建日期" width="180" />
-          <el-table-column prop="updatedTime" label="更新日期" width="180" />
-          <el-table-column prop="isEnabled" label="用户状态" width="120">
+          <el-table-column prop="classesName" label="班级" width="120" align="center" />
+          <el-table-column prop="groupName" label="小组" width="120" align="center" />
+          <el-table-column prop="createdTime" label="创建日期" width="180" align="center" />
+          <el-table-column prop="updatedTime" label="更新日期" width="180" align="center" />
+          <el-table-column prop="isEnabled" label="用户状态" width="120" align="center">
             <!--            注意:这里获取page中的list中的isEnabled对象的每一个用户的弃用弃用状态一定要用:active-value绑定每一个用户的状态字符否则会出现前端显示isEnabled为0的bug-->
             <template slot-scope="scope">
               <el-switch
@@ -163,7 +163,7 @@
           </el-form-item>
           <!-- 跳转页按钮 -->
           <el-form-item style="margin-top:17px;margin-left:10px">
-            <el-button type="primary" sizi="mini" @click="handleCurrentChange">确定</el-button>
+            <el-button type="primary" sizi="mini" @size-change="handleSizeChange" @click="jumpPage">确定</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -284,6 +284,10 @@ export default {
       }
       this.$message.success('操作成功!')
       this.getByPage()
+    },
+    jumpPage() {
+      this.$refs.pagination.handleCurrentChange(1)
+      this.$emit('handleCurrentChange', 1)
     },
     // 改变选中状态
     handleSelectionChange(val) {
