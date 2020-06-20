@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 var group_name = 'position'
 export default {
-  getByPage(page, size) { // 分页查询
+  getByPage(page, size, className) { // 分页查询
     return request({
-      url: `/${group_name}/all/${page}/${size}`,
+      url: `/${group_name}/all/${page}/${size}/${className}`,
       method: 'get'
     })
   },
@@ -25,6 +25,25 @@ export default {
       url: `/${group_name}/updateIds`,
       method: 'put',
       data: ids
+    })
+  },
+  delete(id) {
+    return request({
+      url: `/${group_name}/delete/${id}`,
+      method: 'put'
+    })
+  },
+  get(id) {
+    return request({
+      url: `/${group_name}/findClassById/${id}`,
+      method: 'get'
+    })
+  },
+  alter(classes) {
+    return request({
+      url: `/${group_name}/alter`,
+      method: 'post',
+      data: classes
     })
   }
 }

@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 var group_name = 'classes'
 export default {
-  getByPage(page, size) { // 分页查询
+  getByPage(page, size, className) { // 分页查询
     return request({
-      url: `/${group_name}/all/${page}/${size}`,
-      method: 'get'
+      url: `/${group_name}/all/${page}/${size}/${className}`,
+      method: 'post'
     })
   },
   update(id, type) { // 根据id更新
@@ -20,11 +20,30 @@ export default {
       data: classes
     })
   },
-  updateByIds(ids) { // 批量删除
+  updateByIds(ids) { // 批量
     return request({
       url: `/${group_name}/updateIds`,
       method: 'put',
       data: ids
+    })
+  },
+  delete(id) {
+    return request({
+      url: `/${group_name}/delete/${id}`,
+      method: 'put'
+    })
+  },
+  get(id) {
+    return request({
+      url: `/${group_name}/findClassById/${id}`,
+      method: 'get'
+    })
+  },
+  alter(classes) {
+    return request({
+      url: `/${group_name}/alter`,
+      method: 'post',
+      data: classes
     })
   }
 }

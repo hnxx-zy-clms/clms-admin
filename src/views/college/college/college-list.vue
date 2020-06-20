@@ -1,6 +1,19 @@
 <template>
   <div v-loading="loading">
+    <!-- 搜索栏 模糊查询-->
+    <el-form :inline="true" :model="page" class="demo-form-inline" size="mini">
+      <el-form-item label="学院名称">
+        <el-input v-model="page.collegeName" placeholder="学院名称" clearable />
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" sizi="mini" @click="getByPage">查询</el-button>
+      </el-form-item>
+    </el-form>
+    <!-- 分割线 -->
+    <el-divider />
     <el-button type="primary" class="add-button" size="mini" @click="openAddDialog">添加</el-button>
+    <el-button type="primary" class="add-button" size="mini" @click="updateByIds">导出</el-button>
+    <el-button type="primary" class="add-button" size="mini" @click="updateByIds">导入</el-button>
     <el-button type="danger" class="add-button" size="mini" @click="updateByIds">批量禁用</el-button>
     <el-table
       :data="page.list"
@@ -29,6 +42,18 @@
           </el-button>
           <el-button v-if="scope.row.collegeStates === 1" size="mini" type="warning" @click="toDisable(scope.row.collegeId)">弃用
           </el-button>
+          <el-button
+            size="mini"
+            type="danger"
+            @click="toDelete(scope.row.collegeId)"
+          >删除
+          </el-button>
+          <el-button
+            size="mini"
+            type="danger"
+            @click="toUpdate(scope.row.collegeId)"
+          >修改
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -55,16 +80,19 @@
 <script>
 import xxxApi from '@/api/college'
 import XxxAdd from './college-add'
+import XxxUpdate from './college-update'
 
 export default {
   components: {
-    XxxAdd
+    XxxAdd,
+    XxxUpdate
   },
   data() {
     return {
       page: {
         currentPage: 1, // 当前页
         pageSize: 10, // 每页显示条数
+        collegeName: null,
         totalPage: 0, // 总页数
         totalCount: 0, // 总条数
         params: {}, // 查询参数对象
@@ -94,7 +122,10 @@ export default {
       this.getByPage()
     },
     getByPage() {
-      xxxApi.getByPage(this.page.currentPage,this.page.pageSize).then(res => {
+      if (this.page.collegeName === '') {
+        this.page.collegeName = null
+      }
+      xxxApi.getByPage(this.page.currentPage, this.page.pageSize, this.page.collegeName).then(res => {
         this.page.currentPage = res.data.pageNum
         this.page.pageSize = res.data.pageSize
         this.page.totalPage = res.data.pages
