@@ -8,7 +8,7 @@ function resolve(dir) {
 
 const name = defaultSettings.title || 'Clms 后台' // 页面标题
 
-const port = 8081 // dev port 设置运行端口
+const port = 8065 // dev port 设置运行端口
 
 /**
  * vue.config.js 是一个可选的配置文件
