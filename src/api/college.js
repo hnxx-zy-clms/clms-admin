@@ -51,6 +51,20 @@ export default {
       method: 'post',
       data: classes
     })
+  },
+  exportexcell(){
+    return request({
+      url: `/${group_name}/exportExcel`,
+      method: 'get',
+      responseType: 'blob'
+    })
+  },
+  importExcel(formdata) {
+    return request({
+      url: `/${group_name}/importExcel`,
+      method: 'post',
+      data: formdata
+    })
   }
 }
 

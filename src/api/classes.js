@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { getToken } from '@/utils/auth'
 var group_name = 'classes'
 export default {
   getByPage(page, size, className) { // 分页查询
@@ -44,6 +45,20 @@ export default {
       url: `/${group_name}/alter`,
       method: 'post',
       data: classes
+    })
+  },
+  exportexcell(){
+    return request({
+      url: `/${group_name}/exportExcel`,
+      method: 'get',
+      responseType: 'blob'
+    })
+  },
+  importExcel(formdata) {
+    return request({
+      url: `/${group_name}/importExcel`,
+      method: 'post',
+      data: formdata
     })
   }
 }

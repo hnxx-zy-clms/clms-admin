@@ -13,8 +13,8 @@
     <!-- 分割线 -->
     <el-divider />
     <el-button type="primary" class="add-button" size="mini" @click="openAddDialog">添加</el-button>
-    <el-button type="primary" class="add-button" size="mini" @click="updateByIds">导出</el-button>
-    <el-button type="primary" class="add-button" size="mini" @click="updateByIds">导入</el-button>
+    <el-button type="primary" class="add-button" size="mini" @click="exportexcell">导出</el-button>
+    <el-button type="primary" class="add-button" size="mini" @click="importExcel">导入</el-button>
     <el-button type="danger" class="add-button" size="mini" @click="updateByIds">批量禁用</el-button>
     <el-table
       :data="page.list"
@@ -75,6 +75,26 @@
     <el-dialog title="修改" :visible.sync="updateDialog">
       <xxx-update :xxx="xxx" @closeUpdateDialog="closeUpdateDialog" @getByPage="getByPage"/>
     </el-dialog>
+    <el-dialog
+      title="批量导入"
+      :visible.sync="pldrdialogVisible"
+      width="50%"
+      @close="dialogVisibleclose">
+      <el-form label-width="80px"   ref="addformref">
+
+        <el-form-item label="Excel导入">
+
+          <div>
+            <input  type="file"  ref='input' class="input" >
+            <button @click="publish">上传</button>
+          </div>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="pldrdialogVisible = false">取 消</el-button>
+    <el-button type="primary"  @click="adduser">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -107,7 +127,8 @@ export default {
       loading: false, // 控制是否显示加载效果
       selectXxxs: [], // 被选中的模版列
       addDialog: false, // 控制添加弹窗显示
-      updateDialog: false // 控制修改弹窗显示
+      updateDialog: false, // 控制修改弹窗显示
+      pldrdialogVisible: false
     }
   },
   created() {
@@ -238,6 +259,37 @@ export default {
     },
     closeUpdateDialog() {
       this.updateDialog = false
+    },
+    exportexcell(){
+      xxxApi.exportexcell().then(res => {
+        const link = document.createElement('a')
+        // link.style.display = 'none'
+        const blob = new Blob([res], { type: 'application/vnd.ms-excel' })
+        link.href = URL.createObjectURL(blob)
+        link.download = 'position.xls' // 下载的文件名
+        document.body.appendChild(link)
+        link.click()
+        this.$message({
+          type: 'success',
+          message: '下载成功'
+        })
+      })
+    },
+    importExcel(){
+      this.pldrdialogVisible=true
+    },
+    dialogVisibleclose(){
+      this.pldrdialogVisible=false
+    },
+    publish(){
+      let ip = this.$refs.input;
+      let formdata = new FormData()
+      formdata.append("file", ip.files[0]);
+      xxxApi.importExcel(formdata)
+
+      this.$message.success("上传成功")
+
+
     }
   }
 }
