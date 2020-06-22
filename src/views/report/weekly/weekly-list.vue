@@ -63,27 +63,6 @@
       style="width: 100%"
       @sort-change="changeSort"
     >
-      <el-table-column type="expand">
-        <template slot-scope="props">
-          <el-form label-position="left" class="demo-table-expand">
-            <el-form-item label="工作内容:">
-              <span>{{ props.row.workContent }}</span>
-            </el-form-item>
-            <el-form-item label="遇到的困难:">
-              <span>{{ props.row.difficulty }}</span>
-            </el-form-item>
-            <el-form-item label="解决方法:">
-              <span>{{ props.row.solution }}</span>
-            </el-form-item>
-            <el-form-item label="今日心得:">
-              <span>{{ props.row.experience }}</span>
-            </el-form-item>
-            <el-form-item label="下一天计划:">
-              <span>{{ props.row.plan }}</span>
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-table-column>
       <el-table-column prop="reportId" label="#" width="60" align="center" />
       <el-table-column prop="name" align="center" label="用户名" width="200" show-overflow-tooltip />
       <el-table-column prop="userGroupId" label="组名" width="120" sortable="custom" align="center" />
@@ -106,7 +85,7 @@
           <el-tag v-else type="info">不可编辑</el-tag>
         </template>
       </el-table-column>
-      <el-table-column  fixed="right"  label="操作" width="208" align="center">
+      <el-table-column label="操作" width="208" align="center">
         <template slot-scope="scope">
           <!--          <el-button size="mini" type="primary" @click="toUpdate(scope.row.typeId)">修改</el-button>-->
           <el-button slot="reference" size="mini" type="primary" @click="toRead(scope.row)">查看</el-button>
@@ -114,7 +93,20 @@
         </template>
       </el-table-column>
     </el-table>
-
+    <el-dialog
+      title="周报内容"
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      center>
+      <h3>工作内容:</h3> <p>{{ report.workContent }}</p>
+      <h3>遇到的困难:</h3> <p>{{ report.difficulty }}</p>
+      <h3>解决方法:</h3> <p>{{ report.solution}}</p>
+      <h3>今日心得:</h3> <p>{{ report.experience }}</p>
+      <h3>下一周计划:</h3> <p>{{ report.plan }}</p>
+      <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+  </span>
+    </el-dialog>
     <!--
       分页组件-最完整版
       class : 分页组件
@@ -159,6 +151,7 @@ export default {
         sortColumn: 'created_time', // 排序列
         sortMethod: 'asc' // 排序方式
       },
+      centerDialogVisible: false,
       report: {
         reportId: '',
         reportType: '',
@@ -298,13 +291,8 @@ export default {
     },
     // 查看
     toRead(row) {
-      const $table = this.$refs.table
-      this.page.list.forEach(item => {
-        if (row.reportId !== item.reportId) {
-          $table.toggleRowExpansion(item, false)
-        }
-      })
-      $table.toggleRowExpansion(row)
+      this.report = row
+      this.centerDialogVisible = true
     },
     // 删除
     toDelete(id) {
