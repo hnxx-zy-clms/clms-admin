@@ -73,13 +73,13 @@
           修改
         </span>
       </button>
-      <el-button slot="reference" size="mini" type="warning" class="filter-item" @click="deleteOne">
+      <el-button slot="reference" size="mini" type="danger" class="filter-item" @click="deleteOne">
         <i class="el-icon-delete" /><span>
           删除
         </span>
       </el-button>
-      <button type="button" class="el-button filter-item el-button--warning el-button--mini"><!---->
-        <i class="el-icon-download" /><span>导出</span></button>
+      <el-button type="warning" size="mini" class="filter-item">
+        <i class="el-icon-download" /><span>导出</span></el-button>
     </div>
     <!-- 添加弹窗 -->
     <el-dialog title="添加" :visible.sync="addDialog" width="570px">
@@ -87,7 +87,7 @@
     </el-dialog>
     <!-- 修改弹窗 -->
     <el-dialog title="修改" :visible.sync="updateDialog" width="570px">
-      <user-update @closeUpdateDialog="closeUpdateDialog" @getByPage="getByPage" />
+      <user-update :user="user" @closeUpdateDialog="closeUpdateDialog" @getByPage="getByPage" />
     </el-dialog>
 
     <el-row :gutter="20">
@@ -139,15 +139,25 @@
             fixed="right"
           >
             <template>
-              <el-button size="mini" type="primary" icon="el-icon-edit">
+              <el-button size="mini" type="primary" icon="el-icon-edit" @click="openUpdateDialog">
                 操作
               </el-button>
-              <el-button style="margin-top:4px;margin-left: 0px" size="mini" type="primary" icon="el-icon-view">
+              <!--              <el-button style="margin-top:4px;margin-left: 0px" size="mini" type="primary" icon="el-icon-view">-->
+              <!--                查看-->
+              <!--              </el-button>-->
+              <el-button type="primary" size="mini" icon="el-icon-view" style="margin-top:4px;margin-left: 0px" @click="drawer = true">
                 查看
               </el-button>
             </template>
           </el-table-column>
         </el-table>
+        <el-drawer
+          title="我是标题"
+          :visible.sync="drawer"
+          :with-header="false"
+        >
+          <span>用户信息!</span>
+        </el-drawer>
         <!-- 分页插件 -->
         <el-form :inline="true" class="demo-form-inline" size="mini" style="margin-left:150px">
           <!--  分页排序-->
@@ -194,7 +204,7 @@ export default {
         userName: '',
         userPassword: '',
         mobile: '',
-        sex: '',
+        sex: '男',
         userCollegeId: '',
         userClassId: '',
         userGroupId: '',
@@ -202,9 +212,9 @@ export default {
         userDescription: '',
         createdTime: '',
         updatedTime: '',
-        userPositionId: '',
-        isEnabled: '',
-        isDeleted: '',
+        userPositionId: 0,
+        isEnabled: 1,
+        isDeleted: 0,
         groupName: '',
         classesName: ''
       }],
@@ -213,6 +223,7 @@ export default {
       positionList: [],
       enabledTypeOptions: [],
       // checkboxT: [],
+      drawer: false,
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -298,9 +309,9 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
-    // checkboxT(row, rowIndex) {
-    //   return row.id !== this.user.userId
-    // },
+    checkboxT(row, rowIndex) {
+      return row.userId !== this.user.userId
+    },
     // 获取用户
     getByGroup() {
       userApi.getByGroup(this.page).then(res => {
@@ -323,8 +334,11 @@ export default {
       this.insertUser()
     },
     // 更新用户
-    update() {
-      this.updateById()
+    update(user) {
+      userApi.updateById(user).then(res => {
+        this.user = res.data
+        this.updateDialog = true
+      })
     },
     // 删除用户
     deleteOne() {

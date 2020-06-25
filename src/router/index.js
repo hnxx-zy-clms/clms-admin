@@ -52,13 +52,13 @@ export const constantRoutes = [
         name: 'Role',
         component: () => import('@/views/user/role/role-list'),
         meta: { title: '角色管理', icon: 'tree' }
-      },
-      {
-        path: 'menu',
-        name: 'Menu',
-        component: () => import('@/views/user/menu/index'),
-        meta: { title: '菜单管理', icon: 'table' }
       }
+      // {
+      //   path: 'menu',
+      //   name: 'Menu',
+      //   component: () => import('@/views/user/menu/index'),
+      //   meta: { title: '菜单管理', icon: 'table' }
+      // }
     ]
   },
 

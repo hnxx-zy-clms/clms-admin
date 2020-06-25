@@ -26,6 +26,7 @@
 
 <script>
 import userApi from '@/api/user'
+import user from '../../../api/user'
 export default {
   data() {
     return {
@@ -58,6 +59,8 @@ export default {
      * 2、子组件可以使用 $emit 触发父组件的自定义事件
      */
     onSubmit() {
+      this.user = {}
+      this.user = user
       userApi.insertUser(this.user).then(res => {
         this.$message.success(res.msg)
         this.$emit('closeAddDialog')
