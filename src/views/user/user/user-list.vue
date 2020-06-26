@@ -68,7 +68,7 @@
           新增
         </span>
       </el-button>
-      <el-button :disabled="multipleSelection.length === 0" type="success" size="mini" class="filter-item" @click="updateSort">
+      <el-button :disabled="multipleSelection.length !== 1" type="success" size="mini" class="filter-item" @click="updateSort">
         <i class="el-icon-edit" /><span>
           修改
         </span>
@@ -353,10 +353,12 @@ export default {
       this.multipleSelection.forEach(e => {
         selectedId.push(e.userId)
       })
-      userApi.getById(selectedId).then(res => {
-        this.user = res.data
-        this.updateDialog = true
-      })
+      if (selectedId.length <= 1) {
+        userApi.getById(selectedId).then(res => {
+          this.user = res.data
+          this.updateDialog = true
+        })
+      }
       // 完成更新操作后清除数组数据，防止缓存数据堆栈占据缓存
       selectedId = []
       // selectedId.length = 0
@@ -368,17 +370,36 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        const selectedId = []
+        var selectedId = []
         this.multipleSelection.forEach(e => {
           selectedId.push(e.userId)
         })
-        userApi.deleteOneById(selectedId).then(res => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
+        // 定义数组遍历删除所有选中元素实现批量删除
+        const length = this.multipleSelection.length
+        for (let i = 0; i < length; i++) {
+          userApi.deleteOneById(selectedId[i]).then(res => {
+            this.getByPage()
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
           })
-          this.getByPage()
-        })
+          // 注意：如果分页方法放在循环外面将会导致剩一个实际已删除但显示未删除的BUG
+          // this.getByPage()
+        }
+        // 分割线
+        // 单条删除
+        // userApi.deleteOneById(selectedId).then(res => {
+        //   this.$message({
+        //     type: 'success',
+        //     message: '删除成功!'
+        //   })
+        //   this.getByPage()
+        // })
+        // this.$message({
+        //   type: 'success',
+        //   message: '删除成功!'
+        // })
       }).catch(() => {
         this.$message({
           type: 'info',
