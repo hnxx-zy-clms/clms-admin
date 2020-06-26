@@ -63,17 +63,17 @@
     <!-- 增删改查 -->
     <div style="margin-bottom:28px">
       <!-- crud组件 -->
-      <el-button type="primary" size="mini" class="filter-item" @click="openAddDialog">
+      <el-button type="primary" size="mini" class="filter-item" @click="addUser">
         <i class="el-icon-plus" /><span>
           新增
         </span>
       </el-button>
-      <el-button type="success" size="mini" class="filter-item" @click="openUpdateDialog">
+      <el-button :disabled="multipleSelection.length === 0" type="success" size="mini" class="filter-item" @click="updateSort">
         <i class="el-icon-edit" /><span>
           修改
         </span>
       </el-button>
-      <el-button slot="reference" size="mini" type="danger" class="filter-item" @click="deleteOne">
+      <el-button slot="reference" :disabled="multipleSelection.length === 0" size="mini" type="danger" class="filter-item" @click="deleteOne">
         <i class="el-icon-delete" /><span>
           删除
         </span>
@@ -223,7 +223,6 @@ export default {
       groupList: [],
       positionList: [],
       enabledTypeOptions: [],
-      // checkboxT: [],
       drawer: false,
       pickerOptions: {
         shortcuts: [{
@@ -331,8 +330,12 @@ export default {
       this.getByPage()
     },
     // 新增用户
-    addUser() {
-      this.insertUser()
+    addUser(user) {
+      userApi.insertUser(user).then(res => {
+        this.user = user
+        this.addDialog = true
+      })
+      // this.insertUser()
     },
     // 更新用户,根据id查询出用户然后进行更新,
     // 注意：用户信息从该方法中的响应体数据中获取
@@ -341,6 +344,22 @@ export default {
         this.user = res.data
         this.updateDialog = true
       })
+    },
+    // 通过选定项更新用户
+    updateSort() {
+      // 遍历所有选项的值获取选中行的userId通过push方法把一个元素添加到数组的尾部
+      // let与const不支持null占位，也就是说不能重新赋空值
+      var selectedId = []
+      this.multipleSelection.forEach(e => {
+        selectedId.push(e.userId)
+      })
+      userApi.getById(selectedId).then(res => {
+        this.user = res.data
+        this.updateDialog = true
+      })
+      // 完成更新操作后清除数组数据，防止缓存数据堆栈占据缓存
+      selectedId = []
+      // selectedId.length = 0
     },
     // 删除用户
     deleteOne() {

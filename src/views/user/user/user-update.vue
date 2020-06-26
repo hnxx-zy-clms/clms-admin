@@ -2,7 +2,7 @@
   <div>
     <!--修改弹窗表单-->
     <el-form ref="form" :inline="true" :model="user" :rules="rules" size="small" label-width="66px" class="addForm">
-      <el-form-item label="用户Id" prop="userId" required><el-input v-model="user.userId" /></el-form-item>
+      <!--      <el-form-item label="用户Id" prop="userId" required><el-input v-model="user.userId" /></el-form-item>-->
       <el-form-item label="用户名" prop="userName" required><el-input v-model="user.userName" /></el-form-item>
       <el-form-item label="密码" prop="userPassword" required><el-input v-model="user.userPassword" /></el-form-item>
       <el-form-item label="姓名" prop="name"><el-input v-model="user.name" /></el-form-item>
