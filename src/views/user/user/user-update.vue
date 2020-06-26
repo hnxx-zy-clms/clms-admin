@@ -8,14 +8,14 @@
       <el-form-item label="姓名" prop="name"><el-input v-model="user.name" /></el-form-item>
       <el-form-item label="学院" prop="collegeName"><el-input v-model="user.collegeName" /></el-form-item>
       <el-form-item label="班级" prop="classesName"><el-input v-model="user.classesName" /></el-form-item>
-      <el-form-item label="小组" prop="groupName"><el-input v-model="user.groupName" /></el-form-item>
+      <el-form-item label="小组" prop="groupName"><el-input v-model="user.groupName" /></el-form-item><br>
       <el-form-item label="性别" prop="sex">
         <el-radio-group v-model="user.sex" style="width: 178px">
           <el-radio label="男">男</el-radio>
           <el-radio label="女">女</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="状态" prop="isEnabled">
+      <el-form-item label="状态" prop="isEnabled" style="margin-left: 8px">
         <el-radio-group v-model="user.isEnabled" style="width: 178px">
           <el-radio :label="1">激活</el-radio>
           <el-radio :label="0">禁用</el-radio>
@@ -56,7 +56,6 @@ export default {
       // 在更新用户前一般将原来的用户缓存清空，否则缓存堆栈占用导致请求错误
       // this.user = {}
       // this.user = user
-      this.user.isEnabled = 1
       userApi.updateById(this.user).then(res => {
         this.$message.success(res.msg)
         this.$emit('closeUpdateDialog')

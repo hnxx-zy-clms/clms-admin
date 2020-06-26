@@ -36,10 +36,16 @@ export default {
       method: 'put'
     })
   },
-  deleteOneById(userId) { // 删除用户
+  deleteOneById(id) { // 删除用户
     return request({
-      url: `/${group_name}/delete/by/${userId}`,
+      url: `/${group_name}/delete/by/${id}`,
       method: 'delete'
+    })
+  },
+  getById(id) { // 通过id获取用户信息
+    return request({
+      url: `/${group_name}/get/by/${id}`,
+      method: 'post'
     })
   }
 }

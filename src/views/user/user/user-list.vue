@@ -63,16 +63,16 @@
     <!-- 增删改查 -->
     <div style="margin-bottom:28px">
       <!-- crud组件 -->
-      <button type="button" class="el-button filter-item el-button--primary el-button--mini" @click="openAddDialog">
+      <el-button type="primary" size="mini" class="filter-item" @click="openAddDialog">
         <i class="el-icon-plus" /><span>
           新增
         </span>
-      </button>
-      <button type="button" class="el-button filter-item el-button--success el-button--mini" @click="openUpdateDialog">
+      </el-button>
+      <el-button type="success" size="mini" class="filter-item" @click="openUpdateDialog">
         <i class="el-icon-edit" /><span>
           修改
         </span>
-      </button>
+      </el-button>
       <el-button slot="reference" size="mini" type="danger" class="filter-item" @click="deleteOne">
         <i class="el-icon-delete" /><span>
           删除
@@ -120,10 +120,10 @@
           <el-table-column prop="updatedTime" label="更新日期" width="180" align="center" />
           <el-table-column prop="isEnabled" label="用户状态" width="120" align="center">
             <!--            注意:这里获取page中的list中的isEnabled对象的每一个用户的弃用弃用状态一定要用:active-value绑定每一个用户的状态字符否则会出现前端显示isEnabled为0的bug-->
+            <!--            :disabled="user.userId === scope.row.userId"-->
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.isEnabled"
-                :disabled="user.userId === scope.row.userId"
                 :active-value="1"
                 :inactive-value="0"
                 active-color="#13ce66"
@@ -138,8 +138,9 @@
             align="center"
             fixed="right"
           >
-            <template>
-              <el-button size="mini" type="primary" icon="el-icon-edit" @click="openUpdateDialog">
+            <!--            这里的userId作为形参传递给updateUser(id)中的id-->
+            <template slot-scope="scope">
+              <el-button size="mini" type="primary" icon="el-icon-edit" @click="updateUser(scope.row.userId)">
                 操作
               </el-button>
               <!--              <el-button style="margin-top:4px;margin-left: 0px" size="mini" type="primary" icon="el-icon-view">-->
@@ -305,7 +306,7 @@ export default {
       this.$refs.pagination.handleCurrentChange(1)
       this.$emit('handleCurrentChange', 1)
     },
-    // 改变选中状态
+    // 改变选中行的状态
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
@@ -330,12 +331,13 @@ export default {
       this.getByPage()
     },
     // 新增用户
-    add() {
+    addUser() {
       this.insertUser()
     },
-    // 更新用户
-    update(user) {
-      userApi.updateById(user).then(res => {
+    // 更新用户,根据id查询出用户然后进行更新,
+    // 注意：用户信息从该方法中的响应体数据中获取
+    updateUser(id) {
+      userApi.getById(id).then(res => {
         this.user = res.data
         this.updateDialog = true
       })
