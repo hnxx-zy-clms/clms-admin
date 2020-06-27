@@ -111,6 +111,7 @@
                 style="width: 60px;height: 50px"
                 :src="scope.row.userIcon"
                 :preview-src-list="[scope.row.userIcon]"
+                :z-index="1000"
               />
             </template>
           </el-table-column>
@@ -146,18 +147,38 @@
               <!--              <el-button style="margin-top:4px;margin-left: 0px" size="mini" type="primary" icon="el-icon-view">-->
               <!--                查看-->
               <!--              </el-button>-->
-              <el-button type="primary" size="mini" icon="el-icon-view" style="margin-top:4px;margin-left: 0px" @click="drawer = true">
+              <el-button type="primary" size="mini" icon="el-icon-view" style="margin-top:4px;margin-left: 0px" @click="readUser(scope.row.userId)">
                 查看
               </el-button>
             </template>
           </el-table-column>
         </el-table>
+        <!--        用户信息抽屉-->
         <el-drawer
-          title="我是标题"
           :visible.sync="drawer"
           :with-header="false"
         >
-          <span>用户信息!</span>
+          <el-card class="box-card">
+            <div slot="header" class="clearfix">
+              <span>用户信息</span>
+            </div>
+            <div :model="user" style="text-align: center">
+              <el-avatar :size="100" :src="user.userIcon" />
+            </div>
+            <ul class="user-info">
+              <li class="li-my"><div style="height: 100%"><svg-icon /> 登录账号<div class="user-right">{{ user.userName }}</div></div></li>
+              <li class="li-my"><svg-icon /> 登录密码 <div class="user-right">{{ user.userPassword }}</div></li>
+              <li class="li-my"><svg-icon /> 用户姓名 <div class="user-right">{{ user.name }}</div></li>
+              <li class="li-my"><svg-icon /> 用户性别 <div class="user-right">{{ user.sex }}</div></li>
+              <li class="li-my"><svg-icon />  所属学院 <div class="user-right"> {{ user.collegeName }}</div></li>
+              <li class="li-my"><svg-icon />  所属班级 <div class="user-right"> {{ user.classesName }}</div></li>
+              <li class="li-my"><svg-icon />  所属小组 <div class="user-right"> {{ user.groupName }}</div></li>
+              <li class="li-my"><svg-icon /> 手机号码 <div class="user-right">{{ user.mobile }}</div></li>
+              <li class="li-my"><svg-icon /> 个性签名 <div class="user-right">{{ user.userDescription }}</div></li>
+              <li class="li-my"><svg-icon /> 创建时间 <div class="user-right">{{ user.createdTime }}</div></li>
+              <li class="li-my"><svg-icon /> 更新时间 <div class="user-right">{{ user.updatedTime }}</div></li>
+            </ul>
+          </el-card>
         </el-drawer>
         <!-- 分页插件 -->
         <el-form :inline="true" class="demo-form-inline" size="mini" style="margin-left:150px">
@@ -257,7 +278,9 @@ export default {
       },
       loading: true, // 控制是否显示延迟加载效果(懒加载)
       addDialog: false, // 控制添加弹窗显示
-      updateDialog: false // 控制修改弹窗显示
+      updateDialog: false, // 控制修改弹窗显示
+      draw: false, // 抽屉默认关闭
+      passwordDialog: false // 修改密码弹窗
     }
   },
   // 初始化函数
@@ -336,6 +359,13 @@ export default {
         this.addDialog = true
       })
       // this.insertUser()
+    },
+    // 查看用户
+    readUser(id) {
+      userApi.getById(id).then(res => {
+        this.user = res.data
+        this.drawer = true
+      })
     },
     // 更新用户,根据id查询出用户然后进行更新,
     // 注意：用户信息从该方法中的响应体数据中获取
@@ -467,3 +497,40 @@ export default {
   }
 }
 </script>
+
+<style>
+<!--  卡片 -->
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+  .box-card {
+    width: 580px;
+  }
+/*  列表*/
+.user-info {
+  padding-left: 0;
+  list-style: none;
+}
+.li-my{
+  border-bottom: 1px solid #F0F3F4;
+  padding: 11px 0;
+  font-size: 13px;
+   }
+.user-right {
+  float: right;
+}
+ a{
+    color: #317EF3;
+   }
+/*  头像*/
+.avatar {
+    width: 300px;
+    height: 150px;
+    display: block;
+  }
+</style>

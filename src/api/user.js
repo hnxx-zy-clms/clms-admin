@@ -47,6 +47,13 @@ export default {
       url: `/${group_name}/get/by/${id}`,
       method: 'post'
     })
+  },
+  updateUserPwd(user) { // 修改用户密码
+    return request({
+      url: `/${group_name}/update/userPassword`,
+      method: 'put',
+      data: user
+    })
   }
 }
 
